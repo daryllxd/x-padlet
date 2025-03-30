@@ -1,33 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Todo Manager Application
+
+A modern Todo Manager application built with Next.js, featuring a card-based view and a presentation mode.
+
+## Features
+
+- **Card View**: View all your todos in a clean card-based interface
+- **Presentation Mode**: Present your active todos in a slideshow format
+- **Add/Edit/Delete**: Full CRUD operations for todo items
+- **Persistence**: Todos are saved in localStorage
+
+## Technologies Used
+
+- **Next.js 15**: React framework for building the application
+- **TypeScript**: For type safety
+- **Tailwind CSS**: For styling
+- **ShadCN UI**: Component library for UI elements
+- **Lucide Icons**: Beautiful, consistent icons
+- **Sonner**: Toast notifications
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+```
+
+Then, run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How to Use
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Add Todo**: Click the "Add Todo" button to create a new todo
+2. **Edit Todo**: Click the edit icon on any todo card to modify it
+3. **Complete Todo**: Click the check icon to mark a todo as complete
+4. **Delete Todo**: Click the trash icon to remove a todo
+5. **Presentation Mode**: Navigate to the Presentation tab to view active todos as slides
+
+## Project Structure
+
+- `src/components`: UI components
+- `src/context`: Application state management
+- `src/types`: TypeScript type definitions
+- `src/app`: Next.js pages and layouts
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+This project uses Next.js with App Router. To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [ShadCN UI](https://ui.shadcn.com/) - learn about the component library
 
 ## Deploy on Vercel
 

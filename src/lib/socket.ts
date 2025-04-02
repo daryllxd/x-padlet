@@ -19,6 +19,9 @@ export const socketEvents = {
   onTodoToggled: (callback: (todoId: string, completed: boolean) => void) => {
     socket.on("todo:toggled", callback);
   },
+  onTodoReordered: (callback: (todos: TodoItem[]) => void) => {
+    socket.on("todo:reordered", callback);
+  },
   // Event emitters
   createTodo: (todo: Omit<TodoItem, "id" | "created_at" | "updated_at">) => {
     socket.emit("todo:create", todo);
@@ -31,5 +34,8 @@ export const socketEvents = {
   },
   toggleTodo: (todoId: string) => {
     socket.emit("todo:toggle", todoId);
+  },
+  reorderTodos: (todoIds: string[]) => {
+    socket.emit("todo:reorder", todoIds);
   },
 };

@@ -108,6 +108,16 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Handle todo reordering
+  socket.on("todo:reorder", async (todoIds) => {
+    try {
+      const reorderedTodos = await todoService.updatePositions(todoIds);
+      io.emit("todo:reordered", reorderedTodos);
+    } catch (error) {
+      console.error("Error reordering todos:", error);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });

@@ -4,11 +4,17 @@ import { query } from "../config/db";
 export class TodoService {
   // Create a new todo
   async createTodo(input: CreateTodoInput): Promise<Todo> {
+    // Get the maximum position and add 1
+    const maxPositionResult = await query(
+      "SELECT COALESCE(MAX(position), 0) as max_pos FROM todos"
+    );
+    const nextPosition = (maxPositionResult.rows[0].max_pos || 0) + 1;
+
     const result = await query(
-      `INSERT INTO todos (title, description, completed)
-       VALUES ($1, $2, $3)
+      `INSERT INTO todos (title, description, completed, position)
+       VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [input.title, input.description, false]
+      [input.title, input.description, false, nextPosition]
     );
     return result.rows[0];
   }
@@ -34,6 +40,12 @@ export class TodoService {
     if (input.completed !== undefined) {
       updates.push(`completed = $${paramCount}`);
       values.push(input.completed);
+      paramCount++;
+    }
+
+    if (input.position !== undefined) {
+      updates.push(`position = $${paramCount}`);
+      values.push(input.position);
       paramCount++;
     }
 
@@ -73,7 +85,7 @@ export class TodoService {
 
   // Get all todos
   async getAllTodos(): Promise<Todo[]> {
-    const result = await query("SELECT * FROM todos ORDER BY created_at DESC");
+    const result = await query("SELECT * FROM todos ORDER BY position ASC");
     return result.rows;
   }
 
@@ -81,5 +93,20 @@ export class TodoService {
   async getTodo(id: string): Promise<Todo | null> {
     const result = await query("SELECT * FROM todos WHERE id = $1", [id]);
     return result.rows[0] || null;
+  }
+
+  // Update todo positions
+  async updatePositions(todoIds: string[]): Promise<Todo[]> {
+    const updates = todoIds
+      .map(
+        (id, index) =>
+          `UPDATE todos SET position = ${
+            index + 1
+          } WHERE id = '${id}' RETURNING *`
+      )
+      .join(";");
+
+    const result = await query(updates);
+    return result.rows;
   }
 }

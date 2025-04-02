@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   draggable,
+  dropTargetForElements,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { TodoCard } from "./TodoCard";
@@ -32,10 +33,13 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
 
   useEffect(() => {
     return monitorForElements({
-      onDrop: ({ source, location }) => {
+      onDrop: ({ source, location, ...rest }) => {
         const dropTarget = location.current.dropTargets[0] as unknown as {
           data: { id: string; title: string };
         };
+
+        console.log("location", location);
+        console.log("rest", rest);
 
         if (!dropTarget) {
           return;
@@ -46,6 +50,12 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
           title: string;
         };
         const dropTargetId = dropTarget.data.id;
+
+        const [closestEdgeSymbol] = Object.getOwnPropertySymbols(
+          dropTarget.data
+        );
+
+        console.log(dropTarget.data[closestEdgeSymbol]);
 
         if (sourceId.id === dropTargetId) {
           return;
@@ -58,7 +68,11 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
         const newOrder = currentOrder
           .map((x) => {
             if (x === dropTargetId) {
-              return [dropTargetId, sourceId.id];
+              if (dropTarget.data[closestEdgeSymbol] === "left") {
+                return [sourceId.id, dropTargetId];
+              } else {
+                return [dropTargetId, sourceId.id];
+              }
             }
 
             return x;
@@ -77,24 +91,6 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
           key={todo.id}
           data-todo-id={todo.id}
           className={cn(draggedId === todo.id && isDragging && "opacity-50")}
-          draggable
-          onDrop={(e) => {
-            e.preventDefault();
-            const dropTarget = (e.currentTarget as HTMLElement).getAttribute(
-              "data-todo-id"
-            );
-            const sourceId = draggedId;
-
-            if (dropTarget && sourceId && dropTarget !== sourceId) {
-              // Get current order of todos
-              const currentOrder = todos.map((t) => t.id);
-
-              // Remove source from current position
-              const newOrder = currentOrder.filter((id) => id !== sourceId);
-
-              // Find target index and insert source after it
-            }
-          }}
         >
           <TodoCard todo={todo} onEdit={onEdit} />
         </div>

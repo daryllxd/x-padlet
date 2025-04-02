@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev -p ${PORT:-3001}",
     "dev:https": "next dev --experimental-https -p ${PORT:-3001}",
+    "server": "cd server && pnpm run dev -p ${PORT:-3002}",
+    "server:https": "cd server && pnpm run dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

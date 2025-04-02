@@ -12,7 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, Trash, Edit, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState, useRef, useEffect } from "react";
+import {
+  draggable,
+  dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
+import invariant from "tiny-invariant";
 interface TodoCardProps {
   todo: TodoItem;
   onEdit: (id: string) => void;
@@ -21,9 +27,60 @@ interface TodoCardProps {
 export function TodoCard({ todo, onEdit }: TodoCardProps) {
   const { toggleComplete, deleteTodo } = useTodo();
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
+  const ref = useRef(null);
+  const [dragging, setDragging] = useState<boolean>(false); // NEW
+  const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
+  useEffect(() => {
+    const el = ref.current;
+    invariant(el);
+
+    return draggable({
+      element: el,
+      getInitialData: () => {
+        return {
+          id: todo.id,
+          title: todo.title,
+          description: todo.description,
+        };
+      },
+      onDragStart: (e) => {
+        setDragging(true);
+      },
+      onDrop: () => setDragging(false), // NEW
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    invariant(el);
+
+    return dropTargetForElements({
+      element: el,
+      getData: () => {
+        return {
+          id: todo.id,
+          title: todo.title,
+          description: todo.description,
+        };
+      },
+      onDragEnter: () => setIsDraggedOver(true),
+      onDragLeave: () => setIsDraggedOver(false),
+      onDrop: (e) => {
+        setIsDraggedOver(false);
+      },
+    });
+  }, []);
 
   return (
-    <Card className={cn("w-full", todo.completed && "opacity-75 bg-slate-50")}>
+    <Card
+      ref={ref}
+      className={cn(
+        "w-full",
+        todo.completed && "opacity-75 bg-slate-50",
+        dragging && "opacity-50",
+        isDraggedOver && "bg-red-100"
+      )}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle

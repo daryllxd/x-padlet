@@ -45,7 +45,10 @@ export function TodoProvider({ children }: { children: ReactNode }) {
       );
     });
 
-    // Fetch initial todos
+    socketEvents.onTodoReordered((newOrder) => {
+      setTodos(newOrder.sort((a, b) => a.position - b.position));
+    });
+
     fetch("http://localhost:3002/api/todos")
       .then((res) => res.json())
       .then((data) => setTodos(data))

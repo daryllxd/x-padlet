@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { AddTodoDialog } from "@/components/AddTodoDialog";
-import { TodoCard } from "@/components/TodoCard";
+import { DraggableTodoList } from "@/components/DraggableTodoList";
 import { useTodo } from "@/context/TodoContext";
 import { TodoItem } from "@/types";
 
@@ -41,17 +41,13 @@ export default function Home() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {todos.length > 0 ? (
-          todos.map((todo) => (
-            <TodoCard key={todo.id} todo={todo} onEdit={handleEdit} />
-          ))
-        ) : (
-          <div className="col-span-full flex items-center justify-center h-40 text-slate-500">
-            No todos yet. Add your first todo to get started.
-          </div>
-        )}
-      </div>
+      {todos.length > 0 ? (
+        <DraggableTodoList todos={todos} onEdit={handleEdit} />
+      ) : (
+        <div className="flex items-center justify-center h-40 text-slate-500">
+          No todos yet. Add your first todo to get started.
+        </div>
+      )}
     </div>
   );
 }

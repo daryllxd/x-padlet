@@ -12,7 +12,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server<ClientEvents, ServerEvents>(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Next.js app URL
+    origin: "http://localhost:3001", // Next.js app URL
     methods: ["GET", "POST"],
   },
 });

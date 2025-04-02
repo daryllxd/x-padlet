@@ -8,10 +8,11 @@ import {
   ReactNode,
 } from "react";
 import { TodoItem } from "@/types";
+import { socketEvents } from "@/lib/socket";
 
 interface TodoContextType {
   todos: TodoItem[];
-  addTodo: (todo: Omit<TodoItem, "id" | "createdAt">) => void;
+  addTodo: (todo: Omit<TodoItem, "id" | "created_at" | "updated_at">) => void;
   updateTodo: (id: string, updates: Partial<TodoItem>) => void;
   deleteTodo: (id: string) => void;
   toggleComplete: (id: string) => void;
@@ -22,54 +23,59 @@ const TodoContext = createContext<TodoContextType | undefined>(undefined);
 export function TodoProvider({ children }: { children: ReactNode }) {
   const [todos, setTodos] = useState<TodoItem[]>([]);
 
-  // Load todos from localStorage on initial render
   useEffect(() => {
-    const savedTodos = localStorage.getItem("todos");
-    if (savedTodos) {
-      try {
-        const parsedTodos = JSON.parse(savedTodos);
-        // Convert string dates back to Date objects
-        const todosWithDates = parsedTodos.map((todo: any) => ({
-          ...todo,
-          createdAt: new Date(todo.createdAt),
-        }));
-        setTodos(todosWithDates);
-      } catch (error) {
-        console.error("Failed to parse todos from localStorage", error);
-      }
-    }
+    // Set up socket event listeners
+    socketEvents.onTodoCreated((todo) => {
+      setTodos((prev) => [...prev, todo]);
+    });
+
+    socketEvents.onTodoUpdated((updatedTodo) => {
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+      );
+    });
+
+    socketEvents.onTodoDeleted((todoId) => {
+      setTodos((prev) => prev.filter((todo) => todo.id !== todoId));
+    });
+
+    socketEvents.onTodoToggled((todoId, completed) => {
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === todoId ? { ...todo, completed } : todo))
+      );
+    });
+
+    // Fetch initial todos
+    fetch("http://localhost:3002/api/todos")
+      .then((res) => res.json())
+      .then((data) => setTodos(data))
+      .catch((error) => console.error("Error fetching todos:", error));
+
+    // Cleanup socket listeners on unmount
+    return () => {
+      // Socket.io automatically removes listeners when the component unmounts
+    };
   }, []);
 
-  // Save todos to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
-
-  const addTodo = (todoData: Omit<TodoItem, "id" | "createdAt">) => {
-    const newTodo: TodoItem = {
-      ...todoData,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-    };
-    setTodos([...todos, newTodo]);
+  const addTodo = (
+    todo: Omit<TodoItem, "id" | "created_at" | "updated_at">
+  ) => {
+    socketEvents.createTodo(todo);
   };
 
   const updateTodo = (id: string, updates: Partial<TodoItem>) => {
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, ...updates } : todo))
-    );
+    const todo = todos.find((t) => t.id === id);
+    if (todo) {
+      socketEvents.updateTodo({ ...todo, ...updates });
+    }
   };
 
   const deleteTodo = (id: string) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    socketEvents.deleteTodo(id);
   };
 
   const toggleComplete = (id: string) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    socketEvents.toggleTodo(id);
   };
 
   return (

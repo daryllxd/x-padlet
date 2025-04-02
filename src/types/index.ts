@@ -1,7 +1,8 @@
 export interface TodoItem {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   completed: boolean;
-  createdAt: Date;
+  created_at: string;
+  updated_at: string;
 }

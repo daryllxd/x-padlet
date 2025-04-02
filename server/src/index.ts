@@ -51,19 +51,6 @@ app.get("/api/todos", async (req, res) => {
 io.on("connection", (socket) => {
   console.log("Client connected");
 
-  // Send initial todos to the new client
-  todoService
-    .getAllTodos()
-    .then((todos) => {
-      todos.forEach((todo) => {
-        socket.emit("todo:created", todo);
-      });
-    })
-    .catch((error) => {
-      console.error("Error sending initial todos:", error);
-    });
-
-  // Handle todo creation
   socket.on("todo:create", async (input) => {
     try {
       const todo = await todoService.createTodo(input);
@@ -73,7 +60,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle todo update
   socket.on("todo:update", async (todo) => {
     try {
       const updated = await todoService.updateTodo(todo.id, todo);
@@ -85,7 +71,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle todo deletion
   socket.on("todo:delete", async (todoId) => {
     try {
       if (await todoService.deleteTodo(todoId)) {
@@ -96,7 +81,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle todo toggle
   socket.on("todo:toggle", async (todoId) => {
     try {
       const todo = await todoService.toggleTodo(todoId);
@@ -108,7 +92,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle todo reordering
   socket.on("todo:reorder", async (todoIds) => {
     try {
       const reorderedTodos = await todoService.updatePositions(todoIds);
@@ -125,7 +108,6 @@ io.on("connection", (socket) => {
 
 const port = process.env.PORT || 3002;
 
-// Initialize database and start server
 initDb().then(() => {
   httpServer.listen(port, () => {
     console.log(`Server running on port ${port}`);

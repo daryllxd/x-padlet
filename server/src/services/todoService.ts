@@ -95,18 +95,22 @@ export class TodoService {
     return result.rows[0] || null;
   }
 
-  // Update todo positions
   async updatePositions(todoIds: string[]): Promise<Todo[]> {
-    const updates = todoIds
-      .map(
-        (id, index) =>
-          `UPDATE todos SET position = ${
-            index + 1
-          } WHERE id = '${id}' RETURNING *`
-      )
-      .join(";");
+    const positionCases = todoIds
+      .map((id, index) => `WHEN id = '${id}' THEN ${index + 1}`)
+      .join(" ");
 
-    const result = await query(updates);
+    const ids = todoIds.map((id) => `'${id}'`).join(",");
+
+    // Must do an update in one go so that result.rows returns the new rows
+    const sql = `
+      UPDATE todos
+      SET position = CASE ${positionCases} END
+      WHERE id IN (${ids})
+      RETURNING *
+    `;
+
+    const result = await query(sql);
     return result.rows;
   }
 }

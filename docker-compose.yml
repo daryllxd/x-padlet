@@ -6,9 +6,12 @@ services:
       context: .
       dockerfile: Dockerfile.client
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-3001}:3001"
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:3002
+    volumes:
+      - .:/app # Mount the current directory to /app
+      - /app/node_modules # Prevent overwriting node_modules
     depends_on:
       - backend
 

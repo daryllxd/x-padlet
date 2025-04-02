@@ -8,7 +8,6 @@ export const socket = io(SOCKET_URL);
 // Event listeners for todos
 export const socketEvents = {
   onTodoCreated: (callback: (todo: TodoItem) => void) => {
-    console.log("created");
     socket.on("todo:created", callback);
   },
   onTodoUpdated: (callback: (todo: TodoItem) => void) => {
@@ -22,7 +21,6 @@ export const socketEvents = {
   },
   // Event emitters
   createTodo: (todo: Omit<TodoItem, "id" | "created_at" | "updated_at">) => {
-    console.log("creating");
     socket.emit("todo:create", todo);
   },
   updateTodo: (todo: TodoItem) => {

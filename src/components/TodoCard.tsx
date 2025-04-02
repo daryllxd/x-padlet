@@ -20,7 +20,7 @@ interface TodoCardProps {
 
 export function TodoCard({ todo, onEdit }: TodoCardProps) {
   const { toggleComplete, deleteTodo } = useTodo();
-  const formattedDate = new Date(todo.createdAt).toLocaleDateString();
+  const formattedDate = new Date(todo.created_at).toLocaleDateString();
 
   return (
     <Card className={cn("w-full", todo.completed && "opacity-75 bg-slate-50")}>

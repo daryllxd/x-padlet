@@ -113,11 +113,11 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 // Initialize database and start server
 initDb().then(() => {
-  httpServer.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  httpServer.listen(port, () => {
+    console.log(`Server running on port ${port}`);
   });
 });

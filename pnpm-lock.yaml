@@ -11,6 +11,9 @@ importers:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: ^1.5.2
         version: 1.5.2
+      '@atlaskit/pragmatic-drag-and-drop-hitbox':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@hookform/resolvers':
         specifier: ^4.1.3
         version: 4.1.3(react-hook-form@7.55.0(react@19.1.0))
@@ -105,6 +108,9 @@ packages:
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+
+  '@atlaskit/pragmatic-drag-and-drop-hitbox@1.0.3':
+    resolution: {integrity: sha512-/Sbu/HqN2VGLYBhnsG7SbRNg98XKkbF6L7XDdBi+izRybfaK1FeMfodPpm/xnBHPJzwYMdkE0qtLyv6afhgMUA==}
 
   '@atlaskit/pragmatic-drag-and-drop@1.5.2':
     resolution: {integrity: sha512-fDuTwlDD11r3ev5tLJ6JnzQUiG9v77c8zGcNdO7RRNtZZbOHam8CFhmyFGY4E/mLjvgYng0UkcyCrSBc4FXYZw==}
@@ -2273,6 +2279,11 @@ packages:
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
+
+  '@atlaskit/pragmatic-drag-and-drop-hitbox@1.0.3':
+    dependencies:
+      '@atlaskit/pragmatic-drag-and-drop': 1.5.2
+      '@babel/runtime': 7.27.0
 
   '@atlaskit/pragmatic-drag-and-drop@1.5.2':
     dependencies:

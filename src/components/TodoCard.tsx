@@ -76,9 +76,9 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
       ref={ref}
       className={cn(
         "w-full",
-        todo.completed && "opacity-75 bg-slate-50",
-        dragging && "opacity-50",
-        isDraggedOver && "bg-red-100"
+        todo.completed && "opacity-75 bg-slate-50 border-2",
+        dragging && "opacity-50 bg-slate-200 [&>*]:opacity-0 border-slate-300",
+        !dragging && isDraggedOver && "bg-red-100"
       )}
     >
       <CardHeader className="pb-2">

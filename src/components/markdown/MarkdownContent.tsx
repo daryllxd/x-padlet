@@ -1,15 +1,18 @@
-"use client";
+'use client';
 
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ListNode, ListItemNode } from "@lexical/list";
-import { LinkNode } from "@lexical/link";
-import { CodeNode, CodeHighlightNode } from "@lexical/code";
-import { $convertFromMarkdownString, TRANSFORMERS } from "@lexical/markdown";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
+import { CodeHighlightNode, CodeNode } from '@lexical/code';
+import { LinkNode } from '@lexical/link';
+import { ListItemNode, ListNode } from '@lexical/list';
+import { $convertFromMarkdownString, TRANSFORMERS } from '@lexical/markdown';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { EditorRefPlugin } from '@lexical/react/LexicalEditorRefPlugin';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { LexicalEditor } from 'lexical';
+import { useEffect, useRef } from 'react';
 
 interface MarkdownContentProps {
   content: string;
@@ -27,8 +30,10 @@ const nodes = [
 ];
 
 export function MarkdownContent({ content, className }: MarkdownContentProps) {
+  const editorRef = useRef<LexicalEditor | null>(null);
+
   const initialConfig = {
-    namespace: "TodoMarkdownViewer",
+    namespace: 'TodoMarkdownViewer',
     nodes,
     editable: false,
     onError: (error: Error) => {
@@ -38,10 +43,18 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
       $convertFromMarkdownString(content, TRANSFORMERS);
     },
     theme: {
-      code: "bg-slate-100 rounded px-1.5 py-0.5 font-mono text-sm",
-      codeBlock: "bg-slate-100 rounded-lg p-3 font-mono text-sm my-2",
+      code: 'bg-slate-100 rounded py-0.5 font-mono text-sm mt-4 block',
+      codeBlock: 'bg-slate-100 rounded-lg p-3 font-mono text-sm my-2',
     },
   };
+
+  useEffect(() => {
+    if (content && editorRef.current) {
+      editorRef.current.update(() => {
+        $convertFromMarkdownString(content, TRANSFORMERS);
+      });
+    }
+  }, [content]);
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
@@ -49,8 +62,8 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         contentEditable={
           <ContentEditable
             className={cn(
-              "outline-none prose prose-sm max-w-none",
-              "prose-code:before:content-none prose-code:after:content-none",
+              'prose prose-sm max-w-none outline-none',
+              'prose-code:before:content-none prose-code:after:content-none',
               className
             )}
             readOnly={true}
@@ -59,6 +72,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         placeholder={null}
         ErrorBoundary={LexicalErrorBoundary}
       />
+      <EditorRefPlugin editorRef={editorRef} />
     </LexicalComposer>
   );
 }

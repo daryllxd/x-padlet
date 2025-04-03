@@ -1,31 +1,25 @@
-"use client";
+'use client';
 
-import { TodoItem } from "@/types";
-import { useTodo } from "@/context/TodoContext";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Check, Trash, Edit, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useState, useRef, useEffect } from "react";
-import {
-  draggable,
-  dropTargetForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTodo } from '@/context/TodoContext';
+import { cn } from '@/lib/utils';
+import { TodoItem } from '@/types';
 import {
   attachClosestEdge,
   extractClosestEdge,
   type Edge,
-} from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import {
+  draggable,
+  dropTargetForElements,
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { Check, Edit, Trash, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
-import invariant from "tiny-invariant";
-import { EditTodoDialog } from "@/components/todos/EditTodoDialog";
-import { MarkdownContent } from "@/components/markdown/MarkdownContent";
+import { MarkdownContent } from '@/components/markdown/MarkdownContent';
+import { EditTodoDialog } from '@/components/todos/EditTodoDialog';
+import invariant from 'tiny-invariant';
 
 interface TodoCardProps {
   todo: TodoItem;
@@ -33,34 +27,34 @@ interface TodoCardProps {
 }
 
 type DraggableState = {
-  state: "idle" | "dragging" | "draggedOver";
-  closestEdge: "left" | "right" | null;
+  state: 'idle' | 'dragging' | 'draggedOver';
+  closestEdge: 'left' | 'right' | null;
 };
 
 function useDraggableState() {
   const [state, setState] = useState<DraggableState>({
-    state: "idle",
+    state: 'idle',
     closestEdge: null,
   });
 
   const setDragging = () => {
-    setState({ state: "dragging", closestEdge: null });
+    setState({ state: 'dragging', closestEdge: null });
   };
 
-  const setDraggedOver = (edge: "left" | "right") => {
-    setState({ state: "draggedOver", closestEdge: edge });
+  const setDraggedOver = (edge: 'left' | 'right') => {
+    setState({ state: 'draggedOver', closestEdge: edge });
   };
 
   const reset = () => {
-    setState({ state: "idle", closestEdge: null });
+    setState({ state: 'idle', closestEdge: null });
   };
 
   return { state, setDragging, setDraggedOver, reset };
 }
 
 // Add type guard for edge
-function isHorizontalEdge(edge: Edge): edge is "left" | "right" {
-  return edge === "left" || edge === "right";
+function isHorizontalEdge(edge: Edge): edge is 'left' | 'right' {
+  return edge === 'left' || edge === 'right';
 }
 
 export function TodoCard({ todo, onEdit }: TodoCardProps) {
@@ -87,6 +81,10 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
   }, []);
 
   useEffect(() => {
+    console.log(todo);
+  }, [todo]);
+
+  useEffect(() => {
     const el = ref.current;
     invariant(el);
 
@@ -101,7 +99,7 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
         return attachClosestEdge(data, {
           input,
           element,
-          allowedEdges: ["left", "right"],
+          allowedEdges: ['left', 'right'],
         });
       },
       onDragEnter: ({ self }) => {
@@ -122,58 +120,42 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
   return (
     <>
       <div className="relative h-full">
-        {state.closestEdge === "left" && (
-          <div className="absolute left-[-10px] top-[8px] h-[calc(100%-16px)] w-1 bg-blue-500 opacity-50 transform -translate-x-full" />
+        {state.closestEdge === 'left' && (
+          <div className="absolute top-[8px] left-[-10px] h-[calc(100%-16px)] w-1 -translate-x-full transform bg-blue-500 opacity-50" />
         )}
 
-        {state.closestEdge === "right" && (
-          <div className="absolute right-[-10px] top-[8px] h-[calc(100%-16px)] w-1 bg-blue-500 opacity-50 transform translate-x-full" />
+        {state.closestEdge === 'right' && (
+          <div className="absolute top-[8px] right-[-10px] h-[calc(100%-16px)] w-1 translate-x-full transform bg-blue-500 opacity-50" />
         )}
 
         <Card
           ref={ref}
           className={cn(
-            "h-full w-full",
-            todo.completed && "opacity-75 bg-slate-50 border-2",
-            state.state === "dragging" &&
-              "opacity-50 bg-slate-200 [&>*]:opacity-0 border-slate-300",
-            state.state === "draggedOver" && "bg-slate-100"
+            'h-full w-full',
+            todo.completed && 'border-2 bg-slate-50 opacity-75',
+            state.state === 'dragging' &&
+              'border-slate-300 bg-slate-200 opacity-50 [&>*]:opacity-0',
+            state.state === 'draggedOver' && 'bg-slate-100'
           )}
         >
           <CardHeader className="pb-2">
             <div className="flex items-start justify-between">
               <CardTitle
                 className={cn(
-                  "text-lg font-medium line-clamp-1",
-                  todo.completed && "line-through text-slate-500"
+                  'line-clamp-1 text-lg font-medium',
+                  todo.completed && 'text-slate-500 line-through'
                 )}
               >
                 {todo.title}
               </CardTitle>
               <div className="flex space-x-1">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => toggleComplete(todo.id)}
-                >
-                  {todo.completed ? (
-                    <X className="h-4 w-4" />
-                  ) : (
-                    <Check className="h-4 w-4" />
-                  )}
+                <Button size="icon" variant="ghost" onClick={() => toggleComplete(todo.id)}>
+                  {todo.completed ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                 </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => deleteTodo(todo.id)}
-                >
+                <Button size="icon" variant="ghost" onClick={() => deleteTodo(todo.id)}>
                   <Trash className="h-4 w-4" />
                 </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => setIsEditModalOpen(true)}
-                >
+                <Button size="icon" variant="ghost" onClick={() => setIsEditModalOpen(true)}>
                   <Edit className="h-4 w-4" />
                 </Button>
               </div>
@@ -181,14 +163,14 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
           </CardHeader>
           <CardContent>
             <MarkdownContent
-              content={todo.description || ""}
+              content={todo.description || ''}
               className={cn(
-                "text-sm text-slate-700",
-                todo.completed && "line-through text-slate-500"
+                'text-sm text-slate-700',
+                todo.completed && 'text-slate-500 line-through'
               )}
             />
           </CardContent>
-          <CardFooter className="pt-0 mt-auto">
+          <CardFooter className="mt-auto pt-0">
             <p className="text-xs text-slate-500">Created: {formattedDate}</p>
           </CardFooter>
         </Card>

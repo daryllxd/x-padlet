@@ -6,6 +6,16 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { MarkdownPlugin } from "@lexical/markdown";
+import {
+  $convertFromMarkdownString,
+  $convertToMarkdownString,
+  TRANSFORMERS,
+} from "@lexical/markdown";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ListNode, ListItemNode } from "@lexical/list";
+import { LinkNode } from "@lexical/link";
+import { CodeNode, CodeHighlightNode } from "@lexical/code";
 import {
   $getRoot,
   $createParagraphNode,
@@ -28,6 +38,38 @@ const theme = {
     underline: "underline",
   },
 };
+
+// Add CodeNode to the list of nodes
+const nodes = [
+  HeadingNode,
+  QuoteNode,
+  ListNode,
+  ListItemNode,
+  LinkNode,
+  CodeNode,
+  CodeHighlightNode,
+];
+
+// Add code block transformer to TRANSFORMERS
+const CODE_TRANSFORMERS = [
+  ...TRANSFORMERS,
+  {
+    export: (node: CodeNode) => {
+      if (node instanceof CodeNode) {
+        return `\`\`\`\n${node.getTextContent()}\n\`\`\``;
+      }
+      return null;
+    },
+    regExp: /^```\n([\s\S]*?)\n```$/,
+    replace: (textNode: TextNode, match: RegExpMatch) => {
+      const [, codeContent] = match;
+      const codeNode = $createCodeNode();
+      codeNode.append($createTextNode(codeContent));
+      textNode.replace(codeNode);
+    },
+    type: "element",
+  },
+];
 
 export function LexicalEditor({
   initialContent = "",

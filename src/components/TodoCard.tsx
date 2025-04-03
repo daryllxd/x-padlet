@@ -25,6 +25,7 @@ import {
 
 import invariant from "tiny-invariant";
 import { EditTodoDialog } from "@/components/EditTodoDialog";
+import { MarkdownContent } from "@/components/MarkdownContent";
 
 interface TodoCardProps {
   todo: TodoItem;
@@ -174,14 +175,13 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
             </div>
           </CardHeader>
           <CardContent>
-            <p
+            <MarkdownContent
+              content={todo.description}
               className={cn(
                 "text-sm text-slate-700",
                 todo.completed && "line-through text-slate-500"
               )}
-            >
-              {todo.description}
-            </p>
+            />
           </CardContent>
           <CardFooter className="pt-0 mt-auto">
             <p className="text-xs text-slate-500">Created: {formattedDate}</p>

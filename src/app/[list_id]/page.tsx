@@ -2,12 +2,15 @@
 
 import { AddTodoDialog } from '@/components/todos/AddTodoDialog';
 import { DraggableTodoList } from '@/components/todos/DraggableTodoList';
+import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
 import { use, useRef, useState } from 'react';
 
 export default function Home({ params }: { params: Promise<{ list_id: string }> }) {
   const { list_id: listId } = use(params);
+
+  const { data: todoList, isLoading: isTodoListLoading } = useTodoList(listId);
 
   const { data: todos, isLoading } = useTodos(listId);
 
@@ -39,7 +42,7 @@ export default function Home({ params }: { params: Promise<{ list_id: string }> 
     <div className="container mx-auto py-10">
       <header className="mb-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Todo List</h1>
+          <h1 className="text-3xl font-bold">{todoList?.title}</h1>
           <div className="flex gap-4">
             <AddTodoDialog listId={listId} />
           </div>

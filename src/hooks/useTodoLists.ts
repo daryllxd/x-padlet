@@ -15,3 +15,12 @@ export function useTodoLists() {
     queryFn: fetchTodoLists,
   });
 }
+
+export function useTodoList(listId: string) {
+  return useQuery({
+    queryKey: ['todoLists'],
+    queryFn: fetchTodoLists,
+    select: (data) => data.find((list) => list.id === listId),
+    enabled: !!listId,
+  });
+}

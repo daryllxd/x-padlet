@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <div className="container mx-auto py-8">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">My Todo Lists</h1>
+        <h1 className="text-3xl font-bold">My Work</h1>
         {/* We'll add a create button later */}
       </div>
 

@@ -58,6 +58,11 @@ function useDraggableState() {
   return { state, setDragging, setDraggedOver, reset };
 }
 
+// Add type guard for edge
+function isHorizontalEdge(edge: Edge): edge is "left" | "right" {
+  return edge === "left" || edge === "right";
+}
+
 export function TodoCard({ todo, onEdit }: TodoCardProps) {
   const { toggleComplete, deleteTodo, updateTodo } = useTodo();
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
@@ -101,7 +106,7 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
       },
       onDragEnter: ({ self }) => {
         const closestEdge = extractClosestEdge(self.data);
-        if (closestEdge) {
+        if (closestEdge && isHorizontalEdge(closestEdge)) {
           setDraggedOver(closestEdge);
         }
       },
@@ -176,7 +181,7 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
           </CardHeader>
           <CardContent>
             <MarkdownContent
-              content={todo.description}
+              content={todo.description || ""}
               className={cn(
                 "text-sm text-slate-700",
                 todo.completed && "line-through text-slate-500"

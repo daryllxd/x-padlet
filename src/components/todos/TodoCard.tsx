@@ -32,11 +32,13 @@ export function TodoCard({ todo, onEdit }: TodoCardProps) {
           <Card
             className={cn(
               'h-full w-full',
+              'hover:cursor-pointer',
               todo.completed && 'border-2 bg-slate-50 opacity-75',
               state.state === 'dragging' &&
                 'border-slate-300 bg-slate-200 opacity-50 [&>*]:opacity-0',
               state.state === 'draggedOver' && 'bg-slate-100'
             )}
+            onDoubleClick={() => setIsEditModalOpen(true)}
           >
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">

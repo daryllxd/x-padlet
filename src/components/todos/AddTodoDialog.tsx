@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,34 +8,29 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useTodo } from "@/context/TodoContext";
-import { TodoItem } from "@/types";
-import { Plus } from "lucide-react";
-import { toast } from "sonner";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useTodo } from '@/context/TodoContext';
+import { TodoItem } from '@/types';
+import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AddTodoDialogProps {
   initialTodo?: TodoItem;
   isEditing?: boolean;
 }
 
-export function AddTodoDialog({
-  initialTodo,
-  isEditing = false,
-}: AddTodoDialogProps) {
+export function AddTodoDialog({ initialTodo, isEditing = false }: AddTodoDialogProps) {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState(initialTodo?.title || "");
-  const [description, setDescription] = useState(
-    initialTodo?.description || ""
-  );
+  const [title, setTitle] = useState(initialTodo?.title || '');
+  const [description, setDescription] = useState(initialTodo?.description || '');
   const { addTodo, updateTodo } = useTodo();
 
   const resetForm = () => {
-    setTitle("");
-    setDescription("");
+    setTitle('');
+    setDescription('');
   };
 
   const handleClose = () => {
@@ -47,16 +42,16 @@ export function AddTodoDialog({
     e.preventDefault();
 
     if (!title.trim()) {
-      toast("Title is required");
+      toast('Title is required');
       return;
     }
 
     if (isEditing && initialTodo) {
       updateTodo(initialTodo.id, { title, description });
-      toast("Todo updated successfully");
+      toast('Todo updated successfully');
     } else {
       addTodo({ title, description, completed: false });
-      toast("Todo added successfully");
+      toast('Todo added successfully');
     }
 
     handleClose();
@@ -76,7 +71,7 @@ export function AddTodoDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit Todo" : "Add New Todo"}</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Todo' : 'Add New Todo'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="space-y-2">
@@ -106,7 +101,7 @@ export function AddTodoDialog({
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
-            <Button type="submit">{isEditing ? "Update" : "Add"}</Button>
+            <Button type="submit">{isEditing ? 'Update' : 'Add'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

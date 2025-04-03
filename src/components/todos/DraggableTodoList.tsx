@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
   draggable,
   dropTargetForElements,
   monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { TodoCard } from "./TodoCard";
-import { TodoItem } from "@/types";
-import { useTodo } from "@/context/TodoContext";
-import { socketEvents } from "@/lib/socket";
-import { cn } from "@/lib/utils";
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { TodoCard } from './TodoCard';
+import { TodoItem } from '@/types';
+import { useTodo } from '@/context/TodoContext';
+import { socketEvents } from '@/lib/socket';
+import { cn } from '@/lib/utils';
 
 interface DraggableTodoListProps {
   todos: TodoItem[];
@@ -38,9 +38,6 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
           data: { id: string; title: string };
         };
 
-        console.log("location", location);
-        console.log("rest", rest);
-
         if (!dropTarget) {
           return;
         }
@@ -51,24 +48,19 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
         };
         const dropTargetId = dropTarget.data.id;
 
-        const [closestEdgeSymbol] = Object.getOwnPropertySymbols(
-          dropTarget.data
-        );
-
-        console.log(dropTarget.data[closestEdgeSymbol]);
+        const [closestEdgeSymbol] = Object.getOwnPropertySymbols(dropTarget.data);
 
         if (sourceId.id === dropTargetId) {
           return;
         }
 
-        const currentOrder = todos
-          .filter((t) => t.id !== sourceId.id)
-          .map((t) => t.id);
+        const currentOrder = todos.filter((t) => t.id !== sourceId.id).map((t) => t.id);
 
         const newOrder = currentOrder
           .map((x) => {
             if (x === dropTargetId) {
-              if (dropTarget.data[closestEdgeSymbol] === "left") {
+              // @ts-ignore
+              if (dropTarget.data[closestEdgeSymbol] === 'left') {
                 return [sourceId.id, dropTargetId];
               } else {
                 return [dropTargetId, sourceId.id];
@@ -85,12 +77,12 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
   }, [todos]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {todos.map((todo) => (
         <div
           key={todo.id}
           data-todo-id={todo.id}
-          className={cn(draggedId === todo.id && isDragging && "opacity-50")}
+          className={cn(draggedId === todo.id && isDragging && 'opacity-50')}
         >
           <TodoCard todo={todo} onEdit={onEdit} />
         </div>

@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import { TodoItem } from "@/types";
-import { socketEvents } from "@/lib/socket";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { TodoItem } from '@/types';
+import { socketEvents } from '@/lib/socket';
 
 interface TodoContextType {
   todos: TodoItem[];
-  addTodo: (todo: Omit<TodoItem, "id" | "created_at" | "updated_at">) => void;
+  addTodo: (todo: Omit<TodoItem, 'id' | 'created_at' | 'updated_at' | 'position'>) => void;
   updateTodo: (id: string, updates: Partial<TodoItem>) => void;
   deleteTodo: (id: string) => void;
   toggleComplete: (id: string) => void;
@@ -30,9 +24,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
     });
 
     socketEvents.onTodoUpdated((updatedTodo) => {
-      setTodos((prev) =>
-        prev.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
-      );
+      setTodos((prev) => prev.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)));
     });
 
     socketEvents.onTodoDeleted((todoId) => {
@@ -40,19 +32,17 @@ export function TodoProvider({ children }: { children: ReactNode }) {
     });
 
     socketEvents.onTodoToggled((todoId, completed) => {
-      setTodos((prev) =>
-        prev.map((todo) => (todo.id === todoId ? { ...todo, completed } : todo))
-      );
+      setTodos((prev) => prev.map((todo) => (todo.id === todoId ? { ...todo, completed } : todo)));
     });
 
     socketEvents.onTodoReordered((newOrder) => {
       setTodos(newOrder.sort((a, b) => a.position - b.position));
     });
 
-    fetch("http://localhost:3002/api/todos")
+    fetch('http://localhost:3002/api/todos')
       .then((res) => res.json())
       .then((data) => setTodos(data))
-      .catch((error) => console.error("Error fetching todos:", error));
+      .catch((error) => console.error('Error fetching todos:', error));
 
     // Cleanup socket listeners on unmount
     return () => {
@@ -60,9 +50,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const addTodo = (
-    todo: Omit<TodoItem, "id" | "created_at" | "updated_at">
-  ) => {
+  const addTodo = (todo: Omit<TodoItem, 'id' | 'created_at' | 'updated_at' | 'position'>) => {
     socketEvents.createTodo(todo);
   };
 
@@ -82,9 +70,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <TodoContext.Provider
-      value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete }}
-    >
+    <TodoContext.Provider value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete }}>
       {children}
     </TodoContext.Provider>
   );
@@ -93,7 +79,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
 export function useTodo() {
   const context = useContext(TodoContext);
   if (context === undefined) {
-    throw new Error("useTodo must be used within a TodoProvider");
+    throw new Error('useTodo must be used within a TodoProvider');
   }
   return context;
 }

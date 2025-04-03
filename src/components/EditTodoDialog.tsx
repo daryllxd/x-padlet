@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { LexicalEditor } from "@/components/LexicalEditor";
 
 interface EditTodoDialogProps {
   todo: TodoItem;
@@ -25,9 +25,9 @@ export function EditTodoDialog({
   onSave,
 }: EditTodoDialogProps) {
   const [editedTitle, setEditedTitle] = useState(todo.title);
-  const [editedDescription, setEditedDescription] = useState<
-    TodoItem["description"]
-  >(todo.description);
+  const [editedDescription, setEditedDescription] = useState<string>(
+    todo.description || ""
+  );
 
   const handleSave = () => {
     onSave({
@@ -35,6 +35,10 @@ export function EditTodoDialog({
       description: editedDescription,
     });
     onOpenChange(false);
+  };
+
+  const handleEditorChange = (content: string) => {
+    setEditedDescription(content);
   };
 
   return (
@@ -52,16 +56,17 @@ export function EditTodoDialog({
               id="title"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
+              placeholder="Enter title"
             />
           </div>
           <div className="space-y-2">
             <label htmlFor="description" className="text-sm font-medium">
               Description
             </label>
-            <Textarea
-              id="description"
-              value={editedDescription}
-              onChange={(e) => setEditedDescription(e.target.value)}
+            <LexicalEditor
+              initialContent={editedDescription}
+              onChange={handleEditorChange}
+              className="min-h-[200px] border rounded-md p-4"
             />
           </div>
         </div>

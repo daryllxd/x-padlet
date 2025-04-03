@@ -1,12 +1,13 @@
-import { Todo, CreateTodoInput, UpdateTodoInput } from "../types";
-import { query } from "../config/db";
+import { query } from '../config/db';
+import { CreateTodoInput, Todo, UpdateTodoInput } from '../types';
+import { WontFix } from '../types/wontfix';
 
 export class TodoService {
   // Create a new todo
   async createTodo(input: CreateTodoInput): Promise<Todo> {
     // Get the maximum position and add 1
     const maxPositionResult = await query(
-      "SELECT COALESCE(MAX(position), 0) as max_pos FROM todos"
+      'SELECT COALESCE(MAX(position), 0) as max_pos FROM todos'
     );
     const nextPosition = (maxPositionResult.rows[0].max_pos || 0) + 1;
 
@@ -22,7 +23,7 @@ export class TodoService {
   // Update a todo
   async updateTodo(id: string, input: UpdateTodoInput): Promise<Todo | null> {
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: WontFix[] = [];
     let paramCount = 1;
 
     if (input.title !== undefined) {
@@ -54,7 +55,7 @@ export class TodoService {
     values.push(id);
     const result = await query(
       `UPDATE todos 
-       SET ${updates.join(", ")}
+       SET ${updates.join(', ')}
        WHERE id = $${paramCount}
        RETURNING *`,
       values
@@ -65,9 +66,7 @@ export class TodoService {
 
   // Delete a todo
   async deleteTodo(id: string): Promise<boolean> {
-    const result = await query("DELETE FROM todos WHERE id = $1 RETURNING id", [
-      id,
-    ]);
+    const result = await query('DELETE FROM todos WHERE id = $1 RETURNING id', [id]);
     return result.rowCount !== null && result.rowCount > 0;
   }
 
@@ -85,22 +84,22 @@ export class TodoService {
 
   // Get all todos
   async getAllTodos(): Promise<Todo[]> {
-    const result = await query("SELECT * FROM todos ORDER BY position ASC");
+    const result = await query('SELECT * FROM todos ORDER BY position ASC');
     return result.rows;
   }
 
   // Get a single todo
   async getTodo(id: string): Promise<Todo | null> {
-    const result = await query("SELECT * FROM todos WHERE id = $1", [id]);
+    const result = await query('SELECT * FROM todos WHERE id = $1', [id]);
     return result.rows[0] || null;
   }
 
   async updatePositions(todoIds: string[]): Promise<Todo[]> {
     const positionCases = todoIds
       .map((id, index) => `WHEN id = '${id}' THEN ${index + 1}`)
-      .join(" ");
+      .join(' ');
 
-    const ids = todoIds.map((id) => `'${id}'`).join(",");
+    const ids = todoIds.map((id) => `'${id}'`).join(',');
 
     // Must do an update in one go so that result.rows returns the new rows
     const sql = `

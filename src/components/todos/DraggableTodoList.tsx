@@ -1,16 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import {
-  draggable,
-  dropTargetForElements,
-  monitorForElements,
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { TodoCard } from './TodoCard';
-import { TodoItem } from '@/types';
-import { useTodo } from '@/context/TodoContext';
 import { socketEvents } from '@/lib/socket';
-import { cn } from '@/lib/utils';
+import { TodoItem } from '@/types';
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { useEffect } from 'react';
+import { TodoCard } from './TodoCard';
 
 interface DraggableTodoListProps {
   todos: TodoItem[];
@@ -18,22 +12,9 @@ interface DraggableTodoListProps {
 }
 
 export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
-  const [draggedId, setDraggedId] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleDragStart = (todoId: string) => {
-    setDraggedId(todoId);
-    setIsDragging(true);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedId(null);
-    setIsDragging(false);
-  };
-
   useEffect(() => {
     return monitorForElements({
-      onDrop: ({ source, location, ...rest }) => {
+      onDrop: ({ source, location }) => {
         const dropTarget = location.current.dropTargets[0] as unknown as {
           data: { id: string; title: string };
         };
@@ -59,7 +40,7 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
         const newOrder = currentOrder
           .map((x) => {
             if (x === dropTargetId) {
-              // @ts-ignore
+              // @ts-expect-error closestEdgeSymbol is a symbol
               if (dropTarget.data[closestEdgeSymbol] === 'left') {
                 return [sourceId.id, dropTargetId];
               } else {
@@ -79,11 +60,7 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {todos.map((todo) => (
-        <div
-          key={todo.id}
-          data-todo-id={todo.id}
-          className={cn(draggedId === todo.id && isDragging && 'opacity-50')}
-        >
+        <div key={todo.id} data-todo-id={todo.id}>
           <TodoCard todo={todo} onEdit={onEdit} />
         </div>
       ))}

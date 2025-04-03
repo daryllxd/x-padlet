@@ -1,17 +1,48 @@
--- Drop existing trigger and function if they exist
+DROP TRIGGER IF EXISTS update_todo_lists_updated_at ON todo_lists;
 DROP TRIGGER IF EXISTS update_todos_updated_at ON todos;
+
+-- Then drop the function
 DROP FUNCTION IF EXISTS update_updated_at_column();
 
--- Create todos table
-CREATE TABLE IF NOT EXISTS todos (
+-- Create todo_lists table
+CREATE TABLE IF NOT EXISTS todo_lists (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    completed BOOLEAN DEFAULT FALSE,
-    position INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name = 'todos'
+        AND column_name = 'todo_list_id'
+    ) THEN
+        ALTER TABLE todos ADD COLUMN todo_list_id UUID REFERENCES todo_lists(id) ON DELETE CASCADE;
+    END IF;
+END $$;
+
+-- Create index for faster lookups
+CREATE INDEX IF NOT EXISTS idx_todos_todo_list_id ON todos(todo_list_id);
+
+-- Insert default todo list
+INSERT INTO todo_lists (title, description)
+VALUES ('My Todo List', 'Default todo list')
+ON CONFLICT DO NOTHING;
+
+-- Migrate existing todos to default list
+WITH default_list AS (
+    SELECT id FROM todo_lists WHERE title = 'My Todo List'
+)
+UPDATE todos
+SET todo_list_id = (SELECT id FROM default_list)
+WHERE todo_list_id IS NULL;
+
+-- Make todo_list_id NOT NULL after migration
+ALTER TABLE todos ALTER COLUMN todo_list_id SET NOT NULL;
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -22,8 +53,13 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Create trigger to automatically update updated_at
+-- Create triggers to automatically update updated_at
 CREATE TRIGGER update_todos_updated_at
     BEFORE UPDATE ON todos
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_todo_lists_updated_at
+    BEFORE UPDATE ON todo_lists
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column(); 

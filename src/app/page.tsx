@@ -10,7 +10,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="container py-8">
+      <div className="container mx-auto py-8">
         <div className="mb-8 flex items-center justify-between">
           <Skeleton className="h-10 w-48" />
         </div>
@@ -25,14 +25,14 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="container py-8">
+      <div className="container mx-auto py-8">
         <div className="text-red-500">Error loading todo lists</div>
       </div>
     );
   }
 
   return (
-    <div className="container py-8">
+    <div className="container mx-auto py-8">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">My Todo Lists</h1>
         {/* We'll add a create button later */}

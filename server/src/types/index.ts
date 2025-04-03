@@ -9,10 +9,7 @@ export interface Todo {
   updated_at: Date;
 }
 
-export interface CreateTodoInput {
-  title: string;
-  description: string;
-}
+export type CreateTodoInput = Omit<Todo, 'id' | 'created_at' | 'updated_at' | 'position'>;
 
 export interface UpdateTodoInput {
   title?: string;

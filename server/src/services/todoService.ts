@@ -3,7 +3,6 @@ import { CreateTodoInput, Todo, UpdateTodoInput } from '../types';
 import { WontFix } from '../types/wontfix';
 
 export class TodoService {
-  // Create a new todo
   async createTodo(input: CreateTodoInput): Promise<Todo> {
     // Get the maximum position and add 1
     const maxPositionResult = await query(
@@ -12,15 +11,14 @@ export class TodoService {
     const nextPosition = (maxPositionResult.rows[0].max_pos || 0) + 1;
 
     const result = await query(
-      `INSERT INTO todos (title, description, completed, position)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO todos (title, description, completed, position, todo_list_id)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [input.title, input.description, false, nextPosition]
+      [input.title, input.description, false, nextPosition, input.todo_list_id]
     );
     return result.rows[0];
   }
 
-  // Update a todo
   async updateTodo(id: string, input: UpdateTodoInput): Promise<Todo | null> {
     const updates: string[] = [];
     const values: WontFix[] = [];
@@ -82,13 +80,11 @@ export class TodoService {
     return result.rows[0] || null;
   }
 
-  // Get all todos
   async getAllTodos(): Promise<Todo[]> {
     const result = await query('SELECT * FROM todos ORDER BY position ASC');
     return result.rows;
   }
 
-  // Get a single todo
   async getTodo(id: string): Promise<Todo | null> {
     const result = await query('SELECT * FROM todos WHERE id = $1', [id]);
     return result.rows[0] || null;

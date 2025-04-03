@@ -6,4 +6,5 @@ export interface TodoItem {
   position: number;
   created_at: string;
   updated_at: string;
+  todo_list_id: string;
 }

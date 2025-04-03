@@ -1,5 +1,5 @@
-import { io } from 'socket.io-client';
 import { TodoItem } from '@/types';
+import { io } from 'socket.io-client';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 

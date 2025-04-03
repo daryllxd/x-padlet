@@ -24,8 +24,8 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 
 import invariant from "tiny-invariant";
-import { EditTodoDialog } from "@/components/EditTodoDialog";
-import { MarkdownContent } from "@/components/MarkdownContent";
+import { EditTodoDialog } from "@/components/todos/EditTodoDialog";
+import { MarkdownContent } from "@/components/markdown/MarkdownContent";
 
 interface TodoCardProps {
   todo: TodoItem;

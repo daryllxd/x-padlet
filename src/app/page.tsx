@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { AddTodoDialog } from "@/components/AddTodoDialog";
-import { DraggableTodoList } from "@/components/DraggableTodoList";
+import { AddTodoDialog } from "@/components/todos/AddTodoDialog";
+import { DraggableTodoList } from "@/components/todos/DraggableTodoList";
 import { useTodo } from "@/context/TodoContext";
 import { TodoItem } from "@/types";
 

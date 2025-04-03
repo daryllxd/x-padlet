@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { LexicalEditor } from "@/components/LexicalEditor";
+import { LexicalEditor } from "@/components/markdown/LexicalEditor";
 
 interface EditTodoDialogProps {
   todo: TodoItem;

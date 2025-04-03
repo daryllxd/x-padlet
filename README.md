@@ -1,13 +1,20 @@
-# Todo Manager Application
+# X-Padlet
 
-A modern Todo Manager application built with Next.js, featuring a card-based view and a presentation mode.
+Sample project to Upskill in:
+
+- 🔌 Websockets via Socket.io
+- 🐲 Pragmatic drag and drop [Reference](https://atlassian.design/components/pragmatic-drag-and-drop/examples/)
+- 📋 Clipboard API and rendering different content from the clipboard
+- 🎨 More theming experiments
+- 🚢 Containerization/Deployment/Docker
 
 ## Features
 
 - **Card View**: View all your todos in a clean card-based interface
 - **Presentation Mode**: Present your active todos in a slideshow format
 - **Add/Edit/Delete**: Full CRUD operations for todo items
-- **Persistence**: Todos are saved in localStorage
+- **Real-time Updates**: WebSocket integration for live updates
+- **Persistence**: Server-side storage with real-time sync
 
 ## Technologies Used
 
@@ -17,22 +24,35 @@ A modern Todo Manager application built with Next.js, featuring a card-based vie
 - **ShadCN UI**: Component library for UI elements
 - **Lucide Icons**: Beautiful, consistent icons
 - **Sonner**: Toast notifications
+- **Socket.IO**: Real-time WebSocket communication
 
 ## Getting Started
 
-First, install the dependencies:
+First, install the dependencies for both client and server:
 
 ```bash
+# Install client dependencies
+cd client
+pnpm install
+
+# Install server dependencies
+cd server
 pnpm install
 ```
 
-Then, run the development server:
+Then, start both the client and server:
 
 ```bash
-pnpm dev
+$ pnpm run dev
+$ pnpm run dev:https # Https version, but you need to edit your hosts file to access at https://x-padlet.local:3001/
+
+$ pnpm run server # Need to create DB
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at:
+
+- Client: [http://localhost:3000](http://localhost:3000)
+- Server: [http://localhost:3001](http://localhost:3001)
 
 ## How to Use
 
@@ -48,16 +68,3 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - `src/context`: Application state management
 - `src/types`: TypeScript type definitions
 - `src/app`: Next.js pages and layouts
-
-## Learn More
-
-This project uses Next.js with App Router. To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [ShadCN UI](https://ui.shadcn.com/) - learn about the component library
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

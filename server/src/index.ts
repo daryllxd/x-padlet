@@ -8,19 +8,38 @@ import { query } from "./config/db";
 import fs from "fs";
 import path from "path";
 
+const allowedOrigins = ["http://localhost:3001", "https://x-padlet.local:3001"];
+
 const app = express();
 const httpServer = createServer(app);
-const io = new Server<ClientEvents, ServerEvents>(httpServer, {
-  cors: {
-    origin: "http://localhost:3001", // Next.js app URL
-    methods: ["GET", "POST"],
+
+// Shared CORS configuration
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
   },
+  methods: ["GET", "POST"],
+};
+
+const io = new Server<ClientEvents, ServerEvents>(httpServer, {
+  cors: corsOptions,
 });
 
 const todoService = new TodoService();
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Initialize database

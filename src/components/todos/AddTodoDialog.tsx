@@ -1,32 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useTodo } from '@/context/TodoContext';
+import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
 import { Plus } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface AddTodoDialogProps {
   initialTodo?: TodoItem;
   isEditing?: boolean;
+  listId: string;
 }
 
-export function AddTodoDialog({ initialTodo, isEditing = false }: AddTodoDialogProps) {
+export function AddTodoDialog({ initialTodo, listId, isEditing = false }: AddTodoDialogProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(initialTodo?.title || '');
   const [description, setDescription] = useState(initialTodo?.description || '');
-  const { addTodo, updateTodo } = useTodo();
+  const { addTodo, updateTodo } = useTodos(listId);
 
   const resetForm = () => {
     setTitle('');
@@ -50,7 +51,12 @@ export function AddTodoDialog({ initialTodo, isEditing = false }: AddTodoDialogP
       updateTodo(initialTodo.id, { title, description });
       toast('Todo updated successfully');
     } else {
-      addTodo({ title, description, completed: false });
+      addTodo({
+        title,
+        description,
+        completed: false,
+        todo_list_id: 'e74409d7-3e13-4760-8da2-49552b81a97a',
+      });
       toast('Todo added successfully');
     }
 

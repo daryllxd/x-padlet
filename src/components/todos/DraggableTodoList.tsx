@@ -9,9 +9,10 @@ import { TodoCard } from './TodoCard';
 interface DraggableTodoListProps {
   todos: TodoItem[];
   onEdit: (id: string) => void;
+  listId: string;
 }
 
-export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
+export function DraggableTodoList({ todos, onEdit, listId }: DraggableTodoListProps) {
   useEffect(() => {
     return monitorForElements({
       onDrop: ({ source, location }) => {
@@ -61,7 +62,7 @@ export function DraggableTodoList({ todos, onEdit }: DraggableTodoListProps) {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {todos.map((todo) => (
         <div key={todo.id} data-todo-id={todo.id}>
-          <TodoCard todo={todo} onEdit={onEdit} />
+          <TodoCard listId={listId} todo={todo} onEdit={onEdit} />
         </div>
       ))}
     </div>

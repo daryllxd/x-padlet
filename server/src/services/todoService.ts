@@ -80,8 +80,11 @@ export class TodoService {
     return result.rows[0] || null;
   }
 
-  async getAllTodos(): Promise<Todo[]> {
-    const result = await query('SELECT * FROM todos ORDER BY position ASC');
+  async getAllTodos(id: string): Promise<Todo[]> {
+    const result = await query(
+      'SELECT * FROM todos WHERE todo_list_id = $1 ORDER BY position ASC',
+      [id]
+    );
     return result.rows;
   }
 

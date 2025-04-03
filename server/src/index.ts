@@ -57,10 +57,10 @@ const initDb = async () => {
 // REST endpoints for initial data loading
 app.get('/api/todos', async (req, res) => {
   try {
-    const todos = await todoService.getAllTodos();
+    const todos = await todoService.getAllTodos(req.query.listId as string);
     res.json(todos);
   } catch (error) {
-    console.error('Error fetching todos:', error);
+    console.error('Error fetching todo lists:', error);
     res.status(500).json({ error: 'Failed to fetch todos' });
   }
 });
@@ -71,7 +71,7 @@ app.get('/api/todo-lists', async (req, res) => {
     res.json(todoLists);
   } catch (error) {
     console.error('Error fetching todo lists:', error);
-    res.status(500).json({ error: 'Failed to fetch todo lists' });
+    res.status(500).json({ error: 'Failed to fetch todos' });
   }
 });
 

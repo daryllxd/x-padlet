@@ -4,7 +4,7 @@ import { MarkdownContent } from '@/components/markdown/MarkdownContent';
 import { EditTodoDialog } from '@/components/todos/EditTodoDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTodo } from '@/context/TodoContext';
+import { useTodos } from '@/hooks/useTodos';
 import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
 import { Check, Edit, Trash, X } from 'lucide-react';
@@ -16,8 +16,8 @@ interface TodoCardProps {
   onEdit: (id: string) => void;
 }
 
-export function TodoCard({ todo, onEdit }: TodoCardProps) {
-  const { toggleComplete, deleteTodo, updateTodo } = useTodo();
+export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
+  const { toggleComplete, deleteTodo, updateTodo } = useTodos(listId);
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 

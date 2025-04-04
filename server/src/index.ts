@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import fs from 'fs';
 import { createServer } from 'http';
 import path from 'path';
@@ -27,7 +27,7 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'PATCH', 'POST'],
 };
 
 const io = new Server<ClientEvents, ServerEvents>(httpServer, {
@@ -98,6 +98,24 @@ app.post('/api/todo-lists', async (req, res): Promise<WontFix> => {
   } catch (error) {
     console.error('Error creating todo list:', error);
     res.status(500).json({ error: 'Failed to create todo list' });
+  }
+});
+
+// Archive a todo list
+app.patch('/api/todo-lists/:id/archive', async (req: Request, res: Response): Promise<WontFix> => {
+  try {
+    const { id } = req.params;
+
+    const archivedList = await todoListService.archiveTodoList(id);
+
+    if (!archivedList) {
+      return res.status(404).json({ error: 'Todo list not found' });
+    }
+
+    res.status(200).json(archivedList);
+  } catch (error) {
+    console.error('Error archiving todo list:', error);
+    res.status(500).json({ error: 'Failed to archive todo list' });
   }
 });
 

@@ -6,7 +6,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { Copy, Link, Pencil, Trash } from 'lucide-react';
+import { Clipboard, Copy, Link, Pencil, Trash } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -50,8 +50,12 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
           <div ref={triggerRef}>{children}</div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-48">
-          <ContextMenuItem onClick={copyLink}>
+          <ContextMenuItem onClick={() => window.open(`/${id}`, '_blank')}>
             <Link className="mr-2 h-4 w-4" />
+            Open in new tab
+          </ContextMenuItem>
+          <ContextMenuItem onClick={copyLink}>
+            <Clipboard className="mr-2 h-4 w-4" />
             Copy Link
           </ContextMenuItem>
           <ContextMenuItem>

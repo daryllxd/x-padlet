@@ -24,7 +24,7 @@ export function TodoListCard({ id, title, description, todoCount }: TodoListCard
 
   return (
     <TodoListContextMenu id={id} ref={contextMenuRef}>
-      <Link href={`/lists/${id}`}>
+      <Link target="_blank" rel="noopener noreferrer" href={`/${id}`}>
         <Card className="group hover:bg-accent/50 relative h-full p-6 transition-colors">
           <button
             onClick={handleEllipsisClick}

@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { EllipsisVertical } from 'lucide-react';
-import Link from 'next/link';
 import { useRef } from 'react';
+import { XPadletLink } from '../ui/link';
 import { TodoListContextMenu, TodoListContextMenuRef } from './TodoListContextMenu';
 
 interface TodoListCardProps {
@@ -24,7 +24,7 @@ export function TodoListCard({ id, title, description, todoCount }: TodoListCard
 
   return (
     <TodoListContextMenu id={id} ref={contextMenuRef}>
-      <Link target="_blank" rel="noopener noreferrer" href={`/${id}`}>
+      <XPadletLink target="_blank" href={`/${id}`} variant="muted">
         <Card className="group hover:bg-accent/50 relative h-full p-6 transition-colors">
           <button
             onClick={handleEllipsisClick}
@@ -44,7 +44,7 @@ export function TodoListCard({ id, title, description, todoCount }: TodoListCard
             </div>
           </div>
         </Card>
-      </Link>
+      </XPadletLink>
     </TodoListContextMenu>
   );
 }

@@ -36,6 +36,7 @@ export function useCreateTodoList() {
         title: newTodoList.title,
         description: newTodoList.description,
         todoCount: 0,
+        status: 'active',
       };
 
       queryClient.setQueryData<TodoList[]>(['todoLists'], (old = []) => {

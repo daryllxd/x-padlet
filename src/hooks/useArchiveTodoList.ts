@@ -12,6 +12,8 @@ const archiveTodoList = async (id: string): Promise<void> => {
   if (!response.ok) {
     throw new Error('Failed to archive todo list');
   }
+
+  return response.json();
 };
 
 export function useArchiveTodoList() {

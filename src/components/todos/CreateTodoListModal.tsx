@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateTodoList } from '@/hooks/useCreateTodoList';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface CreateTodoListModalProps {
   isOpen: boolean;
@@ -20,10 +21,14 @@ export function CreateTodoListModal({ isOpen, onClose }: CreateTodoListModalProp
     createTodoList(
       { title, description },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          toast.success('Todo list created successfully');
           setTitle('');
           setDescription('');
           onClose();
+        },
+        onError: (error) => {
+          toast.error('Failed to create todo list');
         },
       }
     );

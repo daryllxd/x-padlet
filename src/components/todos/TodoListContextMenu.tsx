@@ -41,7 +41,7 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
     }));
 
     const copyLink = () => {
-      const url = `${window.location.origin}/lists/${id}`;
+      const url = `${window.location.origin}/${id}`;
       navigator.clipboard.writeText(url);
       toast('Link copied to clipboard');
     };
@@ -53,6 +53,9 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
         },
         onError: () => {
           toast.error('Failed to archive todo list');
+        },
+        onSettled: () => {
+          // Remove this entire onSettled callback since it was just for debugging
         },
       });
     };
@@ -82,9 +85,9 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
           <ContextMenuItem className="text-red-600">
             <button
               onClick={handleArchive}
-              className="hover:bg-accent hover:text-accent-foreground flex w-full items-center space-x-2 rounded-sm px-2 py-1.5 text-sm outline-none"
+              className="hover:bg-accent hover:text-accent-foreground flex w-full items-center space-x-2 rounded-sm text-sm outline-none"
             >
-              <Archive className="h-4 w-4" />
+              <Archive className="mr-4 h-4 w-4" />
               <span>Archive</span>
             </button>
           </ContextMenuItem>

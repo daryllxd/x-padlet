@@ -3,15 +3,15 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ListTodo, Presentation } from 'lucide-react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { XPadletLink } from './ui/link';
 
 export function NavBar() {
   const pathname = usePathname();
 
   const links = [
     {
-      name: 'Todo List',
+      name: 'My work',
       href: '/',
       icon: <ListTodo className="mr-2 h-4 w-4" />,
       active: pathname === '/',
@@ -28,11 +28,11 @@ export function NavBar() {
     <nav className="border-b">
       <div className="container mx-auto flex h-14 items-center px-4">
         <div className="mr-4">
-          <span className="text-lg font-bold">X-Padlet</span>
+          <span className="text-lg font-bold">🧑‍🎨 X-Padlet</span>
         </div>
         <div className="flex space-x-4">
           {links.map((link) => (
-            <Link href={link.href} key={link.href}>
+            <XPadletLink href={link.href} key={link.href}>
               <Button
                 variant={link.active ? 'default' : 'ghost'}
                 className={cn('flex items-center', link.active && 'pointer-events-none')}
@@ -40,7 +40,7 @@ export function NavBar() {
                 {link.icon}
                 {link.name}
               </Button>
-            </Link>
+            </XPadletLink>
           ))}
         </div>
       </div>

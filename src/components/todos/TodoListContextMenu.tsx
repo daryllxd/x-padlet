@@ -6,7 +6,8 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { Copy, Link, Pencil, Trash } from 'lucide-react';
+import { useArchiveTodoList } from '@/hooks/useArchiveTodoList';
+import { Archive, Clipboard, Copy, Link, Pencil } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -23,6 +24,7 @@ interface TodoListContextMenuProps {
 export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListContextMenuProps>(
   function TodoListContextMenu({ id, children }, ref) {
     const triggerRef = useRef<HTMLDivElement>(null);
+    const { mutate: archiveTodoList } = useArchiveTodoList();
 
     useImperativeHandle(ref, () => ({
       open: (x: number, y: number) => {
@@ -39,9 +41,23 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
     }));
 
     const copyLink = () => {
-      const url = `${window.location.origin}/lists/${id}`;
+      const url = `${window.location.origin}/${id}`;
       navigator.clipboard.writeText(url);
       toast('Link copied to clipboard');
+    };
+
+    const handleArchive = () => {
+      archiveTodoList(id, {
+        onSuccess: () => {
+          toast.success('Todo list archived');
+        },
+        onError: () => {
+          toast.error('Failed to archive todo list');
+        },
+        onSettled: () => {
+          // Remove this entire onSettled callback since it was just for debugging
+        },
+      });
     };
 
     return (
@@ -50,8 +66,12 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
           <div ref={triggerRef}>{children}</div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-48">
-          <ContextMenuItem onClick={copyLink}>
+          <ContextMenuItem onClick={() => window.open(`/${id}`, '_blank')}>
             <Link className="mr-2 h-4 w-4" />
+            Open in new tab
+          </ContextMenuItem>
+          <ContextMenuItem onClick={copyLink}>
+            <Clipboard className="mr-2 h-4 w-4" />
             Copy Link
           </ContextMenuItem>
           <ContextMenuItem>
@@ -63,8 +83,13 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
             Rename
           </ContextMenuItem>
           <ContextMenuItem className="text-red-600">
-            <Trash className="mr-2 h-4 w-4" />
-            Archive
+            <button
+              onClick={handleArchive}
+              className="hover:bg-accent hover:text-accent-foreground flex w-full items-center space-x-2 rounded-sm text-sm outline-none"
+            >
+              <Archive className="mr-4 h-4 w-4" />
+              <span>Archive</span>
+            </button>
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>

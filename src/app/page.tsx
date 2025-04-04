@@ -1,12 +1,16 @@
 'use client';
 
+import { CreateTodoListModal } from '@/components/todos/CreateTodoListModal';
 import { TodoListCard } from '@/components/todos/TodoListCard';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTodoLists } from '@/hooks/useTodoLists';
 import { TodoList } from '@/types/todo';
+import { useState } from 'react';
 
 export default function Home() {
   const { data: todoLists, isLoading, error } = useTodoLists();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -47,10 +51,13 @@ export default function Home() {
             <h1 className="text-4xl font-bold tracking-tight text-slate-900">My Work</h1>
             <p className="text-slate-500">Manage and organize your tasks efficiently</p>
           </div>
-          {/* We'll style the create button when we add it */}
-          {/* <Button size="lg" className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700">
+          <Button
+            size="lg"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700"
+          >
             Create New List
-          </Button> */}
+          </Button>
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -71,6 +78,11 @@ export default function Home() {
             <p className="mt-2 text-slate-500">Create your first todo list to get started</p>
           </div>
         )}
+
+        <CreateTodoListModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+        />
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import { query } from '../config/db';
 
-interface TodoList {
+export interface TodoList {
   id: string;
   title: string;
   description: string | null;
+  status: 'active' | 'completed' | 'archived';
   created_at: Date;
   updated_at: Date;
 }
@@ -16,14 +17,15 @@ interface CreateTodoListInput {
 interface UpdateTodoListInput {
   title?: string;
   description?: string;
+  status?: 'active' | 'completed' | 'archived';
 }
 
 export class TodoListService {
   // Create a new todo list
   async createTodoList(input: CreateTodoListInput): Promise<TodoList> {
     const result = await query(
-      `INSERT INTO todo_lists (title, description)
-       VALUES ($1, $2)
+      `INSERT INTO todo_lists (title, description, status)
+       VALUES ($1, $2, 'active')
        RETURNING *`,
       [input.title, input.description || null]
     );
@@ -48,6 +50,12 @@ export class TodoListService {
       paramCount++;
     }
 
+    if (input.status !== undefined) {
+      updates.push(`status = $${paramCount}`);
+      values.push(input.status);
+      paramCount++;
+    }
+
     if (updates.length === 0) return null;
 
     values.push(id);
@@ -62,6 +70,18 @@ export class TodoListService {
     return result.rows[0] || null;
   }
 
+  // Archive a todo list
+  async archiveTodoList(id: string): Promise<TodoList | null> {
+    const result = await query(
+      `UPDATE todo_lists 
+       SET status = 'archived'
+       WHERE id = $1
+       RETURNING *`,
+      [id]
+    );
+    return result.rows[0] || null;
+  }
+
   // Delete a todo list (and all its todos due to CASCADE)
   async deleteTodoList(id: string): Promise<boolean> {
     const result = await query('DELETE FROM todo_lists WHERE id = $1 RETURNING id', [id]);
@@ -69,16 +89,30 @@ export class TodoListService {
   }
 
   // Get all todo lists with todo counts
-  async getAllTodoLists(): Promise<(TodoList & { todoCount: number })[]> {
-    const result = await query(`
+  async getAllTodoLists(
+    status?: 'active' | 'completed' | 'archived'
+  ): Promise<(TodoList & { todoCount: number })[]> {
+    let queryText = `
       SELECT 
         tl.*,
         COUNT(t.id) as "todoCount"
       FROM todo_lists tl
       LEFT JOIN todos t ON t.todo_list_id = tl.id
-      GROUP BY tl.id
-      ORDER BY tl.created_at DESC
-    `);
+    `;
+
+    const queryParams: any[] = [];
+
+    if (status) {
+      queryText += ` WHERE tl.status = $1`;
+      queryParams.push(status);
+    } else {
+      // Default to active and completed
+      queryText += ` WHERE tl.status IN ('active', 'completed')`;
+    }
+
+    queryText += ` GROUP BY tl.id ORDER BY tl.created_at DESC`;
+
+    const result = await query(queryText, queryParams);
     return result.rows;
   }
 

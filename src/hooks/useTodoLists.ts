@@ -9,6 +9,12 @@ const fetchTodoLists = async (): Promise<TodoList[]> => {
   return response.json();
 };
 
+// New type for create todo list input
+type CreateTodoListInput = {
+  title: string;
+  description?: string;
+};
+
 export function useTodoLists() {
   return useQuery({
     queryKey: ['todoLists'],

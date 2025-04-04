@@ -8,6 +8,9 @@ Sample project to Upskill in:
 - 🎨 More theming experiments
 - 🚢 Containerization/Deployment/Docker
 
+[Demo link](https://www.loom.com/share/38cd8adb7411466fa1b8f45fb018bcaf)
+[Demo](./videos/loom-vid.mp4)
+
 ## Features
 
 - **Card View**: View all your todos in a clean card-based interface

@@ -26,7 +26,7 @@ export const socketEvents = {
   createTodo: (todo: Omit<TodoItem, 'id' | 'created_at' | 'updated_at' | 'position'>) => {
     socket.emit('todo:create', todo);
   },
-  updateTodo: (todo: TodoItem) => {
+  updateTodo: (todo: Partial<TodoItem>) => {
     socket.emit('todo:update', todo);
   },
   deleteTodo: (todoId: string) => {

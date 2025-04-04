@@ -1,10 +1,11 @@
 export interface Todo {
   id: string;
-  todo_list_id: string;
   title: string;
-  description: string;
+  description: string | null;
   completed: boolean;
   position: number;
+  todo_list_id: string;
+  image_url: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -13,9 +14,10 @@ export type CreateTodoInput = Omit<Todo, 'id' | 'created_at' | 'updated_at' | 'p
 
 export interface UpdateTodoInput {
   title?: string;
-  description?: string;
+  description?: string | null;
   completed?: boolean;
   position?: number;
+  image_url?: string | null;
 }
 
 // Client -> Server events

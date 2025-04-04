@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ListTodo, Presentation } from 'lucide-react';
+import { ListTodo } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { XPadletLink } from './ui/link';
 
@@ -15,12 +15,6 @@ export function NavBar() {
       href: '/',
       icon: <ListTodo className="mr-2 h-4 w-4" />,
       active: pathname === '/',
-    },
-    {
-      name: 'Presentation',
-      href: '/presentation',
-      icon: <Presentation className="mr-2 h-4 w-4" />,
-      active: pathname === '/presentation',
     },
   ];
 

@@ -14,6 +14,7 @@ import { Draggable } from './Draggable';
 interface TodoCardProps {
   todo: TodoItem;
   onEdit: (id: string) => void;
+  listId: string;
 }
 
 export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
@@ -21,7 +22,11 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const handleSaveEdit = (updates: { title: string; description: string }) => {
+  const handleSaveEdit = (updates: {
+    title: string;
+    description: string;
+    image_url?: string | null;
+  }) => {
     updateTodo(todo.id, updates);
   };
 
@@ -63,7 +68,10 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid gap-2">
+              {todo.image_url && (
+                <img src={todo.image_url} alt="Todo" className="h-full w-full rounded-xl" />
+              )}
               <MarkdownContent
                 content={todo.description || ''}
                 className={cn(

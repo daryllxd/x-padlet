@@ -1,38 +1,33 @@
-import { TodoItem } from "@/types";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { LexicalEditor } from '@/components/markdown/LexicalEditor';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { LexicalEditor } from "@/components/markdown/LexicalEditor";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { TodoItem } from '@/types';
+import { useState } from 'react';
 
 interface EditTodoDialogProps {
   todo: TodoItem;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (updates: { title: string; description: string }) => void;
+  onSave: (updates: { title: string; description: string; image_url?: string | null }) => void;
 }
 
-export function EditTodoDialog({
-  todo,
-  open,
-  onOpenChange,
-  onSave,
-}: EditTodoDialogProps) {
+export function EditTodoDialog({ todo, open, onOpenChange, onSave }: EditTodoDialogProps) {
   const [editedTitle, setEditedTitle] = useState(todo.title);
-  const [editedDescription, setEditedDescription] = useState<string>(
-    todo.description || ""
-  );
+  const [editedDescription, setEditedDescription] = useState<string>(todo.description || '');
+  const [editedImageUrl, setEditedImageUrl] = useState(todo.image_url || '');
 
   const handleSave = () => {
     onSave({
       title: editedTitle,
       description: editedDescription,
+      image_url: editedImageUrl || null,
     });
     onOpenChange(false);
   };
@@ -60,13 +55,32 @@ export function EditTodoDialog({
             />
           </div>
           <div className="space-y-2">
+            <label htmlFor="imageUrl" className="text-sm font-medium">
+              Image URL
+            </label>
+            <Input
+              id="imageUrl"
+              value={editedImageUrl}
+              onChange={(e) => setEditedImageUrl(e.target.value)}
+              placeholder="Enter image URL"
+            />
+            {editedImageUrl && (
+              <img
+                src={editedImageUrl}
+                alt="Preview"
+                className="mt-2 h-32 w-full rounded-md object-cover"
+                onError={() => setEditedImageUrl('')}
+              />
+            )}
+          </div>
+          <div className="space-y-2">
             <label htmlFor="description" className="text-sm font-medium">
               Description
             </label>
             <LexicalEditor
               initialContent={editedDescription}
               onChange={handleEditorChange}
-              className="min-h-[200px] border rounded-md p-4"
+              className="min-h-[200px] rounded-md border p-4"
             />
           </div>
         </div>

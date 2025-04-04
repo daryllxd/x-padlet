@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +28,7 @@ export function AddTodoDialog({ initialTodo, listId, isEditing = false }: AddTod
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(initialTodo?.title || '');
   const [description, setDescription] = useState(initialTodo?.description || '');
+  const [keepOpen, setKeepOpen] = useState(false);
   const { addTodo, updateTodo } = useTodos(listId);
 
   const resetForm = () => {
@@ -60,7 +62,12 @@ export function AddTodoDialog({ initialTodo, listId, isEditing = false }: AddTod
       toast('Todo added successfully');
     }
 
-    handleClose();
+    if (!keepOpen) {
+      handleClose();
+    } else {
+      setTitle('');
+      setDescription('');
+    }
   };
 
   return (
@@ -102,6 +109,19 @@ export function AddTodoDialog({ initialTodo, listId, isEditing = false }: AddTod
               placeholder="Todo description"
               rows={4}
             />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="keep-open"
+              checked={keepOpen}
+              onCheckedChange={(checked) => setKeepOpen(checked as boolean)}
+            />
+            <label
+              htmlFor="keep-open"
+              className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Keep dialog open after adding
+            </label>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>

@@ -1,6 +1,5 @@
 import { query } from '../config/db';
 import { CreateTodoInput, Todo, UpdateTodoInput } from '../types';
-import { WontFix } from '../types/wontfix';
 
 export class TodoService {
   async createTodo(input: CreateTodoInput): Promise<Todo> {
@@ -21,7 +20,7 @@ export class TodoService {
 
   async updateTodo(id: string, input: UpdateTodoInput): Promise<Todo | null> {
     const updates: string[] = [];
-    const values: WontFix[] = [];
+    const values: any[] = [];
     let paramCount = 1;
 
     if (input.title !== undefined) {
@@ -45,6 +44,13 @@ export class TodoService {
     if (input.position !== undefined) {
       updates.push(`position = $${paramCount}`);
       values.push(input.position);
+      paramCount++;
+    }
+
+    // Add handling for image_url
+    if (input.image_url !== undefined) {
+      updates.push(`image_url = $${paramCount}`);
+      values.push(input.image_url);
       paramCount++;
     }
 

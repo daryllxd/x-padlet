@@ -1,10 +1,3 @@
-export interface TodoItem {
-  id: string;
-  title: string;
-  description?: string;
-  completed: boolean;
-  position: number;
-  created_at: string;
-  updated_at: string;
-  todo_list_id: string;
-}
+import { TodoItem, TodoList } from '@/types/todo';
+
+export type { TodoItem, TodoList };

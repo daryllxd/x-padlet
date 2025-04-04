@@ -7,8 +7,7 @@ type CreateTodoListInput = {
 };
 
 const createTodoList = async (input: CreateTodoListInput): Promise<TodoList> => {
-  // Using JSONPlaceholder as a temporary backend
-  const response = await fetch('https://jsonplaceholderss.typicode.com/posts', {
+  const response = await fetch('http://localhost:3002/api/todo-lists', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -20,15 +19,7 @@ const createTodoList = async (input: CreateTodoListInput): Promise<TodoList> => 
     throw new Error('Failed to create todo list');
   }
 
-  const data = await response.json();
-
-  // Transform JSONPlaceholder response to match our TodoList type
-  return {
-    id: data.id.toString(),
-    title: data.title,
-    description: data.body,
-    todoCount: 0,
-  };
+  return response.json();
 };
 
 export function useCreateTodoList() {

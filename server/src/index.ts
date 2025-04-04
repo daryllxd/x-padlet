@@ -8,7 +8,7 @@ import { query } from './config/db';
 import { TodoListService } from './services/todoListService';
 import { TodoService } from './services/todoService';
 import { ClientEvents, ServerEvents } from './types';
-
+import { WontFix } from './types/wontfix';
 const allowedOrigins = ['http://localhost:3001', 'https://x-padlet.local:3001'];
 
 const app = express();
@@ -71,7 +71,33 @@ app.get('/api/todo-lists', async (req, res) => {
     res.json(todoLists);
   } catch (error) {
     console.error('Error fetching todo lists:', error);
-    res.status(500).json({ error: 'Failed to fetch todos' });
+    res.status(500).json({ error: 'Failed to fetch todo lists' });
+  }
+});
+
+// TODO: Figure out types in Express
+app.post('/api/todo-lists', async (req, res): Promise<WontFix> => {
+  try {
+    const { title, description } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+
+    const newTodoList = await todoListService.createTodoList({
+      title,
+      description,
+    });
+
+    res.status(201).json({
+      id: newTodoList.id,
+      title: newTodoList.title,
+      description: newTodoList.description,
+      todoCount: 0,
+    });
+  } catch (error) {
+    console.error('Error creating todo list:', error);
+    res.status(500).json({ error: 'Failed to create todo list' });
   }
 });
 

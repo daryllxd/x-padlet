@@ -1,6 +1,6 @@
 import { query } from '../config/db';
 
-interface TodoList {
+export interface TodoList {
   id: string;
   title: string;
   description: string | null;

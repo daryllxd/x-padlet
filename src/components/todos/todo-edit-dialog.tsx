@@ -1,4 +1,4 @@
-import { LexicalEditor } from '@/components/markdown/LexicalEditor';
+import { LexicalEditor } from '@/components/markdown/lexical-editor';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

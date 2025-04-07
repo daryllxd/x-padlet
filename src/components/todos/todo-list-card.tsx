@@ -3,7 +3,7 @@ import { EllipsisVertical } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '../ui/button';
 import { XPadletLink } from '../ui/link';
-import { TodoListContextMenu, TodoListContextMenuRef } from './TodoListContextMenu';
+import { TodoListContextMenu, TodoListContextMenuRef } from './todo-list-context-menu';
 
 interface TodoListCardProps {
   id: string;

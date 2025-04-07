@@ -1,7 +1,7 @@
 'use client';
 
-import { DraggableTodoList } from '@/components/todos/DraggableTodoList';
-import { TodoCreateDialog } from '@/components/todos/TodoCreateDialog';
+import { DraggableTodoList } from '@/components/todos/draggable-todo-list';
+import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';

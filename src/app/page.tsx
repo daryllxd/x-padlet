@@ -1,7 +1,7 @@
 'use client';
 
-import { TodoListCard } from '@/components/todos/TodoListCard';
-import { TodoListCreateDialog } from '@/components/todos/TodoListCreateDialog';
+import { TodoListCard } from '@/components/todos/todo-list-card';
+import { TodoListCreateDialog } from '@/components/todos/todo-list-create-dialog';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTodoLists } from '@/hooks/useTodoLists';

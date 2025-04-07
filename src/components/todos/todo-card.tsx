@@ -1,7 +1,7 @@
 'use client';
 
-import { MarkdownContent } from '@/components/markdown/MarkdownContent';
-import { TodoEditDialog } from '@/components/todos/TodoEditDialog';
+import { MarkdownContent } from '@/components/markdown/markdown-content';
+import { TodoEditDialog } from '@/components/todos/todo-edit-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTodos } from '@/hooks/useTodos';
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
 import { Check, Edit, Trash, X } from 'lucide-react';
 import { useState } from 'react';
-import { Draggable } from './Draggable';
+import { Draggable } from './draggable';
 
 interface TodoCardProps {
   todo: TodoItem;

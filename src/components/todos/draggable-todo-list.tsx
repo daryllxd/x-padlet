@@ -4,8 +4,7 @@ import { socketEvents } from '@/lib/socket';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect } from 'react';
-import { TodoCard } from './TodoCard';
-
+import { TodoCard } from './todo-card';
 interface DraggableTodoListProps {
   todos: TodoItem[];
   onEdit: (id: string) => void;

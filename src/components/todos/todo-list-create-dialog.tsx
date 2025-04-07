@@ -14,16 +14,27 @@ interface TodoListCreateDialogProps {
 }
 
 export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogProps) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('Trial');
+  const [description, setDescription] = useState('Trials');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { mutate: createTodoList, isPending } = useCreateTodoList();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!title.trim()) {
+      toast.error('Title is required');
+      return;
+    }
+
     createTodoList(
-      { title, description },
+      {
+        title,
+        description,
+        coverImageFile: coverImageFile || undefined,
+      },
       {
         onSuccess: (data) => {
           toast.success(
@@ -34,6 +45,7 @@ export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogPr
           setTitle('');
           setDescription('');
           setImagePreview(null);
+          setCoverImageFile(null);
           onClose();
         },
         onError: (error) => {
@@ -46,7 +58,6 @@ export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogPr
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      debugger;
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size should be less than 5MB');
         return;
@@ -57,6 +68,10 @@ export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogPr
         return;
       }
 
+      // Store the file for submission
+      setCoverImageFile(file);
+
+      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -67,6 +82,7 @@ export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogPr
 
   const removeImage = () => {
     setImagePreview(null);
+    setCoverImageFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }

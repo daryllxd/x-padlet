@@ -49,21 +49,21 @@ export function TodoCreateDialog({
     e.preventDefault();
 
     if (!title.trim()) {
-      toast('Title is required');
+      toast.error('Title is required');
       return;
     }
 
     if (isEditing && initialTodo) {
       updateTodo(initialTodo.id, { title, description });
-      toast('Todo updated successfully');
+      toast.success(`Todo "${title}" updated successfully`);
     } else {
       addTodo({
         title,
         description,
         completed: false,
-        todo_list_id: 'e74409d7-3e13-4760-8da2-49552b81a97a',
+        todo_list_id: listId,
       });
-      toast('Todo added successfully');
+      toast.success(`Todo "${title}" added successfully`);
     }
 
     if (!keepOpen) {

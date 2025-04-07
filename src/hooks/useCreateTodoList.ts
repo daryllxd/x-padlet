@@ -4,15 +4,25 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 type CreateTodoListInput = {
   title: string;
   description?: string;
+  coverImageFile?: File;
 };
 
 const createTodoList = async (input: CreateTodoListInput): Promise<TodoList> => {
+  // Create FormData to handle file upload
+  const formData = new FormData();
+  formData.append('title', input.title);
+
+  if (input.description) {
+    formData.append('description', input.description);
+  }
+
+  if (input.coverImageFile) {
+    formData.append('coverImage', input.coverImageFile);
+  }
+
   const response = await fetch('http://localhost:3002/api/todo-lists', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(input),
+    body: formData,
   });
 
   if (!response.ok) {
@@ -37,6 +47,8 @@ export function useCreateTodoList() {
         description: newTodoList.description,
         todoCount: 0,
         status: 'active',
+        // We don't include coverImage in the optimistic update since it's a file
+        // and will be handled by the server
       };
 
       queryClient.setQueryData<TodoList[]>(['todoLists'], (old = []) => {

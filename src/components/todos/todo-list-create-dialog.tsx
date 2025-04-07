@@ -22,13 +22,17 @@ export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogPr
       { title, description },
       {
         onSuccess: (data) => {
-          toast.success('Todo list created successfully');
+          toast.success(
+            <span>
+              Todo list <span className="font-bold">{data.title}</span> created successfully
+            </span>
+          );
           setTitle('');
           setDescription('');
           onClose();
         },
         onError: (error) => {
-          toast.error('Failed to create todo list');
+          toast.error('Failed to create todo list. Please try again.');
         },
       }
     );

@@ -1,7 +1,7 @@
 'use client';
 
-import { CreateTodoListModal } from '@/components/todos/CreateTodoListModal';
 import { TodoListCard } from '@/components/todos/TodoListCard';
+import { TodoListCreateDialog } from '@/components/todos/TodoListCreateDialog';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTodoLists } from '@/hooks/useTodoLists';
@@ -79,7 +79,7 @@ export default function Home() {
           </div>
         )}
 
-        <CreateTodoListModal
+        <TodoListCreateDialog
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
         />

@@ -6,12 +6,12 @@ import { useCreateTodoList } from '@/hooks/useCreateTodoList';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-interface CreateTodoListModalProps {
+interface TodoListCreateDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function CreateTodoListModal({ isOpen, onClose }: CreateTodoListModalProps) {
+export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const { mutate: createTodoList, isPending } = useCreateTodoList();

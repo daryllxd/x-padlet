@@ -1,7 +1,7 @@
 'use client';
 
-import { AddTodoDialog } from '@/components/todos/AddTodoDialog';
 import { DraggableTodoList } from '@/components/todos/DraggableTodoList';
+import { TodoCreateDialog } from '@/components/todos/TodoCreateDialog';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
@@ -44,14 +44,14 @@ export default function Home({ params }: { params: Promise<{ list_id: string }> 
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">{todoList?.title}</h1>
           <div className="flex gap-4">
-            <AddTodoDialog listId={listId} />
+            <TodoCreateDialog listId={listId} />
           </div>
         </div>
       </header>
 
       <div ref={editDialogRef} className="hidden">
         {editingTodo && (
-          <AddTodoDialog listId={listId} initialTodo={editingTodo} isEditing={true} />
+          <TodoCreateDialog listId={listId} initialTodo={editingTodo} isEditing={true} />
         )}
       </div>
 

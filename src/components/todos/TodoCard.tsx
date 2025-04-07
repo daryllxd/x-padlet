@@ -1,7 +1,7 @@
 'use client';
 
 import { MarkdownContent } from '@/components/markdown/MarkdownContent';
-import { EditTodoDialog } from '@/components/todos/EditTodoDialog';
+import { TodoEditDialog } from '@/components/todos/TodoEditDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTodos } from '@/hooks/useTodos';
@@ -85,7 +85,7 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
             </CardFooter>
           </Card>
 
-          <EditTodoDialog
+          <TodoEditDialog
             todo={todo}
             open={isEditModalOpen}
             onOpenChange={setIsEditModalOpen}

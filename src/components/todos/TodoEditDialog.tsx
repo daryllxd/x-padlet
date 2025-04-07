@@ -11,14 +11,14 @@ import { Input } from '@/components/ui/input';
 import { TodoItem } from '@/types';
 import { useState } from 'react';
 
-interface EditTodoDialogProps {
+interface TodoEditDialogProps {
   todo: TodoItem;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (updates: { title: string; description: string; image_url?: string | null }) => void;
 }
 
-export function EditTodoDialog({ todo, open, onOpenChange, onSave }: EditTodoDialogProps) {
+export function TodoEditDialog({ todo, open, onOpenChange, onSave }: TodoEditDialogProps) {
   const [editedTitle, setEditedTitle] = useState(todo.title);
   const [editedDescription, setEditedDescription] = useState<string>(todo.description || '');
   const [editedImageUrl, setEditedImageUrl] = useState(todo.image_url || '');

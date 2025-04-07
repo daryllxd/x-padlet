@@ -18,13 +18,17 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-interface AddTodoDialogProps {
+interface TodoCreateDialogProps {
   initialTodo?: TodoItem;
   isEditing?: boolean;
   listId: string;
 }
 
-export function AddTodoDialog({ initialTodo, listId, isEditing = false }: AddTodoDialogProps) {
+export function TodoCreateDialog({
+  initialTodo,
+  listId,
+  isEditing = false,
+}: TodoCreateDialogProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(initialTodo?.title || '');
   const [description, setDescription] = useState(initialTodo?.description || '');

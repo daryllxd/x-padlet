@@ -5,6 +5,7 @@ import { readFileSync } from 'fs';
 import { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { join } from 'path';
+import { RoughNotation } from 'react-rough-notation';
 
 export const metadata: Metadata = {
   title: 'About | X-Padlet',
@@ -12,10 +13,10 @@ export const metadata: Metadata = {
     'Learn more about X-Padlet and its mission to help you organize your work efficiently.',
 };
 
-// Define components that can be used in MDX
 const components = {
   FeatureCard,
   XPadletLink,
+  RoughNotation,
 };
 
 export default function AboutPage() {

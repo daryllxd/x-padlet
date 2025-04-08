@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -126,7 +127,17 @@ export function ContactForm() {
             rows={4}
             className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
             placeholder="Your message here..."
+            maxLength={1000}
           />
+
+          <div
+            className={cn(
+              'mt-1 text-right text-xs text-slate-500',
+              formData.message.length >= 1000 && 'text-red-500'
+            )}
+          >
+            {formData.message.length}/1000 characters
+          </div>
         </div>
 
         <div className="pt-2">

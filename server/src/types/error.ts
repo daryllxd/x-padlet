@@ -2,4 +2,4 @@ type XPadletError = {
   error: string;
 };
 
-export { XPadletError };
+export { type XPadletError };

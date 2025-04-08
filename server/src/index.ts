@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import fs from 'fs';
 import { createServer } from 'http';
+import multer from 'multer';
 import path from 'path';
 import { Server } from 'socket.io';
 import { query } from './config/db';
@@ -9,6 +10,7 @@ import { TodoListService } from './services/todoListService';
 import { TodoService } from './services/todoService';
 import { ClientEvents, ServerEvents } from './types';
 import { WontFix } from './types/wontfix';
+
 const allowedOrigins = ['http://localhost:3001', 'https://x-padlet.local:3001'];
 
 const app = express();
@@ -40,6 +42,17 @@ const todoListService = new TodoListService();
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    // Generate a unique name and keep the original extension
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const ext = path.extname(file.originalname);
+    cb(null, `${uniqueSuffix}${ext}`);
+  },
+});
+const upload = multer({ storage });
 
 // Initialize database
 const initDb = async () => {
@@ -76,9 +89,10 @@ app.get('/api/todo-lists', async (req, res) => {
 });
 
 // TODO: Figure out types in Express
-app.post('/api/todo-lists', async (req, res): Promise<WontFix> => {
+app.post('/api/todo-lists', upload.single('coverImage'), async (req, res): Promise<WontFix> => {
   try {
     const { title, description } = req.body;
+    const file = req.file;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -87,6 +101,7 @@ app.post('/api/todo-lists', async (req, res): Promise<WontFix> => {
     const newTodoList = await todoListService.createTodoList({
       title,
       description,
+      coverImageFile: file || undefined,
     });
 
     res.status(201).json({
@@ -94,6 +109,15 @@ app.post('/api/todo-lists', async (req, res): Promise<WontFix> => {
       title: newTodoList.title,
       description: newTodoList.description,
       todoCount: 0,
+      fileInfo: file
+        ? {
+            fieldname: file.fieldname,
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size,
+            path: file.path,
+          }
+        : null,
     });
   } catch (error) {
     console.error('Error creating todo list:', error);

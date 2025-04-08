@@ -12,6 +12,10 @@ export default function PresentationPage() {
   const { data: todos } = useTodos('params.list_id');
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  if (!todos) {
+    return <div>Loading...</div>;
+  }
+
   // Filter out completed todos for presentation
   const activeTodos = todos.filter((todo) => !todo.completed);
 

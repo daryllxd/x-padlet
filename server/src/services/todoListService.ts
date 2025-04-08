@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { query } from '../config/db';
 
 export interface TodoList {
@@ -12,6 +14,7 @@ export interface TodoList {
 interface CreateTodoListInput {
   title: string;
   description?: string;
+  coverImageFile?: Express.Multer.File;
 }
 
 interface UpdateTodoListInput {
@@ -21,8 +24,15 @@ interface UpdateTodoListInput {
 }
 
 export class TodoListService {
-  // Create a new todo list
   async createTodoList(input: CreateTodoListInput): Promise<TodoList> {
+    if (input.coverImageFile) {
+      const uploadsDir = path.join(process.cwd(), 'uploads');
+
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+    }
+
     const result = await query(
       `INSERT INTO todo_lists (title, description, status)
        VALUES ($1, $2, 'active')

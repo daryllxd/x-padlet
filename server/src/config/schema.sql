@@ -30,19 +30,6 @@ END $$;
 -- Create index for faster lookups
 CREATE INDEX IF NOT EXISTS idx_todos_todo_list_id ON todos(todo_list_id);
 
--- Insert default todo list
-INSERT INTO todo_lists (title, description)
-VALUES ('My Todo List', 'Default todo list')
-ON CONFLICT DO NOTHING;
-
--- Migrate existing todos to default list
-WITH default_list AS (
-    SELECT id FROM todo_lists WHERE title = 'My Todo List'
-)
-UPDATE todos
-SET todo_list_id = (SELECT id FROM default_list)
-WHERE todo_list_id IS NULL;
-
 -- Make todo_list_id NOT NULL after migration
 ALTER TABLE todos ALTER COLUMN todo_list_id SET NOT NULL;
 

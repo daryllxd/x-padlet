@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from '@/lib/config';
 import { TodoList } from '@/types/todo';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -20,7 +21,7 @@ const createTodoList = async (input: CreateTodoListInput): Promise<TodoList> => 
     formData.append('coverImage', input.coverImageFile);
   }
 
-  const response = await fetch('http://localhost:3002/api/todo-lists', {
+  const response = await fetch(API_ENDPOINTS.todoLists, {
     method: 'POST',
     body: formData,
   });

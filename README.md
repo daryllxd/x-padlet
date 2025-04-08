@@ -57,6 +57,21 @@ The application will be available at:
 - Client: [http://localhost:3000](http://localhost:3000)
 - Server: [http://localhost:3001](http://localhost:3001)
 
+## Configuration
+
+The application uses environment variables for configuration. Create a `.env.local` file in the root directory with the following variables:
+
+```
+# API URL - Change this to your production API URL when deploying
+NEXT_PUBLIC_API_URL=http://localhost:3002
+```
+
+You can copy the `.env.example` file to get started:
+
+```bash
+cp .env.example .env.local
+```
+
 ## How to Use
 
 1. **Add Todo**: Click the "Add Todo" button to create a new todo
@@ -71,3 +86,4 @@ The application will be available at:
 - `src/context`: Application state management
 - `src/types`: TypeScript type definitions
 - `src/app`: Next.js pages and layouts
+- `src/lib`: Utility functions and configuration

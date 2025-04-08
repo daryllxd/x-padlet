@@ -1,8 +1,9 @@
+import { API_ENDPOINTS } from '@/lib/config';
 import { TodoList } from '@/types/todo';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchTodoLists = async (): Promise<TodoList[]> => {
-  const response = await fetch('http://localhost:3002/api/todo-lists');
+  const response = await fetch(API_ENDPOINTS.todoLists);
   if (!response.ok) {
     throw new Error('Failed to fetch todo lists');
   }

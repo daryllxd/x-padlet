@@ -1,9 +1,10 @@
+import { API_ENDPOINTS } from '@/lib/config';
 import { socketEvents } from '@/lib/socket';
 import { TodoItem } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchTodos = async (listId: string): Promise<TodoItem[]> => {
-  const response = await fetch(`http://localhost:3002/api/todos?listId=${listId}`);
+  const response = await fetch(`${API_ENDPOINTS.todos(listId)}`);
   if (!response.ok) {
     throw new Error('Failed to fetch todos');
   }

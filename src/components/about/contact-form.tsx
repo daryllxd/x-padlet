@@ -1,6 +1,5 @@
 'use client';
 
-import { submitContactForm } from '@/lib/api/contact';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -25,7 +24,20 @@ export function ContactForm() {
     setError(null);
 
     try {
-      await submitContactForm(formData);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit form');
+      }
+
       toast.success('Message sent successfully');
       setIsSubmitted(true);
       setFormData({
@@ -36,6 +48,7 @@ export function ContactForm() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(`There was an error submitting your message: ${errorMessage}`);
+      toast.error('Failed to send message. Please try again.');
       console.error('Form submission error:', err);
     } finally {
       setIsSubmitting(false);

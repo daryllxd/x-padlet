@@ -1,3 +1,5 @@
+'use client';
+
 import { Card } from '@/components/ui/card';
 import { EllipsisVertical } from 'lucide-react';
 import { useRef } from 'react';

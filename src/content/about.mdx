@@ -1,0 +1,45 @@
+import { FeatureCard } from '@/components/about/feature-card';
+import { RoughNotation } from 'react-rough-notation';
+
+<div className="grid grid-cols-1 gap-4">
+    <h1 className="text-4xl font-bold">Daryll Santos</h1>
+
+    I am a <RoughNotation type="highlight" color="yellow" show={true}>growth mindset engineer</RoughNotation> with expertise spanning both front-end and back-end
+    (Angular/React/Rails). Strong communicator across team members with different backgrounds, making
+    complex ideas understandable for everyone involved.
+
+    <h2 className="text-2xl font-bold">What I'm working on</h2>
+
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <FeatureCard
+            title="X-Padlet"
+            icon="🧑‍🎨"
+        >
+            Simple task management tool to showcase my skills in the front-end
+        </FeatureCard>
+        <FeatureCard
+            title="Visa Check"
+            icon="⚡"
+        >
+            A way to check Visa requirements for different countries.
+            <p>
+                <RoughNotation type="highlight" color="yellow" animationDelay={1000} show={true}>
+                    <XPadletLink target="_blank" href="https://visa-check-yo.vercel.app/">Check it out.</XPadletLink>
+                </RoughNotation>
+            </p>
+        </FeatureCard>
+        <FeatureCard
+            title="Online Games of the Generals"
+            className="grid gap-2"
+            icon="🚀"
+        >
+            <p>Still in the idea phase but I really want to play this childhood game of mine online. </p >
+            <p>
+                <RoughNotation type="highlight" color="yellow" show={true} animationDelay={2000}>
+                    <XPadletLink target="_blank" href="https://en.wikipedia.org/wiki/Game_of_the_Generals">Check it out.</XPadletLink>
+                </RoughNotation>
+            </p>
+        </FeatureCard>
+    </div>
+
+</div>

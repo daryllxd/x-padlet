@@ -1,6 +1,8 @@
 'use client';
 
+import { submitContactForm } from '@/lib/api/contact';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -10,27 +12,34 @@ export function ContactForm() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await submitContactForm(formData);
+      toast.success('Message sent successfully');
       setIsSubmitted(true);
-      // Reset form
       setFormData({
         name: '',
         email: '',
         message: '',
       });
-    }, 1500);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`There was an error submitting your message: ${errorMessage}`);
+      console.error('Form submission error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -53,6 +62,12 @@ export function ContactForm() {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
+            <p>{error}</p>
+          </div>
+        )}
+
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-slate-700">
             Name

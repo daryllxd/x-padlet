@@ -2,10 +2,24 @@
 
 import { useTodoLists } from '@/hooks/useTodoLists';
 import { TodoList } from '@/types/todo';
+import { TodoListSkeleton } from '../todo-lists/todo-list-skeleton';
 import { TodoListCard } from './todo-list-card';
 
 export function TodoListGrid() {
-  const { data } = useTodoLists();
+  const { data, isLoading, error } = useTodoLists();
+
+  if (isLoading) {
+    return <TodoListSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="mt-12 rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-12 text-center">
+        <h3 className="text-xl font-medium text-red-900">Error loading todo lists</h3>
+        <p className="mt-2 text-red-500">Please try again later</p>
+      </div>
+    );
+  }
 
   if (!data || data.length === 0) {
     return (

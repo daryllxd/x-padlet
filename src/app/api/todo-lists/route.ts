@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from('contact_form_submissions')
       .select('*')
+      .limit(10)
       .order('created_at', { ascending: false });
 
     if (error) throw error;

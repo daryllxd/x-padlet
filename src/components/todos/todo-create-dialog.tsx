@@ -64,7 +64,7 @@ export function TodoCreateDialog({
       formData.append('title', title);
       formData.append('description', description);
       formData.append('todo_list_id', listId);
-      formData.append('completed', 'false');
+      formData.append('is_completed', 'false');
       addTodo(formData);
       toast.success(`Todo "${title}" added successfully`);
     }

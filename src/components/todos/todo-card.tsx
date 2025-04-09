@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
 import { Check, Edit, Trash, X } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Draggable } from './draggable';
 
 interface TodoCardProps {
@@ -21,7 +22,7 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const handleSaveEdit = (updates: {
+  const handleSaveEdit = async (updates: {
     title: string;
     description: string;
     image_url?: string | null;
@@ -32,7 +33,12 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
     if (updates.image_url !== undefined) {
       formData.append('image_url', updates.image_url || '');
     }
-    updateTodo(todo.id, formData);
+    try {
+      await updateTodo(todo.id, formData);
+      toast.success('Todo updated successfully');
+    } catch (error) {
+      toast.error('Failed to update todo');
+    }
   };
 
   return (

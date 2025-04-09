@@ -5,9 +5,9 @@ export async function GET(request: NextRequest) {
   try {
     // Fetch all todo lists from Supabase
     const { data, error } = await supabase
-      .from('contact_form_submissions')
+      .from('todo_lists')
       .select('*')
-      .limit(10)
+      .not('status', 'eq', 'archived')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -21,10 +21,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { title, description } = body;
+    const formData = await request.formData();
 
-    // Validate required fields
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string | null;
+    const coverImage = formData.get('coverImage') as File | null;
+
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
@@ -32,15 +34,23 @@ export async function POST(request: NextRequest) {
     // Insert new todo list using Supabase
     const { data, error } = await supabase
       .from('todo_lists')
-      .insert([{ title, description }])
+      .insert([
+        {
+          title,
+          description: description || null, // Make description optional
+        },
+      ])
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error creating todo list:', error);
+      return NextResponse.json({ error: 'Failed to create todo list' }, { status: 500 });
+    }
 
-    return NextResponse.json(data, { status: 201 });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error creating todo list:', error);
-    return NextResponse.json({ error: 'Failed to create todo list' }, { status: 500 });
+    console.error('Error processing request:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

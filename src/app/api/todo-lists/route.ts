@@ -1,11 +1,17 @@
-import { query } from '@/lib/db';
+import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Fetch all todo lists from the database
-    const result = await query('SELECT * FROM todo_lists ORDER BY created_at DESC');
-    return NextResponse.json(result.rows);
+    // Fetch all todo lists from Supabase
+    const { data, error } = await supabase
+      .from('contact_form_submissions')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching todo lists:', error);
     return NextResponse.json({ error: 'Failed to fetch todo lists' }, { status: 500 });
@@ -22,13 +28,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
-    // Insert new todo list
-    const result = await query(
-      'INSERT INTO todo_lists (title, description) VALUES ($1, $2) RETURNING *',
-      [title, description || null]
-    );
+    // Insert new todo list using Supabase
+    const { data, error } = await supabase
+      .from('todo_lists')
+      .insert([{ title, description }])
+      .select()
+      .single();
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    if (error) throw error;
+
+    return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error('Error creating todo list:', error);
     return NextResponse.json({ error: 'Failed to create todo list' }, { status: 500 });

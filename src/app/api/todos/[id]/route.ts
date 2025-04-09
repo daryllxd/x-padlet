@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/db';
+import { mkdir, writeFile } from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
+import { join } from 'path';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -7,9 +9,36 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   try {
     const formData = await request.formData();
     const updates: Record<string, unknown> = {};
+    const imageFile = formData.get('image') as File | null;
 
+    // Handle image upload if present
+    if (imageFile) {
+      try {
+        // Create uploads directory if it doesn't exist
+        const uploadsDir = join(process.cwd(), 'public', 'uploads');
+        await mkdir(uploadsDir, { recursive: true });
+
+        // Create a unique filename
+        const fileExtension = imageFile.name.split('.').pop();
+        const fileName = `${id}-${Date.now()}.${fileExtension}`;
+        const filePath = join(uploadsDir, fileName);
+
+        // Convert File to Buffer and save
+        const bytes = await imageFile.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        await writeFile(filePath, buffer);
+
+        // Set the image URL to the public path
+        updates.image_url = `/uploads/${fileName}`;
+      } catch (error) {
+        console.error('Error saving image:', error);
+        return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
+      }
+    }
+
+    // Handle other form fields
     for (const [key, value] of formData.entries()) {
-      if (value !== null && value !== '') {
+      if (value !== null && value !== '' && key !== 'image') {
         if (key === 'is_completed') {
           updates[key] = value === 'true';
         } else if (key === 'position') {

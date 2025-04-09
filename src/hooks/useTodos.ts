@@ -12,41 +12,12 @@ async function fetchTodos(listId?: string) {
   return response.json();
 }
 
-type CreateTodoInput = {
-  title: string;
-  description?: string;
-  todo_list_id: string;
-};
-
-async function createTodo(input: FormData | CreateTodoInput) {
-  let formData: FormData;
-
-  if (input instanceof FormData) {
-    formData = input;
-  } else {
-    formData = new FormData();
-    formData.append('title', input.title);
-    if (input.description) {
-      formData.append('description', input.description);
-    }
-    formData.append('todo_list_id', input.todo_list_id);
-  }
-
-  const response = await fetch('/api/todos', {
-    method: 'POST',
-    body: formData,
-  });
-  if (!response.ok) {
-    throw new Error('Failed to create todo');
-  }
-  return response.json();
-}
-
 async function updateTodo(id: string, formData: FormData) {
   const response = await fetch(`/api/todos/${id}`, {
     method: 'PATCH',
     body: formData,
   });
+
   if (!response.ok) {
     throw new Error('Failed to update todo');
   }

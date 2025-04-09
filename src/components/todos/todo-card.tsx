@@ -20,18 +20,22 @@ interface TodoCardProps {
 export function TodoCard({ todo, listId }: TodoCardProps) {
   const { toggleTodo, deleteTodo, updateTodo } = useTodos(listId);
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(true);
 
   const handleSaveEdit = async (updates: {
     title: string;
     description: string;
     image_url?: string | null;
+    imageFile?: File | null;
   }) => {
     const formData = new FormData();
     formData.append('title', updates.title);
     formData.append('description', updates.description);
     if (updates.image_url !== undefined) {
       formData.append('image_url', updates.image_url || '');
+    }
+    if (updates.imageFile) {
+      formData.append('image', updates.imageFile);
     }
     try {
       await updateTodo(todo.id, formData);

@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Enable version updates for npm (handles pnpm lockfiles)
+  - package-ecosystem: 'npm'
+    # Look for `package.json` and `pnpm-lock.yaml` in the root directory
+    directory: '/'
+    # Check for updates weekly
+    schedule:
+      interval: 'weekly'
+    # Specify pnpm as the package manager
+    versioning-strategy: increase
+    Add reviewers if needed (optional)
+    reviewers:
+      - "daryllxd"
+    Assignees (optional)
+    assignees:
+      - "daryllxd"
+    Labels to add to PRs (optional)
+    labels:
+      - "dependencies"

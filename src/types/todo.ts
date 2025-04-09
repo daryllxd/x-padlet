@@ -10,7 +10,7 @@ export interface TodoItem {
   id: string;
   title: string;
   description?: string;
-  completed: boolean;
+  is_completed: boolean;
   position: number;
   todo_list_id: string;
   image_url?: string | null;

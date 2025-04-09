@@ -54,15 +54,18 @@ export function TodoCreateDialog({
     }
 
     if (isEditing && initialTodo) {
-      updateTodo(initialTodo.id, { title, description });
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      updateTodo(initialTodo.id, formData);
       toast.success(`Todo "${title}" updated successfully`);
     } else {
-      addTodo({
-        title,
-        description,
-        completed: false,
-        todo_list_id: listId,
-      });
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('todo_list_id', listId);
+      formData.append('completed', 'false');
+      addTodo(formData);
       toast.success(`Todo "${title}" added successfully`);
     }
 
@@ -99,7 +102,7 @@ export function TodoCreateDialog({
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Todo title"
+              placeholder="Enter todo title"
             />
           </div>
           <div className="space-y-2">
@@ -110,28 +113,25 @@ export function TodoCreateDialog({
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Todo description"
+              placeholder="Enter todo description"
               rows={4}
             />
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox
-              id="keep-open"
+              id="keepOpen"
               checked={keepOpen}
               onCheckedChange={(checked) => setKeepOpen(checked as boolean)}
             />
             <label
-              htmlFor="keep-open"
+              htmlFor="keepOpen"
               className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Keep dialog open after adding
+              Keep dialog open
             </label>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit">{isEditing ? 'Update' : 'Add'}</Button>
+            <Button type="submit">{isEditing ? 'Update' : 'Add'} Todo</Button>
           </DialogFooter>
         </form>
       </DialogContent>

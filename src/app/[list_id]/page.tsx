@@ -4,18 +4,14 @@ import { DraggableTodoList } from '@/components/todos/draggable-todo-list';
 import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
-import { TodoItem } from '@/types';
-import { use, useRef, useState } from 'react';
+import { use } from 'react';
 
 export default function Home({ params }: { params: Promise<{ list_id: string }> }) {
   const { list_id: listId } = use(params);
 
   const { data: todoList, isLoading: isTodoListLoading } = useTodoList(listId);
 
-  const { data: todos, isLoading } = useTodos(listId);
-
-  const [editingTodo, setEditingTodo] = useState<TodoItem | null>(null);
-  const editDialogRef = useRef<HTMLDivElement>(null);
+  const { todos, isLoading } = useTodos(listId);
 
   if (isLoading) {
     return (
@@ -24,19 +20,6 @@ export default function Home({ params }: { params: Promise<{ list_id: string }> 
       </div>
     );
   }
-
-  const handleEdit = (id: string) => {
-    if (!todos) return;
-    const todo = todos.find((todo) => todo.id === id);
-    if (todo) {
-      setEditingTodo(todo);
-      // Programmatically open the dialog by clicking its internal button
-      setTimeout(() => {
-        const button = editDialogRef.current?.querySelector('button');
-        if (button) button.click();
-      }, 0);
-    }
-  };
 
   return (
     <div className="container mx-auto py-10">
@@ -49,14 +32,8 @@ export default function Home({ params }: { params: Promise<{ list_id: string }> 
         </div>
       </header>
 
-      <div ref={editDialogRef} className="hidden">
-        {editingTodo && (
-          <TodoCreateDialog listId={listId} initialTodo={editingTodo} isEditing={true} />
-        )}
-      </div>
-
       {todos && todos.length > 0 ? (
-        <DraggableTodoList listId={listId} todos={todos} onEdit={handleEdit} />
+        <DraggableTodoList listId={listId} todos={todos} />
       ) : (
         <div className="flex h-40 items-center justify-center text-slate-500">
           No todos yet. Add your first todo to get started.

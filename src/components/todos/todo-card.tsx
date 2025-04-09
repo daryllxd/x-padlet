@@ -13,12 +13,11 @@ import { Draggable } from './draggable';
 
 interface TodoCardProps {
   todo: TodoItem;
-  onEdit: (id: string) => void;
   listId: string;
 }
 
-export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
-  const { toggleComplete, deleteTodo, updateTodo } = useTodos(listId);
+export function TodoCard({ todo, listId }: TodoCardProps) {
+  const { toggleTodo, deleteTodo, updateTodo } = useTodos(listId);
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -27,7 +26,13 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
     description: string;
     image_url?: string | null;
   }) => {
-    updateTodo(todo.id, updates);
+    const formData = new FormData();
+    formData.append('title', updates.title);
+    formData.append('description', updates.description);
+    if (updates.image_url !== undefined) {
+      formData.append('image_url', updates.image_url || '');
+    }
+    updateTodo(todo.id, formData);
   };
 
   return (
@@ -38,7 +43,7 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
             className={cn(
               'h-full w-full',
               'hover:cursor-pointer',
-              todo.completed && 'border-2 bg-slate-50 opacity-75',
+              todo.is_completed && 'border-2 bg-slate-50 opacity-75',
               state.state === 'dragging' &&
                 'border-slate-300 bg-slate-200 opacity-50 [&>*]:opacity-0',
               state.state === 'draggedOver' && 'bg-slate-100'
@@ -50,14 +55,14 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
                 <CardTitle
                   className={cn(
                     'line-clamp-1 text-lg font-medium',
-                    todo.completed && 'text-slate-500 line-through'
+                    todo.is_completed && 'text-slate-500 line-through'
                   )}
                 >
                   {todo.title}
                 </CardTitle>
                 <div className="flex space-x-1">
-                  <Button size="icon" variant="ghost" onClick={() => toggleComplete(todo.id)}>
-                    {todo.completed ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+                  <Button size="icon" variant="ghost" onClick={() => toggleTodo(todo.id)}>
+                    {todo.is_completed ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                   </Button>
                   <Button size="icon" variant="ghost" onClick={() => deleteTodo(todo.id)}>
                     <Trash className="h-4 w-4" />
@@ -76,7 +81,7 @@ export function TodoCard({ todo, onEdit, listId }: TodoCardProps) {
                 content={todo.description || ''}
                 className={cn(
                   'text-sm text-slate-700',
-                  todo.completed && 'text-slate-500 line-through'
+                  todo.is_completed && 'text-slate-500 line-through'
                 )}
               />
             </CardContent>

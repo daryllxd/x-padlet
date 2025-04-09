@@ -1,17 +1,18 @@
 'use client';
 
-import { socketEvents } from '@/lib/socket';
+import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect } from 'react';
 import { TodoCard } from './todo-card';
 interface DraggableTodoListProps {
   todos: TodoItem[];
-  onEdit: (id: string) => void;
   listId: string;
 }
 
-export function DraggableTodoList({ todos, onEdit, listId }: DraggableTodoListProps) {
+export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
+  const { reorderTodos } = useTodos(listId);
+
   useEffect(() => {
     return monitorForElements({
       onDrop: ({ source, location }) => {
@@ -52,7 +53,7 @@ export function DraggableTodoList({ todos, onEdit, listId }: DraggableTodoListPr
           })
           .flat();
 
-        socketEvents.reorderTodos(newOrder);
+        reorderTodos(newOrder);
       },
     });
   }, [todos]);
@@ -61,7 +62,7 @@ export function DraggableTodoList({ todos, onEdit, listId }: DraggableTodoListPr
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {todos.map((todo) => (
         <div key={todo.id} data-todo-id={todo.id}>
-          <TodoCard listId={listId} todo={todo} onEdit={onEdit} />
+          <TodoCard listId={listId} todo={todo} />
         </div>
       ))}
     </div>

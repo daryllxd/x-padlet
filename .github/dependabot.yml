@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # Enable version updates for npm (handles pnpm lockfiles)
+  - package-ecosystem: 'npm'
+    directory: '/'
+    # Check for updates weekly
+    schedule:
+      interval: 'weekly'
+    # Specify pnpm as the package manager
+    versioning-strategy: increase
+    reviewers:
+      - "daryllxd"
+    assignees:
+      - "daryllxd"
+    labels:
+      - "dependencies"

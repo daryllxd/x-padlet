@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     const title = formData.get('title');
     const description = formData.get('description');
     const todoListId = formData.get('todo_list_id');
+    const theme = formData.get('theme');
     const isCompleted = formData.get('is_completed') === 'true';
     const imageFile = formData.get('image') as File | null;
 
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       title: title.toString(),
       description: description.toString(),
       imageFile: imageFile,
+      theme: theme as TodoItem['theme'],
     };
 
     const newTodo: Partial<TodoItem> = {
@@ -67,6 +69,7 @@ export async function POST(request: NextRequest) {
       description: todoFormData.description,
       todo_list_id: todoListId.toString(),
       is_completed: isCompleted,
+      theme: todoFormData.theme,
     };
 
     if (todoFormData.imageFile) {

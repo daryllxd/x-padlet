@@ -16,18 +16,18 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto px-4 py-6 sm:py-10">
         <div className="flex h-40 items-center justify-center text-slate-500">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <header className="mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold">{todoList?.title}</h1>
+    <div className="container mx-auto px-4 py-6 sm:py-10">
+      <header className="mb-6 sm:mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1 sm:gap-2">
+            <h1 className="text-2xl font-bold sm:text-3xl">{todoList?.title}</h1>
             <p className="text-sm text-slate-500">{todoList?.description}</p>
           </div>
           <div className="flex gap-4">
@@ -39,15 +39,15 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
       {todos && todos.length > 0 ? (
         <DraggableTodoList listId={todoListId} todos={todos} />
       ) : (
-        <div className="m-20 flex flex-col items-center justify-center text-slate-500">
+        <div className="m-10 flex flex-col items-center justify-center text-slate-500 sm:m-20">
           <Image
             src="/meditating-doodle.svg"
             alt="Meditating Doodle"
-            className="h-40 w-40"
+            className="h-32 w-32 sm:h-40 sm:w-40"
             width={160}
             height={160}
           />
-          <p>Nothing yet here! Let's get started.</p>
+          <p className="mt-4 text-center">Nothing yet here! Let's get started.</p>
         </div>
       )}
     </div>

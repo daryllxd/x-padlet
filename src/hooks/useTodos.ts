@@ -67,7 +67,7 @@ export function useTodos(listId: string) {
 
   const toggleTodoMutation = useMutation({
     mutationFn: async (id: string) => {
-      const todo = todos.find((t) => t.id === id);
+      const todo = todos.find((t: TodoItem) => t.id === id);
       if (!todo) throw new Error('Todo not found');
 
       const { data, error } = await supabase

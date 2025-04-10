@@ -15,6 +15,7 @@ import { useRef, useState } from 'react';
 import { useMount } from 'react-use';
 import { toast } from 'sonner';
 import { FileUploader } from '../ui/file-uploader';
+import { Select } from '../ui/select';
 
 interface TodoDialogProps {
   todo?: TodoItem;
@@ -24,12 +25,21 @@ interface TodoDialogProps {
   mode: 'create' | 'edit';
 }
 
+const THEME_COLORS = [
+  { value: 'red', label: 'Red', color: 'bg-red-500' },
+  { value: 'blue', label: 'Blue', color: 'bg-blue-500' },
+  { value: 'green', label: 'Green', color: 'bg-green-500' },
+  { value: 'yellow', label: 'Yellow', color: 'bg-yellow-500' },
+  { value: 'purple', label: 'Purple', color: 'bg-purple-500' },
+] as const;
+
 export function TodoDialog({ todo, open, onOpenChange, onSave, mode }: TodoDialogProps) {
   const [editedTitle, setEditedTitle] = useState(todo?.title || '');
   const [editedDescription, setEditedDescription] = useState<string>(todo?.description || '');
   const [imagePreview, setImagePreview] = useState<string | null>(todo?.image_url || null);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedTheme, setSelectedTheme] = useState<TodoItem['theme'] | null>(todo?.theme || null);
 
   useMount(() => {
     if (todo?.image_url) {
@@ -43,6 +53,9 @@ export function TodoDialog({ todo, open, onOpenChange, onSave, mode }: TodoDialo
     formData.append('description', editedDescription);
     if (coverImageFile) {
       formData.append('image', coverImageFile);
+    }
+    if (selectedTheme) {
+      formData.append('theme', selectedTheme);
     }
     onSave(formData);
     onOpenChange(false);
@@ -135,12 +148,23 @@ export function TodoDialog({ todo, open, onOpenChange, onSave, mode }: TodoDialo
               className="min-h-[200px] rounded-md border p-4"
             />
           </div>
+          <div className="space-y-2">
+            <Label>Theme Color</Label>
+            <Select
+              items={[{ value: 'none', label: 'None' }, ...THEME_COLORS]}
+              value={selectedTheme || 'none'}
+              onChange={(value) => {
+                setSelectedTheme(value === 'none' ? null : (value as TodoItem['theme']));
+              }}
+              placeholder="Select a theme"
+            />
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>{mode === 'create' ? 'Create' : 'Save Changes'}</Button>
+          <Button onClick={handleSave}>{mode === 'create' ? 'Create' : 'Save'}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

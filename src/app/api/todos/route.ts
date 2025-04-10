@@ -1,4 +1,6 @@
 import { supabase } from '@/lib/db';
+import { uploadToS3 } from '@/lib/s3';
+import { TodoFormData, TodoItem } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -29,44 +31,61 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+
     const title = formData.get('title');
-    const description = formData.get('description') as string | null;
+    const description = formData.get('description');
     const todoListId = formData.get('todo_list_id');
+    const isCompleted = formData.get('is_completed') === 'true';
+    const imageFile = formData.get('image') as File | null;
 
-    if (!title || !todoListId) {
-      return NextResponse.json({ error: 'Title and todo_list_id are required' }, { status: 400 });
+    if (!title || !description || !todoListId) {
+      return NextResponse.json(
+        { error: 'Title, description, and todo list ID are required' },
+        { status: 400 }
+      );
     }
 
-    // Get the maximum position for the todo list
-    const { data: maxPositionData, error: maxPositionError } = await supabase
-      .from('todos')
-      .select('position')
-      .eq('todo_list_id', todoListId)
-      .order('position', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (maxPositionError && maxPositionError.code !== 'PGRST116') {
-      console.error('Error getting max position:', maxPositionError);
-      return NextResponse.json({ error: 'Failed to create todo' }, { status: 500 });
+    if (title.toString().length > 255) {
+      return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
     }
 
-    const nextPosition = (maxPositionData?.position || 0) + 1;
+    if (description.toString().length > 16384) {
+      return NextResponse.json(
+        { error: 'Description must be 16,384 characters or less' },
+        { status: 400 }
+      );
+    }
 
-    // Insert new todo
-    const { data, error } = await supabase
-      .from('todos')
-      .insert([
-        {
-          title,
-          description: description || null,
-          todo_list_id: todoListId,
-          position: nextPosition,
-          is_completed: false,
-        },
-      ])
-      .select()
-      .single();
+    const todoFormData: TodoFormData = {
+      title: title.toString(),
+      description: description.toString(),
+      imageFile: imageFile,
+    };
+
+    const newTodo: Partial<TodoItem> = {
+      title: todoFormData.title,
+      description: todoFormData.description,
+      todo_list_id: todoListId.toString(),
+      is_completed: isCompleted,
+    };
+
+    if (todoFormData.imageFile) {
+      try {
+        const bytes = await todoFormData.imageFile.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        const fileExtension = todoFormData.imageFile.name.split('.').pop();
+        const key = `todos/${Date.now()}.${fileExtension}`;
+
+        const imageUrl = await uploadToS3(buffer, key, todoFormData.imageFile.type);
+        newTodo.image_url = imageUrl;
+      } catch (error) {
+        console.error('Error uploading image to S3:', error);
+        return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
+      }
+    }
+
+    const { data, error } = await supabase.from('todos').insert([newTodo]).select().single();
 
     if (error) {
       console.error('Error creating todo:', error);

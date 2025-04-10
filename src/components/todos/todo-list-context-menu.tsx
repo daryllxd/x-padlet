@@ -28,9 +28,6 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
 
     useImperativeHandle(ref, () => ({
       open: (x: number, y: number) => {
-        console.log('inside contextMenuRef', triggerRef.current);
-
-        // Need x and y to open the context menu at the correct position, otherwise it opens at the top left of the screen
         const event = new MouseEvent('contextmenu', {
           bubbles: true,
           clientX: x,
@@ -53,9 +50,6 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
         },
         onError: () => {
           toast.error('Failed to archive todo list');
-        },
-        onSettled: () => {
-          // Remove this entire onSettled callback since it was just for debugging
         },
       });
     };

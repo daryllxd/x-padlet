@@ -17,23 +17,9 @@ interface TodoCardProps {
 }
 
 export function TodoCard({ todo, listId }: TodoCardProps) {
-  const { toggleTodo, deleteTodo, updateTodo } = useTodos(listId);
+  const { toggleTodo, deleteTodo } = useTodos(listId);
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  const handleSaveEdit = (updates: {
-    title: string;
-    description: string;
-    image_url?: string | null;
-  }) => {
-    const formData = new FormData();
-    formData.append('title', updates.title);
-    formData.append('description', updates.description);
-    if (updates.image_url !== undefined) {
-      formData.append('image_url', updates.image_url || '');
-    }
-    updateTodo(todo.id, formData);
-  };
 
   return (
     <Draggable todo={todo}>
@@ -94,7 +80,7 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
             todo={todo}
             open={isEditModalOpen}
             onOpenChange={setIsEditModalOpen}
-            onSave={handleSaveEdit}
+            listId={listId}
           />
         </>
       )}

@@ -1,4 +1,6 @@
 import { supabase } from '@/lib/db';
+import { uploadToS3 } from '@/lib/s3';
+import { TodoFormData, TodoItem } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -6,23 +8,53 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
   try {
     const formData = await request.formData();
-    const updates: Record<string, unknown> = {};
 
-    for (const [key, value] of formData.entries()) {
-      if (value !== null && value !== '') {
-        if (key === 'is_completed') {
-          updates[key] = value === 'true';
-        } else if (key === 'position') {
-          updates[key] = parseInt(value as string, 10);
-        } else {
-          updates[key] = value;
-        }
+    const title = formData.get('title');
+    const description = formData.get('description');
+    const imageFile = formData.get('image') as File | null;
+
+    if (!title || !description) {
+      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
+    }
+
+    if (title.toString().length > 255) {
+      return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
+    }
+
+    if (description.toString().length > 16384) {
+      return NextResponse.json(
+        { error: 'Description must be 16,384 characters or less' },
+        { status: 400 }
+      );
+    }
+
+    const todoFormData: TodoFormData = {
+      title: title.toString(),
+      description: description.toString(),
+      imageFile: imageFile,
+    };
+
+    const updates: Partial<TodoItem> = {};
+
+    if (todoFormData.imageFile) {
+      try {
+        const bytes = await todoFormData.imageFile.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        const fileExtension = todoFormData.imageFile.name.split('.').pop();
+        const key = `todos/${id}/${Date.now()}.${fileExtension}`;
+
+        const imageUrl = await uploadToS3(buffer, key, todoFormData.imageFile.type);
+
+        updates.image_url = imageUrl;
+      } catch (error) {
+        console.error('Error uploading image to S3:', error);
+        return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
       }
     }
 
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No valid updates provided' }, { status: 400 });
-    }
+    updates.title = todoFormData.title;
+    updates.description = todoFormData.description;
 
     const { data, error } = await supabase
       .from('todos')
@@ -32,6 +64,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       .single();
 
     if (error) {
+      console.error('Supabase update error:', error);
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
     }
 

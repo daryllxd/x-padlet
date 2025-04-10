@@ -4,6 +4,7 @@ import { DraggableTodoList } from '@/components/todos/draggable-todo-list';
 import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
+import Image from 'next/image';
 import { use } from 'react';
 
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
@@ -38,8 +39,15 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
       {todos && todos.length > 0 ? (
         <DraggableTodoList listId={todoListId} todos={todos} />
       ) : (
-        <div className="flex h-40 items-center justify-center text-slate-500">
-          No todos yet. Add your first todo to get started.
+        <div className="m-20 flex flex-col items-center justify-center text-slate-500">
+          <Image
+            src="/meditating-doodle.svg"
+            alt="Meditating Doodle"
+            className="h-40 w-40"
+            width={160}
+            height={160}
+          />
+          <p>Nothing yet here! Let's get started.</p>
         </div>
       )}
     </div>

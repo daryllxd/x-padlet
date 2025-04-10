@@ -6,7 +6,7 @@ import { TodoListSkeleton } from '../todo-lists/todo-list-skeleton';
 import { TodoListCard } from './todo-list-card';
 
 export function TodoListGrid() {
-  const { data, isLoading, error } = useTodoLists();
+  const { data, isLoading, error } = useTodoLists({ status: 'active' });
 
   if (isLoading) {
     return <TodoListSkeleton />;

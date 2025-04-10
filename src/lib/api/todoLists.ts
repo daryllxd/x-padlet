@@ -1,15 +1,33 @@
-import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList } from '@/types/todo';
+import { TodoList } from '@/types';
 
-export async function fetchTodoLists(): Promise<TodoList[]> {
-  const response = await fetch(API_ENDPOINTS.todoLists, {
-    // Add next: { revalidate: 0 } to disable cache or adjust as needed
-    next: { revalidate: 0 },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch todo lists');
+export async function fetchTodoLists({
+  status,
+  baseUrl,
+}: {
+  status?: 'active' | 'archived';
+  baseUrl: string;
+}): Promise<TodoList[]> {
+  const params = new URLSearchParams();
+  if (status) {
+    params.append('status', status);
   }
 
-  return response.json();
+  const fullUrl = `${baseUrl}${params.toString() ? '?' + params.toString() : ''}`;
+
+  try {
+    const response = await fetch(fullUrl, {
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error('Fetch failed with status:', response.status);
+      throw new Error('Failed to fetch todo lists');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error in fetchTodoLists:', error);
+    throw error;
+  }
 }

@@ -1,14 +1,22 @@
+'use server';
+
 import { CreateTodoListButton } from '@/components/todos/create-todo-list-button';
 import { TodoListGrid } from '@/components/todos/todo-list-grid';
 import { fetchTodoLists } from '@/lib/api/todoLists';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { headers } from 'next/headers';
 
 export default async function Home() {
   const queryClient = new QueryClient();
 
+  const headersList = await headers();
+  const host = headersList.get('host');
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  const baseUrl = `${protocol}://${host}/api/todo-lists`;
+
   await queryClient.prefetchQuery({
-    queryKey: ['todoLists'],
-    queryFn: fetchTodoLists,
+    queryKey: ['todoLists', { status: 'active' }],
+    queryFn: () => fetchTodoLists({ status: 'active', baseUrl }),
   });
 
   const dehydratedState = dehydrate(queryClient);

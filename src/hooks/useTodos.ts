@@ -2,16 +2,6 @@ import { supabase } from '@/lib/db';
 import { TodoItem } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-// API functions
-async function fetchTodos(listId?: string) {
-  const url = listId ? `/api/todos?todo_list_id=${listId}` : '/api/todos';
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Failed to fetch todos');
-  }
-  return response.json();
-}
-
 async function updateTodo(id: string, formData: FormData) {
   const response = await fetch(`/api/todos/${id}`, {
     method: 'PATCH',
@@ -20,26 +10,6 @@ async function updateTodo(id: string, formData: FormData) {
 
   if (!response.ok) {
     throw new Error('Failed to update todo');
-  }
-  return response.json();
-}
-
-async function toggleTodo(id: string) {
-  const response = await fetch(`/api/todos/${id}/toggle`, {
-    method: 'PATCH',
-  });
-  if (!response.ok) {
-    throw new Error('Failed to toggle todo');
-  }
-  return response.json();
-}
-
-async function deleteTodo(id: string) {
-  const response = await fetch(`/api/todos/${id}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) {
-    throw new Error('Failed to delete todo');
   }
   return response.json();
 }
@@ -77,21 +47,16 @@ export function useTodos(listId: string) {
 
   const addTodoMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const { data, error } = await supabase
-        .from('todos')
-        .insert([
-          {
-            title: formData.get('title'),
-            description: formData.get('description'),
-            todo_list_id: formData.get('todo_list_id'),
-            is_completed: formData.get('is_completed') === 'true',
-          },
-        ])
-        .select()
-        .single();
+      const response = await fetch(`/api/todos`, {
+        method: 'POST',
+        body: formData,
+      });
 
-      if (error) throw error;
-      return data as TodoItem;
+      if (!response.ok) {
+        throw new Error('Failed to create todo');
+      }
+
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos', listId] });

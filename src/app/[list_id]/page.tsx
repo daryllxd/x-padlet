@@ -6,10 +6,10 @@ import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { use } from 'react';
 
-export default function Home({ params }: { params: Promise<{ list_id: string }> }) {
+export default function TodoListPage({ params }: { params: Promise<{ list_id: string }> }) {
   const { list_id: listId } = use(params);
 
-  const { data: todoList, isLoading: isTodoListLoading } = useTodoList(listId);
+  const { data: todoList } = useTodoList(listId);
 
   const { todos, isLoading } = useTodos(listId);
 

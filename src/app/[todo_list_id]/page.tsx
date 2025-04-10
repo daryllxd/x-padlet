@@ -25,7 +25,10 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
     <div className="container mx-auto py-10">
       <header className="mb-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">{todoList?.title}</h1>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold">{todoList?.title}</h1>
+            <p className="text-sm text-slate-500">{todoList?.description}</p>
+          </div>
           <div className="flex gap-4">
             <TodoCreateDialog listId={todoListId} />
           </div>

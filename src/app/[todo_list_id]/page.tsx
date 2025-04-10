@@ -27,7 +27,14 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
       <header className="mb-6 sm:mb-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1 sm:gap-2">
-            <h1 className="text-2xl font-bold sm:text-3xl">{todoList?.title}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold sm:text-3xl">{todoList?.title}</h1>
+              {todos && todos.length > 0 && (
+                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-sm text-slate-600">
+                  {todos.length} {todos.length === 1 ? 'todo' : 'todos'}
+                </span>
+              )}
+            </div>
             <p className="text-sm text-slate-500">{todoList?.description}</p>
           </div>
           <div className="flex gap-4">

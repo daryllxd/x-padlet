@@ -21,6 +21,15 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
   const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  const hoverClasses = cn(
+    todo.theme === 'blue' && `hover:bg-blue-100`,
+    todo.theme === 'green' && `hover:bg-green-100`,
+    todo.theme === 'yellow' && `hover:bg-yellow-100`,
+    todo.theme === 'purple' && `hover:bg-purple-100`,
+    todo.theme === 'red' && `hover:bg-red-100`,
+    !todo.theme && `hover:bg-slate-100`
+  );
+
   return (
     <Draggable todo={todo}>
       {(state) => (
@@ -32,7 +41,13 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
               todo.is_completed && 'border-2 bg-slate-50 opacity-75',
               state.state === 'dragging' &&
                 'border-slate-300 bg-slate-200 opacity-50 [&>*]:opacity-0',
-              state.state === 'draggedOver' && 'bg-slate-100'
+              state.state === 'draggedOver' && 'bg-slate-100',
+              todo.theme === 'blue' && 'bg-blue-200 transition-colors hover:bg-blue-300',
+              todo.theme === 'green' && 'bg-green-200 transition-colors hover:bg-green-300',
+              todo.theme === 'yellow' && 'bg-yellow-200 transition-colors hover:bg-yellow-300',
+              todo.theme === 'purple' && 'bg-purple-200 transition-colors hover:bg-purple-300',
+              todo.theme === 'red' && 'bg-red-200 transition-colors hover:bg-red-300',
+              !todo.theme && 'bg-slate-200 transition-colors hover:bg-slate-300'
             )}
             onDoubleClick={() => setIsEditModalOpen(true)}
           >
@@ -47,13 +62,28 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
                   {todo.title}
                 </CardTitle>
                 <div className="flex space-x-1">
-                  <Button size="icon" variant="ghost" onClick={() => toggleTodo(todo.id)}>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className={cn(hoverClasses)}
+                    onClick={() => toggleTodo(todo.id)}
+                  >
                     {todo.is_completed ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                   </Button>
-                  <Button size="icon" variant="ghost" onClick={() => deleteTodo(todo.id)}>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className={cn(hoverClasses)}
+                    onClick={() => deleteTodo(todo.id)}
+                  >
                     <Trash className="h-4 w-4" />
                   </Button>
-                  <Button size="icon" variant="ghost" onClick={() => setIsEditModalOpen(true)}>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className={cn(hoverClasses)}
+                    onClick={() => setIsEditModalOpen(true)}
+                  >
                     <Edit className="h-4 w-4" />
                   </Button>
                 </div>

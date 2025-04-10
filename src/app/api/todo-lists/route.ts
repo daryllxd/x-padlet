@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -6,7 +6,10 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status');
 
-    let query = supabase.from('todo_lists').select('*').order('created_at', { ascending: false });
+    let query = supabase
+      .from('todo_lists')
+      .select('*, todos!inner(count)')
+      .order('created_at', { ascending: false });
 
     if (status) {
       query = query.eq('status', status);
@@ -15,14 +18,17 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Error fetching todo lists:', error);
-      return NextResponse.json({ error: 'Failed to fetch todo lists' }, { status: 500 });
+      throw error;
     }
 
-    return NextResponse.json(data);
+    const transformedData = data.map((list) => ({
+      ...list,
+      todoCount: list.todos[0].count,
+    }));
+
+    return NextResponse.json(transformedData);
   } catch (error) {
-    console.error('Error processing request:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch todo lists' }, { status: 500 });
   }
 }
 

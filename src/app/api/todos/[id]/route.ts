@@ -12,6 +12,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const title = formData.get('title');
     const description = formData.get('description');
     const imageFile = formData.get('image') as File | null;
+    const theme = formData.get('theme') as TodoItem['theme'] | null;
 
     if (!title || !description) {
       return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
@@ -32,6 +33,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       title: title.toString(),
       description: description.toString(),
       imageFile: imageFile,
+      theme,
     };
 
     const updates: Partial<TodoItem> = {};
@@ -55,6 +57,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     updates.title = todoFormData.title;
     updates.description = todoFormData.description;
+    updates.theme = todoFormData.theme;
 
     const { data, error } = await supabase
       .from('todos')

@@ -3,8 +3,11 @@
 import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { useEffect } from 'react';
+import { Masonry } from 'masonic';
+import { useEffect, useMemo, useRef } from 'react';
+import { usePrevious } from 'react-use';
 import { TodoCard } from './todo-card';
+
 interface DraggableTodoListProps {
   todos: TodoItem[];
   listId: string;
@@ -12,6 +15,26 @@ interface DraggableTodoListProps {
 
 export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
   const { reorderTodos } = useTodos(listId);
+
+  /**
+   * @description Workaround for Masonry grid re-render when items are deleted
+   * @see https://github.com/jaredLunde/masonic/issues/12#issuecomment-2089843741k
+   * @summary Tracks item count changes to force grid re-render on deletion
+   */
+  const itemsCount = todos?.length;
+  const prevItemsCount = usePrevious(itemsCount);
+
+  const removesCount = useRef(0);
+
+  const gridKeyPostfix = useMemo(() => {
+    if (!itemsCount || !prevItemsCount) return removesCount.current;
+    if (itemsCount < prevItemsCount) {
+      removesCount.current += 1;
+      return removesCount.current;
+    }
+
+    return removesCount.current;
+  }, [itemsCount, prevItemsCount]);
 
   useEffect(() => {
     return monitorForElements({
@@ -59,12 +82,12 @@ export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
   }, [todos]);
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {todos.map((todo) => (
-        <div key={todo.id} data-todo-id={todo.id}>
-          <TodoCard listId={listId} todo={todo} />
-        </div>
-      ))}
-    </div>
+    <Masonry
+      key={gridKeyPostfix}
+      items={todos}
+      render={({ data }) => <TodoCard listId={listId} todo={data} />}
+      columnGutter={16}
+      columnWidth={300}
+    />
   );
 }

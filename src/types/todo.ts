@@ -16,4 +16,5 @@ export interface TodoItem {
   image_url?: string | null;
   created_at: string;
   updated_at: string;
+  theme: 'red' | 'blue' | 'green' | 'yellow' | 'purple' | null;
 }

@@ -8,38 +8,37 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { TodoItem } from '@/types';
+import { TodoFormData, TodoItem } from '@/types';
 import { Label } from '@radix-ui/react-label';
 import { X } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { useMount } from 'react-use';
 import { toast } from 'sonner';
 import { FileUploader } from '../ui/file-uploader';
-
 interface TodoEditDialogProps {
   todo: TodoItem;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (updates: {
-    title: string;
-    description: string;
-    image_url?: string | null;
-    imageFile?: File | null;
-  }) => void;
+  onSave: (data: TodoFormData) => void;
 }
 
 export function TodoEditDialog({ todo, open, onOpenChange, onSave }: TodoEditDialogProps) {
   const [editedTitle, setEditedTitle] = useState(todo.title);
   const [editedDescription, setEditedDescription] = useState<string>(todo.description || '');
-  const [editedImageUrl, setEditedImageUrl] = useState(todo.image_url || '');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useMount(() => {
+    if (todo.image_url) {
+      setImagePreview(todo.image_url);
+    }
+  });
 
   const handleSave = () => {
     onSave({
       title: editedTitle,
       description: editedDescription,
-      image_url: editedImageUrl || null,
       imageFile: coverImageFile,
     });
     onOpenChange(false);
@@ -62,10 +61,8 @@ export function TodoEditDialog({ todo, open, onOpenChange, onSave }: TodoEditDia
         return;
       }
 
-      // Store the file for submission
       setCoverImageFile(file);
 
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -98,11 +95,12 @@ export function TodoEditDialog({ todo, open, onOpenChange, onSave }: TodoEditDia
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
               placeholder="Enter title"
+              maxLength={255}
             />
           </div>
           <div className="space-y-2">
             <div className="space-y-2">
-              <Label>Cover Image (optional)</Label>
+              <Label>Image (optional)</Label>
               {imagePreview ? (
                 <div className="relative">
                   <img

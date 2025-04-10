@@ -1,57 +1,60 @@
 import { supabase } from '@/lib/db';
-import { mkdir, writeFile } from 'fs/promises';
+import { uploadToS3 } from '@/lib/s3';
+import { TodoFormData, TodoItem } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
-import { join } from 'path';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   try {
     const formData = await request.formData();
-    const updates: Record<string, unknown> = {};
+
+    const title = formData.get('title');
+    const description = formData.get('description');
     const imageFile = formData.get('image') as File | null;
 
-    // Handle image upload if present
-    if (imageFile) {
+    if (!title || !description) {
+      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
+    }
+
+    if (title.toString().length > 255) {
+      return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
+    }
+
+    if (description.toString().length > 16384) {
+      return NextResponse.json(
+        { error: 'Description must be 16,384 characters or less' },
+        { status: 400 }
+      );
+    }
+
+    const todoFormData: TodoFormData = {
+      title: title.toString(),
+      description: description.toString(),
+      imageFile: imageFile,
+    };
+
+    const updates: Partial<TodoItem> = {};
+
+    if (todoFormData.imageFile) {
       try {
-        // Create uploads directory if it doesn't exist
-        const uploadsDir = join(process.cwd(), 'public', 'uploads');
-        await mkdir(uploadsDir, { recursive: true });
-
-        // Create a unique filename
-        const fileExtension = imageFile.name.split('.').pop();
-        const fileName = `${id}-${Date.now()}.${fileExtension}`;
-        const filePath = join(uploadsDir, fileName);
-
-        // Convert File to Buffer and save
-        const bytes = await imageFile.arrayBuffer();
+        const bytes = await todoFormData.imageFile.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        await writeFile(filePath, buffer);
 
-        // Set the image URL to the public path
-        updates.image_url = `/uploads/${fileName}`;
+        const fileExtension = todoFormData.imageFile.name.split('.').pop();
+        const key = `todos/${id}/${Date.now()}.${fileExtension}`;
+
+        const imageUrl = await uploadToS3(buffer, key, todoFormData.imageFile.type);
+
+        updates.image_url = imageUrl;
       } catch (error) {
-        console.error('Error saving image:', error);
-        return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
+        console.error('Error uploading image to S3:', error);
+        return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
       }
     }
 
-    // Handle other form fields
-    for (const [key, value] of formData.entries()) {
-      if (value !== null && value !== '' && key !== 'image') {
-        if (key === 'is_completed') {
-          updates[key] = value === 'true';
-        } else if (key === 'position') {
-          updates[key] = parseInt(value as string, 10);
-        } else {
-          updates[key] = value;
-        }
-      }
-    }
-
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No valid updates provided' }, { status: 400 });
-    }
+    updates.title = todoFormData.title;
+    updates.description = todoFormData.description;
 
     const { data, error } = await supabase
       .from('todos')
@@ -61,6 +64,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       .single();
 
     if (error) {
+      console.error('Supabase update error:', error);
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
     }
 

@@ -18,8 +18,6 @@ export function TodoListCard({ id, title, description, todoCount }: TodoListCard
   const contextMenuRef = useRef<TodoListContextMenuRef>(null);
 
   const handleEllipsisClick = (e: React.MouseEvent) => {
-    console.log('outside contextMenuRef', contextMenuRef.current);
-
     e.preventDefault();
     // Get the click position and open the context menu there
     contextMenuRef.current?.open(e.clientX, e.clientY);

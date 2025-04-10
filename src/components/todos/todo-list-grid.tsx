@@ -3,6 +3,7 @@
 import { useTodoLists } from '@/hooks/useTodoLists';
 import { TodoList } from '@/types/todo';
 import { TodoListSkeleton } from '../todo-lists/todo-list-skeleton';
+import { CreateTodoListButton } from './create-todo-list-button';
 import { TodoListCard } from './todo-list-card';
 
 export function TodoListGrid() {
@@ -31,7 +32,8 @@ export function TodoListGrid() {
   }
 
   return (
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <CreateTodoListButton />
       {data.map((list: TodoList) => (
         <TodoListCard
           key={list.id}

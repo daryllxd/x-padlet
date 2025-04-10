@@ -3,8 +3,10 @@
 import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { Masonry } from 'masonic';
 import { useEffect } from 'react';
 import { TodoCard } from './todo-card';
+
 interface DraggableTodoListProps {
   todos: TodoItem[];
   listId: string;
@@ -59,12 +61,11 @@ export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
   }, [todos]);
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {todos.map((todo) => (
-        <div key={todo.id} data-todo-id={todo.id}>
-          <TodoCard listId={listId} todo={todo} />
-        </div>
-      ))}
-    </div>
+    <Masonry
+      items={todos}
+      render={({ data }) => <TodoCard listId={listId} todo={data} />}
+      columnGutter={16}
+      columnWidth={300}
+    />
   );
 }

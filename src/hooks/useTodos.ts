@@ -34,14 +34,9 @@ export function useTodos(listId: string) {
   const { data: todos = [], isLoading } = useQuery({
     queryKey: ['todos', listId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('todos')
-        .select('*')
-        .eq('todo_list_id', listId)
-        .order('created_at', { ascending: false });
+      const response = await fetch(`/api/todos?todo_list_id=${listId}`);
 
-      if (error) throw error;
-      return data as TodoItem[];
+      return response.json();
     },
   });
 
@@ -72,7 +67,7 @@ export function useTodos(listId: string) {
 
   const toggleTodoMutation = useMutation({
     mutationFn: async (id: string) => {
-      const todo = todos.find((t) => t.id === id);
+      const todo = todos.find((t: TodoItem) => t.id === id);
       if (!todo) throw new Error('Todo not found');
 
       const { data, error } = await supabase

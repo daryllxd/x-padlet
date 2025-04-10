@@ -3,10 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const { data, error } = await supabase
-      .from('todo_lists')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const searchParams = request.nextUrl.searchParams;
+    const status = searchParams.get('status');
+
+    let query = supabase.from('todo_lists').select('*').order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching todo lists:', error);

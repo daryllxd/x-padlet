@@ -1,27 +1,30 @@
-import { API_ENDPOINTS } from '@/lib/config';
+'use client';
+
+import { fetchTodoLists as fetchTodoListsFromApi } from '@/lib/api/todoLists';
 import { TodoList } from '@/types/todo';
 import { useQuery } from '@tanstack/react-query';
 
-const fetchTodoLists = async (): Promise<TodoList[]> => {
-  const response = await fetch(API_ENDPOINTS.todoLists);
-  if (!response.ok) {
-    throw new Error('Failed to fetch todo lists');
-  }
-  return response.json();
+const clientFetchTodoLists = async (params: {
+  id?: string;
+  status?: 'active' | 'archived';
+}): Promise<TodoList[]> => {
+  const baseUrl =
+    typeof window !== 'undefined' ? `${window.location.origin}/api/todo-lists` : '/api/todo-lists';
+  return fetchTodoListsFromApi({ ...params, baseUrl });
 };
 
-export function useTodoLists() {
+export function useTodoLists({ status }: { status?: 'active' | 'archived' }) {
   return useQuery({
-    queryKey: ['todoLists'],
-    queryFn: fetchTodoLists,
+    queryKey: ['todoLists', { status }],
+    queryFn: () => clientFetchTodoLists({ status }),
   });
 }
 
-export function useTodoList(listId: string) {
+export function useTodoList(id: string) {
   return useQuery({
     queryKey: ['todoLists'],
-    queryFn: fetchTodoLists,
-    select: (data) => data.find((list) => list.id === listId),
-    enabled: !!listId,
+    queryFn: () => clientFetchTodoLists({ id }),
+    select: (data) => data.find((list) => list.id === id),
+    enabled: !!id,
   });
 }

@@ -9,7 +9,6 @@ export default function Loading() {
             <div className="h-10 w-48 animate-pulse rounded bg-slate-200"></div>
             <div className="h-5 w-64 animate-pulse rounded bg-slate-200"></div>
           </div>
-          <div className="h-10 w-32 animate-pulse rounded bg-slate-200"></div>
         </div>
 
         <TodoListSkeleton />

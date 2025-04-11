@@ -1,30 +1,51 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { EllipsisVertical } from 'lucide-react';
+import { TodoListWithCreating } from '@/types/todo';
+import { EllipsisVertical, Loader2 } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '../ui/button';
 import { XPadletLink } from '../ui/link';
 import { TodoListContextMenu, TodoListContextMenuRef } from './todo-list-context-menu';
 
 interface TodoListCardProps {
-  id: string;
-  title: string;
-  description?: string;
-  todoCount: number;
+  todoList: TodoListWithCreating;
 }
 
-export function TodoListCard({ id, title, description, todoCount }: TodoListCardProps) {
+export function TodoListCard({ todoList }: TodoListCardProps) {
   const contextMenuRef = useRef<TodoListContextMenuRef>(null);
+  const { todoCount, id, title, description } = todoList;
 
   const handleEllipsisClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Get the click position and open the context menu there
     contextMenuRef.current?.open(e.clientX, e.clientY);
   };
 
+  if (todoList.status === 'creating') {
+    return (
+      <Card className="group bg-muted/50 relative h-full cursor-not-allowed p-6 transition-colors">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
+        </div>
+        <div className="space-y-2 opacity-50">
+          <div className="flex items-start justify-between">
+            <h2 className="line-clamp-1 text-xl font-semibold">{title}</h2>
+          </div>
+          {description && (
+            <p className="text-muted-foreground line-clamp-2 text-sm">{description}</p>
+          )}
+          {todoCount > 0 && (
+            <div className="text-muted-foreground text-sm">
+              {todoCount} {todoCount === 1 ? 'todo' : 'todos'}
+            </div>
+          )}
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <TodoListContextMenu id={id} ref={contextMenuRef}>
+    <TodoListContextMenu todoList={todoList} ref={contextMenuRef}>
       <XPadletLink target="_blank" href={`/${id}`} variant="muted">
         <Card className="group hover:bg-accent/50 relative h-full p-6 transition-colors">
           <Button

@@ -5,14 +5,27 @@ import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import Image from 'next/image';
-import { use } from 'react';
+import { useRouter } from 'next/navigation';
+import { use, useEffect } from 'react';
+import { toast } from 'sonner';
 
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
+  const router = useRouter();
   const { todo_list_id: todoListId } = use(params);
 
   const { data: todoList } = useTodoList(todoListId);
 
   const { todos, isLoading } = useTodos(todoListId);
+
+  useEffect(() => {
+    if (todoList?.status === 'archived') {
+      toast.error('This todo list is archived');
+
+      setTimeout(() => {
+        router.push('/');
+      }, 500);
+    }
+  }, [todoList?.status]);
 
   if (isLoading) {
     return (
@@ -22,6 +35,9 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
     );
   }
 
+  if (todoList?.status === 'archived') {
+    return null;
+  }
   return (
     <div className="container mx-auto px-4 py-6 sm:py-10">
       <header className="mb-6 sm:mb-8">

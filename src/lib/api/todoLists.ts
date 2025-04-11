@@ -16,7 +16,7 @@ export async function fetchTodoLists({
 
   try {
     const response = await fetch(fullUrl, {
-      next: { revalidate: 0 },
+      next: { revalidate: 60, tags: ['todo-lists'] },
     });
 
     if (!response.ok) {

@@ -2,22 +2,17 @@
 
 Sample project to Upskill in:
 
-- 🔌 Websockets via Socket.io
-- 🐲 Pragmatic drag and drop [Reference](https://atlassian.design/components/pragmatic-drag-and-drop/examples/)
-- 📋 Clipboard API and rendering different content from the clipboard
-- 🎨 More theming experiments
-- 🚢 Containerization/Deployment/Docker
-
-[Demo link](https://www.loom.com/share/38cd8adb7411466fa1b8f45fb018bcaf)
-[Demo](./videos/loom-vid.mp4)
+[Live Demo](https://x-padlet.vercel.app)
 
 ## Features
 
-- **Card View**: View all your todos in a clean card-based interface
-- **Presentation Mode**: Present your active todos in a slideshow format
-- **Add/Edit/Delete**: Full CRUD operations for todo items
-- **Real-time Updates**: WebSocket integration for live updates
-- **Persistence**: Server-side storage with real-time sync
+- **Theming**: 🧑‍🎨 Customizable color schemes
+- **Markdown Support**: 🙃Rich text editing with markdown syntax
+- **Image Uploads**: 📋 Drag and drop image uploads with preview
+  - 🐲 Pragmatic drag and drop [Reference](https://atlassian.design/components/pragmatic-drag-and-drop/examples/)
+- **Real-time Updates**: 🔌 WebSocket integration for live updates (in progress)
+- **Multiple Content Types**: 🥮 Support for different content types (in progress)
+- **Persistence**: 🦸‍♂️ Server-side storage with real-time sync via Supabase
 
 ## Technologies Used
 
@@ -37,10 +32,6 @@ First, install the dependencies for both client and server:
 # Install client dependencies
 cd client
 pnpm install
-
-# Install server dependencies
-cd server
-pnpm install
 ```
 
 Then, start both the client and server:
@@ -48,14 +39,17 @@ Then, start both the client and server:
 ```bash
 $ pnpm run dev
 $ pnpm run dev:https # Https version, but you need to edit your hosts file to access at https://x-padlet.local:3001/
+```
 
-$ pnpm run server # Need to create DB
+To analyze the bundle size:
+
+```bash
+ANALYZE=true pnpm build
 ```
 
 The application will be available at:
 
-- Client: [http://localhost:3000](http://localhost:3000)
-- Server: [http://localhost:3001](http://localhost:3001)
+- Client: [http://localhost:3001](http://localhost:3001)
 
 ## Configuration
 
@@ -66,19 +60,17 @@ The application uses environment variables for configuration. Create a `.env.loc
 NEXT_PUBLIC_API_URL=http://localhost:3002
 ```
 
-You can copy the `.env.example` file to get started:
-
 ```bash
-cp .env.example .env.local
+cp .env.local.example .env.local
 ```
 
 ## How to Use
 
-1. **Add Todo**: Click the "Add Todo" button to create a new todo
-2. **Edit Todo**: Click the edit icon on any todo card to modify it
-3. **Complete Todo**: Click the check icon to mark a todo as complete
-4. **Delete Todo**: Click the trash icon to remove a todo
-5. **Presentation Mode**: Navigate to the Presentation tab to view active todos as slides
+1. **Create Content**: Click the "Create" button to add new content
+2. **Edit Content**: Click the edit icon on any card to modify it
+3. **Upload Images**: Drag and drop images or use the upload button
+4. **Use Markdown**: Format your content using markdown syntax
+5. **Change Theme**: Toggle between light and dark mode, or customize colors
 
 ## Project Structure
 

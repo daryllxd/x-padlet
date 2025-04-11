@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { TodoList } from '@/types';
-import { X } from 'lucide-react';
+import { LoaderIcon, X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { FileUploader } from '../ui/file-uploader';
@@ -24,6 +24,7 @@ interface TodoListDialogProps {
   onOpenChange: (open: boolean) => void;
   onSave: (data: FormData) => void;
   mode: 'create' | 'edit';
+  isSaving?: boolean;
 }
 
 export interface TodoListDialogRef {
@@ -34,7 +35,7 @@ export interface TodoListDialogRef {
 }
 
 export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>(
-  ({ todoList, open, onOpenChange, onSave, mode }, ref) => {
+  ({ todoList, open, onOpenChange, onSave, isSaving, mode }, ref) => {
     const [title, setTitle] = useState(todoList?.title || '');
     const [description, setDescription] = useState(todoList?.description || '');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -171,6 +172,7 @@ export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>
               className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium"
             >
               {mode === 'create' ? 'Create' : 'Save'}
+              {isSaving && <LoaderIcon className="ml-2 h-4 w-4" />}
             </button>
           </DialogFooter>
         </DialogContent>

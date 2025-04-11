@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList } from '@/types/todo';
+import { TodoList, TodoListWithCreating } from '@/types/todo';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type CreateTodoListInput = {
@@ -18,7 +18,7 @@ const createTodoList = async (input: CreateTodoListInput): Promise<TodoList> => 
   }
 
   if (input.coverImageFile) {
-    formData.append('coverImage', input.coverImageFile);
+    formData.append('cover_image', input.coverImageFile);
   }
 
   const response = await fetch(API_ENDPOINTS.todoLists, {
@@ -42,19 +42,20 @@ export function useCreateTodoList() {
       await queryClient.cancelQueries({ queryKey: ['todoLists'] });
       const previousTodoLists = queryClient.getQueryData<TodoList[]>(['todoLists']) ?? [];
 
-      const optimisticTodoList: TodoList = {
-        id: `temp-${Date.now()}`,
+      const optimisticTodoList: TodoListWithCreating = {
+        id: 'temp-id',
         title: newTodoList.title,
         description: newTodoList.description,
+        status: 'creating',
         todoCount: 0,
-        status: 'active',
-        // We don't include coverImage in the optimistic update since it's a file
-        // and will be handled by the server
       };
 
-      queryClient.setQueryData<TodoList[]>(['todoLists'], (old = []) => {
-        return [...old, optimisticTodoList];
-      });
+      queryClient.setQueryData<TodoListWithCreating[]>(
+        ['todoLists', { status: 'active' }],
+        (old = []) => {
+          return [optimisticTodoList, ...old];
+        }
+      );
 
       return { previousTodoLists };
     },
@@ -64,7 +65,13 @@ export function useCreateTodoList() {
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['todoLists'] });
+      // Get all query keys that start with 'todoLists'
+      const todoListQueries = queryClient.getQueriesData({ queryKey: ['todoLists'] });
+
+      // Invalidate all todoList queries
+      todoListQueries.forEach(([queryKey]) => {
+        queryClient.invalidateQueries({ queryKey });
+      });
     },
   });
 }

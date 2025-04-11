@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList } from '@/types/todo';
+import { TodoList, TodoListWithCreating } from '@/types/todo';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type UpdateTodoListInput = {
@@ -33,7 +33,7 @@ export function useUpdateTodoList() {
       await queryClient.cancelQueries({ queryKey: ['todoLists'] });
       const previousTodoLists = queryClient.getQueryData<TodoList[]>(['todoLists']) ?? [];
 
-      queryClient.setQueryData<TodoList[]>(['todoLists'], (old = []) => {
+      queryClient.setQueryData<TodoListWithCreating[]>(['todoLists'], (old = []) => {
         return old.map((list) =>
           list.id === updatedTodoList.id ? { ...list, title: updatedTodoList.title } : list
         );

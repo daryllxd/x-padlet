@@ -6,6 +6,8 @@ export interface TodoList {
   todoCount: number;
 }
 
+export type TodoListWithCreating = TodoList | (Omit<TodoList, 'status'> & { status: 'creating' });
+
 export interface TodoItem {
   id: string;
   title: string;

@@ -39,18 +39,18 @@ export async function POST(request: NextRequest) {
     const isCompleted = formData.get('is_completed') === 'true';
     const imageFile = formData.get('image') as File | null;
 
-    if (!title || !description || !todoListId) {
+    if ((!title && !description) || !todoListId) {
       return NextResponse.json(
         { error: 'Title, description, and todo list ID are required' },
         { status: 400 }
       );
     }
 
-    if (title.toString().length > 255) {
+    if (title && title.toString().length > 255) {
       return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
     }
 
-    if (description.toString().length > 16384) {
+    if (description && description.toString().length > 16384) {
       return NextResponse.json(
         { error: 'Description must be 16,384 characters or less' },
         { status: 400 }
@@ -58,8 +58,8 @@ export async function POST(request: NextRequest) {
     }
 
     const todoFormData: TodoFormData = {
-      title: title.toString(),
-      description: description.toString(),
+      title: title?.toString() ?? '',
+      description: description?.toString() ?? '',
       imageFile: imageFile,
       theme: theme as TodoItem['theme'],
     };

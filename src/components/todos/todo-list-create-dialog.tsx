@@ -35,6 +35,7 @@ export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogPr
               Todo list <span className="font-bold">{data.title}</span> created successfully
             </span>
           );
+          dialogRef.current?.clearForm();
           onClose();
         },
         onError: (error) => {

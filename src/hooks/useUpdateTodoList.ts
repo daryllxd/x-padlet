@@ -5,13 +5,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 type UpdateTodoListInput = {
   id: string;
   title: string;
-  description: string;
+  description?: string;
 };
 
 const updateTodoList = async (input: UpdateTodoListInput): Promise<TodoList> => {
   const formData = new FormData();
   formData.append('title', input.title);
-  formData.append('description', input.description);
+  if (input.description) {
+    formData.append('description', input.description);
+  }
   const response = await fetch(API_ENDPOINTS.todoList(input.id), {
     method: 'PATCH',
     body: formData,
@@ -33,11 +35,20 @@ export function useUpdateTodoList() {
       await queryClient.cancelQueries({ queryKey: ['todoLists'] });
       const previousTodoLists = queryClient.getQueryData<TodoList[]>(['todoLists']) ?? [];
 
-      queryClient.setQueryData<TodoListWithCreating[]>(['todoLists'], (old = []) => {
-        return old.map((list) =>
-          list.id === updatedTodoList.id ? { ...list, title: updatedTodoList.title } : list
-        );
-      });
+      queryClient.setQueryData<TodoListWithCreating[]>(
+        ['todoLists', { status: 'active' }],
+        (old = []) => {
+          return old.map((list) =>
+            list.id === updatedTodoList.id
+              ? {
+                  ...list,
+                  title: updatedTodoList.title,
+                  description: updatedTodoList.description,
+                }
+              : list
+          );
+        }
+      );
 
       return { previousTodoLists };
     },

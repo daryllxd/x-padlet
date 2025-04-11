@@ -28,10 +28,7 @@ interface TodoListDialogProps {
 }
 
 export interface TodoListDialogRef {
-  setTitle: (title: string) => void;
-  setDescription: (description: string) => void;
-  setImage: (file: File | null) => void;
-  getFormData: () => FormData;
+  clearForm: () => void;
 }
 
 export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>(
@@ -43,28 +40,11 @@ export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useImperativeHandle(ref, () => ({
-      setTitle: (title: string) => setTitle(title),
-      setDescription: (description: string) => setDescription(description),
-      setImage: (file: File | null) => {
-        setCoverImageFile(file);
-        if (file) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setImagePreview(reader.result as string);
-          };
-          reader.readAsDataURL(file);
-        } else {
-          setImagePreview(null);
-        }
-      },
-      getFormData: () => {
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('description', description);
-        if (coverImageFile) {
-          formData.append('cover_image', coverImageFile);
-        }
-        return formData;
+      clearForm: () => {
+        setTitle('');
+        setDescription('');
+        setImagePreview(null);
+        setCoverImageFile(null);
       },
     }));
 

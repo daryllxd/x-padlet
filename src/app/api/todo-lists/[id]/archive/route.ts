@@ -1,6 +1,5 @@
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
-import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 const archiveTodoList = async (
@@ -22,7 +21,6 @@ const archiveTodoList = async (
       return NextResponse.json({ error: 'Failed to archive todo list' }, { status: 500 });
     }
 
-    revalidateTag('todo-lists');
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error in archive todo list route:', error);

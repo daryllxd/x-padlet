@@ -1,6 +1,5 @@
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/supabase';
-import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -61,7 +60,6 @@ const createTodoList = async (request: NextRequest) => {
       return NextResponse.json({ error: 'Failed to create todo list' }, { status: 500 });
     }
 
-    revalidateTag('todo-lists');
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

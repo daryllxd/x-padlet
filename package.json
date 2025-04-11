@@ -99,5 +99,11 @@
     "*.{md,sql}": [
       "prettier --write"
     ]
+  },
+  "nextBundleAnalysis": {
+    "budget": 358400,
+    "budgetPercentIncreaseRed": 20,
+    "minimumChangeThreshold": 0,
+    "showDetails": true
   }
 }

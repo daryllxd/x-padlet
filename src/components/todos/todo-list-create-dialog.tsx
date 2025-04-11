@@ -14,8 +14,8 @@ interface TodoListCreateDialogProps {
 }
 
 export function TodoListCreateDialog({ isOpen, onClose }: TodoListCreateDialogProps) {
-  const [title, setTitle] = useState('Trial');
-  const [description, setDescription] = useState('Trials');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

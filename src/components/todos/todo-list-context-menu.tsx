@@ -62,8 +62,9 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
 
     const handleSave = (formData: FormData) => {
       const newTitle = formData.get('title') as string;
+      const newDescription = formData.get('description') as string;
       updateTodoList(
-        { id, title: newTitle },
+        { id, title: newTitle, description: newDescription },
         {
           onSuccess: () => {
             toast.success('Todo list updated');

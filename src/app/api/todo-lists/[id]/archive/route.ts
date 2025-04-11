@@ -1,8 +1,12 @@
+import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+const archiveTodoList = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
   const { id } = await params;
   try {
     // Update the todo list status to archived
@@ -24,4 +28,6 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     console.error('Error in archive todo list route:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+};
+
+export const PATCH = withRevalidation<{ id: string }>('todo-lists')(archiveTodoList);

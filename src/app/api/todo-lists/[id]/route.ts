@@ -1,13 +1,17 @@
+import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/supabase';
-import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+const updateTodoList = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
   const { id } = await params;
 
   try {
     const formData = await request.formData();
     const title = formData.get('title');
+    const description = formData.get('description');
 
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
@@ -17,9 +21,16 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
     }
 
+    if (description && description.toString().length > 255) {
+      return NextResponse.json(
+        { error: 'Description must be 255 characters or less' },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await supabase
       .from('todo_lists')
-      .update({ title: title.toString() })
+      .update({ title: title.toString(), description: description?.toString() })
       .eq('id', id)
       .select()
       .single();
@@ -29,11 +40,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Failed to update todo list' }, { status: 500 });
     }
 
-    revalidateTag('todo-lists');
-
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+};
+
+export const PATCH = withRevalidation<{ id: string }>('todo-lists')(updateTodoList);

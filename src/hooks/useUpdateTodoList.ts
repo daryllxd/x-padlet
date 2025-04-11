@@ -5,12 +5,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 type UpdateTodoListInput = {
   id: string;
   title: string;
+  description: string;
 };
 
 const updateTodoList = async (input: UpdateTodoListInput): Promise<TodoList> => {
   const formData = new FormData();
   formData.append('title', input.title);
-
+  formData.append('description', input.description);
   const response = await fetch(API_ENDPOINTS.todoList(input.id), {
     method: 'PATCH',
     body: formData,

@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { useTodos } from '@/hooks/useTodos';
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { TodoDialog } from './todo-dialog';
+import { TodoDialog, TodoDialogRef } from './todo-dialog';
 
 interface TodoCreateDialogProps {
   listId: string;
@@ -14,6 +14,7 @@ interface TodoCreateDialogProps {
 
 export function TodoCreateDialog({ listId }: TodoCreateDialogProps) {
   const [open, setOpen] = useState(false);
+  const dialogRef = useRef<TodoDialogRef>(null);
 
   const { addTodo } = useTodos(listId);
 
@@ -25,6 +26,8 @@ export function TodoCreateDialog({ listId }: TodoCreateDialogProps) {
       await addTodo(formData);
       toast.success('Todo created successfully');
       setOpen(false);
+
+      dialogRef.current?.resetForm();
     } catch (error) {
       console.error('Error creating todo:', error);
       toast.error('Failed to create todo');
@@ -39,7 +42,14 @@ export function TodoCreateDialog({ listId }: TodoCreateDialogProps) {
           Add Todo
         </Button>
       </DialogTrigger>
-      <TodoDialog open={open} onOpenChange={setOpen} onSave={handleSave} mode="create" />
+      <TodoDialog
+        ref={dialogRef}
+        open={open}
+        onOpenChange={setOpen}
+        onSave={handleSave}
+        todo={null}
+        mode="create"
+      />
     </Dialog>
   );
 }

@@ -7,6 +7,7 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { useArchiveTodoList } from '@/hooks/useArchiveTodoList';
+import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { TodoList } from '@/types';
 import { Archive, Clipboard, Copy, Link, Pencil } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
@@ -27,6 +28,7 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
   function TodoListContextMenu({ todoList: { id, title, description, todoCount }, children }, ref) {
     const triggerRef = useRef<HTMLDivElement>(null);
     const { mutate: archiveTodoList } = useArchiveTodoList();
+    const { mutate: updateTodoList } = useUpdateTodoList();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -51,14 +53,28 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
         onSuccess: () => {
           toast.success('Todo list archived');
         },
-        onError: () => {
+        onError: (error) => {
+          console.error(error);
           toast.error('Failed to archive todo list');
         },
       });
     };
 
     const handleSave = (formData: FormData) => {
-      console.log(formData);
+      const newTitle = formData.get('title') as string;
+      updateTodoList(
+        { id, title: newTitle },
+        {
+          onSuccess: () => {
+            toast.success('Todo list updated');
+            setIsEditModalOpen(false);
+          },
+          onError: (error) => {
+            console.error(error);
+            toast.error('Failed to update todo list');
+          },
+        }
+      );
     };
 
     return (
@@ -76,13 +92,13 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
               <Clipboard className="mr-2 h-4 w-4" />
               Copy Link
             </ContextMenuItem>
-            <ContextMenuItem>
-              <Copy className="mr-2 h-4 w-4" />
-              Duplicate List
-            </ContextMenuItem>
             <ContextMenuItem onClick={() => setIsEditModalOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Rename
+              Edit
+            </ContextMenuItem>
+            <ContextMenuItem disabled>
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate List
             </ContextMenuItem>
             <ContextMenuItem className="text-red-600">
               <button

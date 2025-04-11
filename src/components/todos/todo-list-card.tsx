@@ -1,30 +1,27 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { TodoList } from '@/types';
 import { EllipsisVertical } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '../ui/button';
 import { XPadletLink } from '../ui/link';
 import { TodoListContextMenu, TodoListContextMenuRef } from './todo-list-context-menu';
-
 interface TodoListCardProps {
-  id: string;
-  title: string;
-  description?: string;
-  todoCount: number;
+  todoList: TodoList;
 }
 
-export function TodoListCard({ id, title, description, todoCount }: TodoListCardProps) {
+export function TodoListCard({ todoList }: TodoListCardProps) {
   const contextMenuRef = useRef<TodoListContextMenuRef>(null);
+  const { todoCount, id, title, description } = todoList;
 
   const handleEllipsisClick = (e: React.MouseEvent) => {
     e.preventDefault();
     // Get the click position and open the context menu there
     contextMenuRef.current?.open(e.clientX, e.clientY);
   };
-
   return (
-    <TodoListContextMenu id={id} ref={contextMenuRef}>
+    <TodoListContextMenu todoList={todoList} ref={contextMenuRef}>
       <XPadletLink target="_blank" href={`/${id}`} variant="muted">
         <Card className="group hover:bg-accent/50 relative h-full p-6 transition-colors">
           <Button

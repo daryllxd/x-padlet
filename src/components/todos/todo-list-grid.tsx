@@ -34,14 +34,8 @@ export function TodoListGrid() {
   return (
     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
       <CreateTodoListButton />
-      {data.map((list: TodoList) => (
-        <TodoListCard
-          key={list.id}
-          id={list.id}
-          title={list.title}
-          description={list.description}
-          todoCount={list.todoCount}
-        />
+      {data.map((todoList: TodoList) => (
+        <TodoListCard key={todoList.id} todoList={todoList} />
       ))}
     </div>
   );

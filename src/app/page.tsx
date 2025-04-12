@@ -26,11 +26,10 @@ export default async function Home() {
           <div className="mb-8 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                X-Pads
+                Puglet
               </h1>
               <p className="max-w-2xl text-sm text-slate-600 sm:text-base">
-                A simple, easy-to-use todo list app that helps you stay organized and get things
-                done.
+                One of the todo lists of all time
               </p>
             </div>
           </div>

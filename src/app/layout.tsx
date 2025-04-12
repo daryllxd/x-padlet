@@ -20,16 +20,18 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'Todo Manager',
-  description: 'A simple todo manager application with presentation mode',
+  title: 'Puglet - Mock Padlet',
+  description: 'A simple todo list application',
   icons: {
     icon: [
-      {
-        url: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🧑‍🎨</text></svg>',
-        sizes: 'any',
-      },
+      { url: '/puglet.ico', sizes: 'any' },
+      { url: '/puglet.png', sizes: '32x32', type: 'image/png' },
+      { url: '/puglet.webp', sizes: '32x32', type: 'image/webp' },
     ],
+    apple: [{ url: '/puglet.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: ['/puglet.ico'],
   },
+  manifest: '/puglet.webmanifest',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

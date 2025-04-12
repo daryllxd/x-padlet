@@ -1,9 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Info, ListTodo } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Button } from './ui/button';
 import { XPadletLink } from './ui/link';
 
 export function NavBar() {
@@ -25,10 +27,20 @@ export function NavBar() {
   ];
 
   return (
-    <nav className="border-b">
+    <nav className="border-b bg-white">
       <div className="container mx-auto flex h-14 items-center px-4">
         <div className="mr-4">
-          <span className="text-lg font-bold">🧑‍🎨 X-Padlet</span>
+          <Link href="/" className="flex items-center text-lg font-bold">
+            <Image
+              src="/puglet.png"
+              alt="Puglet"
+              width={48}
+              height={48}
+              className="mr-2"
+              priority
+            />
+            Puglet
+          </Link>
         </div>
         <div className="flex space-x-4">
           {links.map((link) => (

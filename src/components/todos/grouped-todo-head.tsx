@@ -16,7 +16,7 @@ interface GroupedTodoHeadProps {
 }
 
 export function GroupedTodoHead({ group, todoListId, isCreate = false }: GroupedTodoHeadProps) {
-  const { deleteGroup, updateGroup, createGroupMutation } = useTodoGroups(todoListId);
+  const { deleteGroupMutation, updateGroup, createGroupMutation } = useTodoGroups(todoListId);
   const [isHovered, setIsHovered] = useState(false);
   const contextMenuRef = useRef<GroupedTodoContextMenuRef>(null);
 
@@ -41,7 +41,8 @@ export function GroupedTodoHead({ group, todoListId, isCreate = false }: Grouped
     if (!group) return;
     if (confirm('Are you sure you want to delete this group?')) {
       try {
-        await deleteGroup(group.id);
+        await deleteGroupMutation.mutateAsync(group.id);
+
         toast.success('Group deleted successfully');
       } catch (error) {
         console.error('Failed to delete group:', error);
@@ -109,16 +110,14 @@ export function GroupedTodoHead({ group, todoListId, isCreate = false }: Grouped
         onMouseLeave={() => setIsHovered(false)}
       >
         <h3 className="text-lg font-semibold">{group.name}</h3>
-        {isHovered && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleEllipsisClick}
-            className="h-8 w-8 rounded-lg p-1 group-hover:bg-gray-100"
-          >
-            <EllipsisVertical className="h-4 w-4" />
-          </Button>
-        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleEllipsisClick}
+          className="h-8 w-8 rounded-lg p-1 pr-0 group-hover:bg-gray-100"
+        >
+          <EllipsisVertical className="h-4 w-4" />
+        </Button>
       </div>
     </GroupedTodoContextMenu>
   );

@@ -69,6 +69,8 @@ export function useTodoGroups(todoListId: string) {
       if (!response.ok) {
         throw new Error('Failed to delete group');
       }
+
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] });
@@ -81,7 +83,7 @@ export function useTodoGroups(todoListId: string) {
     error: error as Error | null,
     createGroupMutation,
     updateGroup: updateGroupMutation.mutate,
-    deleteGroup: deleteGroupMutation.mutate,
+    deleteGroupMutation,
     refetch: () => queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] }),
   };
 }

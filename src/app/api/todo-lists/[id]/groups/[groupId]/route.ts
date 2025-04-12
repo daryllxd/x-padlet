@@ -39,13 +39,31 @@ const updateTodoGroup = async (
   }
 };
 
-const deleteTodoGroup = async (
+async function deleteTodoGroup(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; groupId: string }> }
-) => {
+) {
   const { id, groupId } = await params;
 
   try {
+    // First check how many groups exist for this todo list
+    const { count, error: countError } = await supabase
+      .from('todo_groups')
+      .select('*', { count: 'exact', head: true })
+      .eq('todo_list_id', id);
+
+    if (countError) {
+      console.error('Supabase count error:', countError);
+      return NextResponse.json({ error: 'Failed to count todo groups' }, { status: 500 });
+    }
+
+    if (count === 1) {
+      return NextResponse.json(
+        { error: 'Cannot delete the last group. At least one group must remain.' },
+        { status: 400 }
+      );
+    }
+
     const { error } = await supabase
       .from('todo_groups')
       .delete()
@@ -57,12 +75,12 @@ const deleteTodoGroup = async (
       return NextResponse.json({ error: 'Failed to delete todo group' }, { status: 500 });
     }
 
-    return new NextResponse(null, { status: 204 });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error('Error in DELETE /api/todo-lists/[id]/groups/[groupId]:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-};
+}
 
 export const PATCH = withRevalidation<{ id: string; groupId: string }>('todo-groups')(
   updateTodoGroup

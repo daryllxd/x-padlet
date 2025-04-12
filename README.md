@@ -2,7 +2,9 @@
 
 Sample project to Upskill in:
 
-[Live Demo](https://x-padlet.vercel.app)
+[![Live Demo](https://img.shields.io/badge/🔋_Live_demo-Hello-green)](https://x-padlet.vercel.app)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/daryll-santos/)
 
 ## Features
 

@@ -6,13 +6,13 @@ import { TodoCreateDialog } from './todo-create-dialog';
 
 interface GroupedTodoCreateProps {
   todoListId: string;
-  groupId: string;
+  todoGroupId: string;
 }
 
-export function GroupedTodoCreate({ todoListId, groupId }: GroupedTodoCreateProps) {
+export function GroupedTodoCreate({ todoListId, todoGroupId }: GroupedTodoCreateProps) {
   return (
     <>
-      <TodoCreateDialog listId={todoListId}>
+      <TodoCreateDialog listId={todoListId} todoGroupId={todoGroupId}>
         <Button
           variant="ghost"
           size="sm"

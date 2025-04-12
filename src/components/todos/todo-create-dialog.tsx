@@ -10,9 +10,10 @@ import { TodoDialog, TodoDialogRef } from './todo-dialog';
 
 interface TodoCreateDialogProps extends ComponentProps<typeof Dialog> {
   listId: string;
+  todoGroupId?: string;
 }
 
-export function TodoCreateDialog({ listId, children }: TodoCreateDialogProps) {
+export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDialogProps) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<TodoDialogRef>(null);
 
@@ -20,6 +21,9 @@ export function TodoCreateDialog({ listId, children }: TodoCreateDialogProps) {
 
   const handleSave = async (formData: FormData) => {
     formData.append('todo_list_id', listId);
+    if (todoGroupId) {
+      formData.append('todo_group_id', todoGroupId);
+    }
     formData.append('is_completed', 'false');
 
     try {

@@ -88,12 +88,25 @@ export async function POST(request: NextRequest) {
       theme: theme as TodoItem['theme'],
     };
 
+    const { data: groups, error: groupsError } = await supabase
+      .from('todo_groups')
+      .select('id')
+      .eq('todo_list_id', todoListId)
+      .order('created_at', { ascending: true })
+      .limit(1);
+
+    if (groupsError) {
+      console.error('Error fetching groups:', groupsError);
+      return NextResponse.json({ error: 'Failed to fetch groups' }, { status: 500 });
+    }
+
     const newTodo: Partial<TodoItem> = {
       title: todoFormData.title,
       description: todoFormData.description,
       todo_list_id: todoListId.toString(),
       is_completed: isCompleted,
       theme: todoFormData.theme,
+      todo_group_id: groups?.[0]?.id || null,
     };
 
     if (todoFormData.imageFile) {

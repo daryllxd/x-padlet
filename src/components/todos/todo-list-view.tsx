@@ -15,7 +15,7 @@ interface TodoListViewProps {
 }
 
 export function TodoListView({ todos, listId }: TodoListViewProps) {
-  const [viewType, setViewType] = useState<TodoListViewType>('masonry');
+  const [viewType, setViewType] = useState<TodoListViewType>('columnar');
 
   return (
     <div className="space-y-4">

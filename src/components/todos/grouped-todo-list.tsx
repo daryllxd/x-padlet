@@ -1,6 +1,9 @@
 'use client';
 
-import { TodoItem } from '@/types';
+import { useTodoGroups } from '@/hooks/useTodoGroups';
+import { TodoGroup, TodoItem } from '@/types';
+import { GroupedTodoCreate } from './grouped-todo-create';
+import { GroupedTodoHead } from './grouped-todo-head';
 import { TodoCard } from './todo-card';
 
 interface GroupedTodoListProps {
@@ -9,6 +12,8 @@ interface GroupedTodoListProps {
 }
 
 export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
+  const { groups, isLoading } = useTodoGroups(listId);
+
   // Group todos by their group_id
   const groupedTodos = todos.reduce(
     (acc, todo) => {
@@ -25,18 +30,28 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
     {} as Record<string, { name: string; todos: TodoItem[] }>
   );
 
+  if (isLoading) {
+    return <></>;
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {Object.entries(groupedTodos).map(([groupId, group]) => (
-        <div key={groupId} className="space-y-4">
-          <h3 className="text-lg font-semibold">{group.name}</h3>
-          <div className="space-y-4">
-            {group.todos.map((todo) => (
-              <TodoCard key={todo.id} todo={todo} listId={listId} />
-            ))}
+    <div className="space-y-6">
+      <div className="flex gap-4 overflow-x-auto pb-4">
+        {groups.map((group: TodoGroup) => (
+          <div key={group.id} className="min-w-[300px] space-y-4">
+            <GroupedTodoHead todoListId={listId} group={group} />
+            <GroupedTodoCreate todoListId={listId} todoGroupId={group.id} />
+            <div className="space-y-4">
+              {groupedTodos[group.id]?.todos.map((todo) => (
+                <TodoCard key={todo.id} todo={todo} listId={listId} />
+              ))}
+            </div>
           </div>
+        ))}
+        <div className="min-w-[300px] space-y-4">
+          <GroupedTodoHead todoListId={listId} isCreate />
         </div>
-      ))}
+      </div>
     </div>
   );
 }

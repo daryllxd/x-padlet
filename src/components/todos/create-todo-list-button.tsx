@@ -12,7 +12,7 @@ export function CreateTodoListButton() {
     <>
       <Button
         size="lg"
-        className="group relative h-32 h-full w-full cursor-pointer items-start justify-start overflow-hidden rounded-xl border-2 border-dashed border-slate-200 bg-white p-6 text-left transition-all hover:border-indigo-500 hover:bg-indigo-50"
+        className="group relative h-32 w-full cursor-pointer items-start justify-start overflow-hidden rounded-xl border-2 border-dashed border-slate-200 bg-white p-6 text-left transition-all hover:border-indigo-500 hover:bg-indigo-50"
         onClick={() => setIsCreateModalOpen(true)}
       >
         <div className="flex h-full flex-col justify-between">

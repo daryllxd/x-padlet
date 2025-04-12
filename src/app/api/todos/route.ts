@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
     const title = formData.get('title');
     const description = formData.get('description');
     const todoListId = formData.get('todo_list_id');
+    const todoGroupId = formData.get('todo_group_id');
     const theme = formData.get('theme');
     const isCompleted = formData.get('is_completed') === 'true';
     const imageFile = formData.get('image') as File | null;
@@ -88,12 +89,32 @@ export async function POST(request: NextRequest) {
       theme: theme as TodoItem['theme'],
     };
 
+    let groupId: string | undefined = todoGroupId?.toString() || undefined;
+
+    // If no group ID was provided, get the first group
+    if (!groupId) {
+      const { data: groups, error: groupsError } = await supabase
+        .from('todo_groups')
+        .select('id')
+        .eq('todo_list_id', todoListId)
+        .order('position', { ascending: true })
+        .limit(1);
+
+      if (groupsError) {
+        console.error('Error fetching groups:', groupsError);
+        return NextResponse.json({ error: 'Failed to fetch groups' }, { status: 500 });
+      }
+
+      groupId = groups?.[0]?.id;
+    }
+
     const newTodo: Partial<TodoItem> = {
       title: todoFormData.title,
       description: todoFormData.description,
       todo_list_id: todoListId.toString(),
       is_completed: isCompleted,
       theme: todoFormData.theme,
+      todo_group_id: groupId,
     };
 
     if (todoFormData.imageFile) {

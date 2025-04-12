@@ -3,7 +3,15 @@ import { NavBar } from '@/components/NavBar';
 import { Providers } from '@/components/Providers';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
-import { Inter, Montserrat, Open_Sans, Poppins, Roboto } from 'next/font/google';
+import {
+  Inter,
+  Montserrat,
+  Open_Sans,
+  Playpen_Sans,
+  Playpen_Sans,
+  Poppins,
+  Roboto,
+} from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const roboto = Roboto({
@@ -18,6 +26,7 @@ const poppins = Poppins({
   subsets: ['latin'],
   variable: '--font-poppins',
 });
+const playpen = Playpen_Sans({ subsets: ['latin'], variable: '--font-playpen' });
 
 export const metadata: Metadata = {
   title: 'Puglet - Mock Padlet',

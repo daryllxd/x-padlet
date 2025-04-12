@@ -25,6 +25,7 @@ const FONTS = {
   'Open Sans': 'Open Sans, sans-serif',
   Montserrat: 'Montserrat, sans-serif',
   Poppins: 'Poppins, sans-serif',
+  Playpen_Sans: 'Playpen Sans, sans-serif',
 } as const;
 
 type ThemeColor = keyof typeof THEME_COLORS;
@@ -34,7 +35,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
   const router = useRouter();
   const { todo_list_id: todoListId } = use(params);
   const [themeColor, setThemeColor] = useState<ThemeColor>('white');
-  const [font, setFont] = useState<Font>('Inter');
+  const [font, setFont] = useState<Font>('Playpen_Sans');
 
   const { data: todoList } = useTodoList(todoListId);
   const { todos, isLoading } = useTodos(todoListId);
@@ -73,7 +74,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
               </div>
               <p className="text-sm text-slate-500">{todoList?.description}</p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4 lg:flex-row">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-slate-500">Theme:</span>
                 <div className="flex gap-1">
@@ -104,7 +105,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="pointer-events-none absolute top-1/2 right-2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <ChevronDown className="pointer-events-none absolute top-2 right-2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 </div>
               </div>
               <TodoCreateDialog listId={todoListId} />

@@ -3,9 +3,21 @@ import { NavBar } from '@/components/NavBar';
 import { Providers } from '@/components/Providers';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Montserrat, Open_Sans, Poppins, Roboto } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
+});
+const openSans = Open_Sans({ subsets: ['latin'], variable: '--font-open-sans' });
+const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' });
+const poppins = Poppins({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
+});
 
 export const metadata: Metadata = {
   title: 'Todo Manager',
@@ -23,7 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <Providers>
           <Toaster />
           <div className="flex min-h-screen flex-col">

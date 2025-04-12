@@ -4,6 +4,7 @@ import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
 import { TodoListView } from '@/components/todos/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
+import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
@@ -18,12 +19,22 @@ const THEME_COLORS = {
   white: 'bg-white',
 } as const;
 
+const FONTS = {
+  Inter: 'Inter, sans-serif',
+  Roboto: 'Roboto, sans-serif',
+  'Open Sans': 'Open Sans, sans-serif',
+  Montserrat: 'Montserrat, sans-serif',
+  Poppins: 'Poppins, sans-serif',
+} as const;
+
 type ThemeColor = keyof typeof THEME_COLORS;
+type Font = keyof typeof FONTS;
 
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const router = useRouter();
   const { todo_list_id: todoListId } = use(params);
   const [themeColor, setThemeColor] = useState<ThemeColor>('white');
+  const [font, setFont] = useState<Font>('Inter');
 
   const { data: todoList } = useTodoList(todoListId);
   const { todos, isLoading } = useTodos(todoListId);
@@ -47,7 +58,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
   }
 
   return (
-    <div className={`min-h-screen ${THEME_COLORS[themeColor]}`}>
+    <div className={`min-h-screen ${THEME_COLORS[themeColor]}`} style={{ fontFamily: FONTS[font] }}>
       <div className="container mx-auto px-4 py-6 sm:py-10">
         <header className="mb-6 sm:mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -76,6 +87,24 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
                       title={color}
                     />
                   ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-500">Font:</span>
+                <div className="relative">
+                  <select
+                    value={font}
+                    onChange={(e) => setFont(e.target.value as Font)}
+                    className="appearance-none rounded-md border border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm focus:ring-2 focus:ring-slate-400 focus:outline-none"
+                    style={{ fontFamily: FONTS[font] }}
+                  >
+                    {Object.keys(FONTS).map((font) => (
+                      <option key={font} value={font} style={{ fontFamily: FONTS[font as Font] }}>
+                        {font}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute top-1/2 right-2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 </div>
               </div>
               <TodoCreateDialog listId={todoListId} />

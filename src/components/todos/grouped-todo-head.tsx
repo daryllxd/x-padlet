@@ -1,8 +1,9 @@
 'use client';
 
 import { useTodoGroups } from '@/hooks/useTodoGroups';
+import { cn } from '@/lib/utils';
 import { TodoGroup } from '@/types';
-import { EllipsisVertical, Loader2, Plus } from 'lucide-react';
+import { EllipsisVertical, Plus } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
@@ -15,7 +16,7 @@ interface GroupedTodoHeadProps {
 }
 
 export function GroupedTodoHead({ group, todoListId, isCreate = false }: GroupedTodoHeadProps) {
-  const { deleteGroup, updateGroup, createGroup, isCreatingGroup } = useTodoGroups(todoListId);
+  const { deleteGroup, updateGroup, createGroupMutation } = useTodoGroups(todoListId);
   const [isHovered, setIsHovered] = useState(false);
   const contextMenuRef = useRef<GroupedTodoContextMenuRef>(null);
 
@@ -25,13 +26,14 @@ export function GroupedTodoHead({ group, todoListId, isCreate = false }: Grouped
   };
 
   const handleCreateGroup = async () => {
-    if (isCreatingGroup) return;
+    if (createGroupMutation.isPending) return;
 
     try {
-      await createGroup('New Group');
+      await createGroupMutation.mutateAsync('New Group');
       toast.success('Group created successfully');
     } catch (error) {
       console.error('Failed to create group:', error);
+      toast.error('Failed to create group');
     }
   };
 
@@ -65,17 +67,24 @@ export function GroupedTodoHead({ group, todoListId, isCreate = false }: Grouped
   if (isCreate) {
     return (
       <div
-        className="group mt-2 flex h-12 items-center justify-center rounded-lg bg-slate-300 px-4 py-4 lg:px-6"
+        className={cn(
+          'group mt-2 flex h-12 items-center justify-center rounded-lg bg-slate-300 px-4 py-4 lg:px-6',
+          createGroupMutation.isPending && 'opacity-50'
+        )}
         onClick={handleCreateGroup}
       >
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 rounded-lg p-1 group-hover:bg-gray-100"
-          disabled={isCreatingGroup}
+          className={cn(
+            'h-8 w-8 rounded-lg p-1',
+            !createGroupMutation.isPending && 'group-hover:bg-gray-100',
+            createGroupMutation.isPending && 'opacity-50'
+          )}
+          disabled={createGroupMutation.isPending}
         >
-          {isCreatingGroup ? (
-            <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+          {createGroupMutation.isPending ? (
+            <>Creating group...</>
           ) : (
             <Plus className="mx-auto h-4 w-4" />
           )}

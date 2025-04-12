@@ -12,7 +12,7 @@ interface GroupedTodoListProps {
 }
 
 export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
-  const { groups } = useTodoGroups(listId);
+  const { groups, isLoading } = useTodoGroups(listId);
 
   // Group todos by their group_id
   const groupedTodos = todos.reduce(
@@ -29,6 +29,10 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
     },
     {} as Record<string, { name: string; todos: TodoItem[] }>
   );
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <div className="space-y-6">

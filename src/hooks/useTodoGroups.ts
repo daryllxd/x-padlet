@@ -77,10 +77,9 @@ export function useTodoGroups(todoListId: string) {
 
   return {
     groups,
-    loading: isLoading,
+    isLoading,
     error: error as Error | null,
-    createGroup: createGroupMutation.mutate,
-    isCreatingGroup: createGroupMutation.isPending,
+    createGroupMutation,
     updateGroup: updateGroupMutation.mutate,
     deleteGroup: deleteGroupMutation.mutate,
     refetch: () => queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] }),

@@ -2,19 +2,20 @@
 
 import { useTodoGroups } from '@/hooks/useTodoGroups';
 import { TodoGroup } from '@/types';
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, Loader2, Plus } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { GroupedTodoContextMenu, GroupedTodoContextMenuRef } from './grouped-todo-context-menu';
 
 interface GroupedTodoHeadProps {
-  group: TodoGroup;
+  group?: TodoGroup;
   todoListId: string;
+  isCreate?: boolean;
 }
 
-export function GroupedTodoHead({ group, todoListId }: GroupedTodoHeadProps) {
-  const { deleteGroup, updateGroup } = useTodoGroups(todoListId);
+export function GroupedTodoHead({ group, todoListId, isCreate = false }: GroupedTodoHeadProps) {
+  const { deleteGroup, updateGroup, createGroup, isCreatingGroup } = useTodoGroups(todoListId);
   const [isHovered, setIsHovered] = useState(false);
   const contextMenuRef = useRef<GroupedTodoContextMenuRef>(null);
 
@@ -23,7 +24,19 @@ export function GroupedTodoHead({ group, todoListId }: GroupedTodoHeadProps) {
     contextMenuRef.current?.open(e.clientX, e.clientY);
   };
 
+  const handleCreateGroup = async () => {
+    if (isCreatingGroup) return;
+
+    try {
+      await createGroup('New Group');
+      toast.success('Group created successfully');
+    } catch (error) {
+      console.error('Failed to create group:', error);
+    }
+  };
+
   const handleDelete = async () => {
+    if (!group) return;
     if (confirm('Are you sure you want to delete this group?')) {
       try {
         await deleteGroup(group.id);
@@ -36,6 +49,7 @@ export function GroupedTodoHead({ group, todoListId }: GroupedTodoHeadProps) {
   };
 
   const onEdit = async () => {
+    if (!group) return;
     const newName = prompt('Enter new group name:', group.name);
 
     if (!newName) return;
@@ -47,6 +61,30 @@ export function GroupedTodoHead({ group, todoListId }: GroupedTodoHeadProps) {
       toast.error('Failed to update group');
     }
   };
+
+  if (isCreate) {
+    return (
+      <div
+        className="group mt-2 flex h-12 items-center justify-center rounded-lg bg-slate-300 px-4 py-4 lg:px-6"
+        onClick={handleCreateGroup}
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 rounded-lg p-1 group-hover:bg-gray-100"
+          disabled={isCreatingGroup}
+        >
+          {isCreatingGroup ? (
+            <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+          ) : (
+            <Plus className="mx-auto h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    );
+  }
+
+  if (!group) return null;
 
   return (
     <GroupedTodoContextMenu

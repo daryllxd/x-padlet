@@ -80,6 +80,7 @@ export function useTodoGroups(todoListId: string) {
     loading: isLoading,
     error: error as Error | null,
     createGroup: createGroupMutation.mutate,
+    isCreatingGroup: createGroupMutation.isPending,
     updateGroup: updateGroupMutation.mutate,
     deleteGroup: deleteGroupMutation.mutate,
     refetch: () => queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] }),

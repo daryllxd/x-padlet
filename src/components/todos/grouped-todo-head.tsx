@@ -1,6 +1,7 @@
 'use client';
 
-import { TodoGroup, useTodoGroups } from '@/hooks/useTodoGroups';
+import { useTodoGroups } from '@/hooks/useTodoGroups';
+import { TodoGroup } from '@/types';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -28,7 +29,7 @@ export function GroupedTodoHead({ group, todoListId }: GroupedTodoHeadProps) {
 
     if (!newName) return;
     try {
-      await updateGroup({ id: todoListId, groupId: group.id, name: newName });
+      await updateGroup({ groupId: group.id, name: newName });
     } catch (error) {
       console.error('Failed to update group:', error);
     }
@@ -36,7 +37,7 @@ export function GroupedTodoHead({ group, todoListId }: GroupedTodoHeadProps) {
 
   return (
     <div
-      className="flex items-center justify-between rounded-lg bg-slate-300 px-6 py-4"
+      className="flex items-center justify-between rounded-lg bg-slate-300 px-4 py-4 lg:px-6"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

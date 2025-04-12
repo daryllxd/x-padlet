@@ -28,11 +28,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
   }, [todoList?.status]);
 
   if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-6 sm:py-10">
-        <div className="flex h-40 items-center justify-center text-slate-500">Loading...</div>
-      </div>
-    );
+    return null;
   }
 
   if (todoList?.status === 'archived') {

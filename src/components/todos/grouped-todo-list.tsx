@@ -104,16 +104,6 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
             </div>
           </div>
         ))}
-        {groupedTodos['ungrouped'] && (
-          <div className="min-w-[300px] space-y-4">
-            <h3 className="text-lg font-semibold">Ungrouped</h3>
-            <div className="space-y-4">
-              {groupedTodos['ungrouped'].todos.map((todo) => (
-                <TodoCard key={todo.id} todo={todo} listId={listId} />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

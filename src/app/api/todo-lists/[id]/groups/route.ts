@@ -13,7 +13,7 @@ const getTodoGroups = async (
       .from('todo_groups')
       .select('*')
       .eq('todo_list_id', id)
-      .order('created_at', { ascending: true });
+      .order('position', { ascending: true });
 
     if (error) {
       console.error('Supabase fetch error:', error);

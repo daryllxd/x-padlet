@@ -34,7 +34,11 @@ type Font = keyof typeof FONTS;
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const router = useRouter();
   const { todo_list_id: todoListId } = use(params);
-  const [themeColor, setThemeColor] = useState<ThemeColor>('white');
+  const [themeColor, setThemeColor] = useState<ThemeColor>(
+    Object.keys(THEME_COLORS)[
+      Math.floor(Math.random() * Object.keys(THEME_COLORS).length)
+    ] as ThemeColor
+  );
   const [font, setFont] = useState<Font>('Playpen_Sans');
 
   const { data: todoList } = useTodoList(todoListId);

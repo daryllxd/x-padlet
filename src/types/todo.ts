@@ -19,4 +19,7 @@ export interface TodoItem {
   created_at: string;
   updated_at: string;
   theme: 'red' | 'blue' | 'green' | 'yellow' | 'purple' | null;
+  todo_group_id?: string;
+  todo_group_name?: string;
+  todo_group_position?: number;
 }

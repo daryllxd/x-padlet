@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
-import { TodoFormData, TodoItem } from '@/types';
+import { TodoFormData } from '@/types';
+import { TodoItem } from '@/types/todo';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {

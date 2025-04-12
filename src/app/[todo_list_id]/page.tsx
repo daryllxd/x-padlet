@@ -1,7 +1,7 @@
 'use client';
 
-import { DraggableTodoList } from '@/components/todos/draggable-todo-list';
 import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
+import { TodoListView } from '@/components/todos/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import Image from 'next/image';
@@ -56,7 +56,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
       </header>
 
       {todos && todos.length > 0 ? (
-        <DraggableTodoList listId={todoListId} todos={todos} />
+        <TodoListView todos={todos} listId={todoListId} />
       ) : (
         <div className="m-10 flex flex-col items-center justify-center text-slate-500 sm:m-20">
           <Image

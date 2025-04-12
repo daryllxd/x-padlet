@@ -4,15 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { useTodos } from '@/hooks/useTodos';
 import { Plus } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { ComponentProps, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { TodoDialog, TodoDialogRef } from './todo-dialog';
 
-interface TodoCreateDialogProps {
+interface TodoCreateDialogProps extends ComponentProps<typeof Dialog> {
   listId: string;
 }
 
-export function TodoCreateDialog({ listId }: TodoCreateDialogProps) {
+export function TodoCreateDialog({ listId, children }: TodoCreateDialogProps) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<TodoDialogRef>(null);
 
@@ -37,10 +37,12 @@ export function TodoCreateDialog({ listId }: TodoCreateDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Todo
-        </Button>
+        {children || (
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Todo
+          </Button>
+        )}
       </DialogTrigger>
       <TodoDialog
         ref={dialogRef}

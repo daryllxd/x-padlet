@@ -4,6 +4,7 @@ import { useTodoGroups } from '@/hooks/useTodoGroups';
 import { TodoGroup, TodoItem } from '@/types';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
+import { GroupedTodoCreate } from './grouped-todo-create';
 import { GroupedTodoHead } from './grouped-todo-head';
 import { TodoCard } from './todo-card';
 
@@ -97,6 +98,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
         {groups.map((group: TodoGroup) => (
           <div key={group.id} className="min-w-[300px] space-y-4">
             <GroupedTodoHead todoListId={listId} group={group} />
+            <GroupedTodoCreate todoListId={listId} groupId={group.id} />
             <div className="space-y-4">
               {groupedTodos[group.id]?.todos.map((todo) => (
                 <TodoCard key={todo.id} todo={todo} listId={listId} />

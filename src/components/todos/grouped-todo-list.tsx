@@ -38,7 +38,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
     <div className="space-y-6">
       <div className="flex gap-4 overflow-x-auto pb-4">
         {groups.map((group: TodoGroup) => (
-          <div key={group.id} className="min-w-[300px] space-y-4">
+          <div key={group.id} className="w-[320px] space-y-4">
             <GroupedTodoHead todoListId={listId} group={group} />
             <GroupedTodoCreate todoListId={listId} todoGroupId={group.id} />
             <div className="w-[320px] space-y-4">
@@ -48,7 +48,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
             </div>
           </div>
         ))}
-        <div className="min-w-[300px] space-y-4">
+        <div className="w-[320px] space-y-4">
           <GroupedTodoHead todoListId={listId} isCreate />
         </div>
       </div>

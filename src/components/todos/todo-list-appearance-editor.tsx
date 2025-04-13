@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Settings2 } from 'lucide-react';
 const THEME_COLORS = {
@@ -42,17 +43,24 @@ export function TodoListAppearanceEditor({
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button>
-          <Settings2 className="h-4 w-4" />
-          <span className="sr-only">Open appearance settings</span>
-        </Button>
-      </SheetTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SheetTrigger asChild>
+            <Button>
+              <Settings2 className="h-4 w-4" />
+              <span className="sr-only">Open appearance settings</span>
+            </Button>
+          </SheetTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Appearance Settings</p>
+        </TooltipContent>
+      </Tooltip>
       <SheetContent
         side={isMobile ? 'bottom' : 'right'}
-        className="max-sm:rounded-t-lg sm:w-[400px] sm:max-w-[400px]"
+        className="px-6 max-sm:rounded-t-lg max-sm:pb-12 sm:w-[400px] sm:max-w-[400px]"
       >
-        <SheetHeader>
+        <SheetHeader className="px-0">
           <SheetTitle>Appearance Settings</SheetTitle>
         </SheetHeader>
         <div className="mt-6 space-y-6">

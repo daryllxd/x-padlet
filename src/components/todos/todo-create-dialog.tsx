@@ -1,7 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTodos } from '@/hooks/useTodos';
 import { Plus } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
@@ -30,7 +37,6 @@ export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDi
       await addTodo(formData);
       toast.success('Todo created successfully');
       setOpen(false);
-
       dialogRef.current?.resetForm();
     } catch (error) {
       console.error('Error creating todo:', error);
@@ -42,20 +48,34 @@ export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDi
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button>
-            <Plus className="h-4 w-4" />
-            <span className="sr-only">Add to list</span>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => setOpen(true)}>
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">Add to list</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Add a new todo</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </DialogTrigger>
-      <TodoDialog
-        ref={dialogRef}
-        open={open}
-        onOpenChange={setOpen}
-        onSave={handleSave}
-        todo={null}
-        mode="create"
-      />
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create New Todo</DialogTitle>
+        </DialogHeader>
+        <TodoDialog
+          ref={dialogRef}
+          open={open}
+          onOpenChange={setOpen}
+          onSave={handleSave}
+          todo={null}
+          mode="create"
+        />
+      </DialogContent>
     </Dialog>
   );
 }

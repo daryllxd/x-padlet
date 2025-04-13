@@ -42,7 +42,7 @@ export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDi
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="gap-2">
+          <Button>
             <Plus className="h-4 w-4" />
             <span className="sr-only">Add to list</span>
           </Button>

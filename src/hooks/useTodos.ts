@@ -57,56 +57,6 @@ export function useTodos(listId: string) {
     },
   });
 
-  const addTodoMutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const response = await fetch(`/api/todos`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create todo');
-      }
-
-      return response.json();
-    },
-    onMutate: async (newTodo) => {
-      await queryClient.cancelQueries({ queryKey: ['todos', listId] });
-      const previousTodos = queryClient.getQueryData<TodoItem[]>(['todos', listId]) ?? [];
-
-      const optimisticTodo: TodoItem = {
-        id: 'temp-id',
-        title: newTodo.get('title')?.toString() ?? '',
-        description: newTodo.get('description')?.toString() ?? '',
-        todo_list_id: listId,
-        todo_group_id: newTodo.get('todo_group_id')?.toString() ?? '',
-        todo_group_name: '',
-        todo_group_position: 0,
-        is_completed: false,
-        position: 1,
-        position_in_group: 1,
-        theme: (newTodo.get('theme')?.toString() ?? 'blue') as TodoItem['theme'],
-        image_url: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
-      queryClient.setQueryData<TodoItem[]>(['todos', listId], (old = []) => {
-        return [optimisticTodo, ...old];
-      });
-
-      return { previousTodos };
-    },
-    onError: (err, newTodo, context) => {
-      if (context?.previousTodos) {
-        queryClient.setQueryData(['todos', listId], context.previousTodos);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos', listId] });
-    },
-  });
-
   const updateMutation = useMutation({
     mutationFn: ({ id, formData }: { id: string; formData: FormData }) => updateTodo(id, formData),
     onSuccess: () => {
@@ -168,14 +118,12 @@ export function useTodos(listId: string) {
   return {
     todos,
     isLoading,
-    addTodo: (formData: FormData) => addTodoMutation.mutateAsync(formData),
     updateTodo: (id: string, formData: FormData) => updateMutation.mutateAsync({ id, formData }),
     toggleTodo: (id: string) => toggleTodoMutation.mutateAsync(id),
     deleteTodo: (id: string) => deleteTodoMutation.mutateAsync(id),
     reorderTodos: (todoIds: string[]) => reorderMutation.mutateAsync(todoIds),
     reorderGroupTodos: (groupId: string, todo: { id: string; position_in_group: number }) =>
       reorderMutation.mutateAsync({ groupId, todo }),
-    isAdding: addTodoMutation.isPending,
     isUpdating: updateMutation.isPending,
     isToggling: toggleTodoMutation.isPending,
     isDeleting: deleteTodoMutation.isPending,

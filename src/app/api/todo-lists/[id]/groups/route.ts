@@ -44,9 +44,30 @@ const createTodoGroup = async (
       return NextResponse.json({ error: 'Name must be 255 characters or less' }, { status: 400 });
     }
 
+    const { data: maxPositionData, error: maxPositionError } = await supabase
+      .from('todo_groups')
+      .select('position')
+      .eq('todo_list_id', id)
+      .order('position', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (maxPositionError && maxPositionError.code !== 'PGRST116') {
+      console.error('Supabase max position error:', maxPositionError);
+      return NextResponse.json({ error: 'Failed to get max position' }, { status: 500 });
+    }
+
+    const nextPosition = (maxPositionData?.position ?? 0) + 1;
+
     const { data, error } = await supabase
       .from('todo_groups')
-      .insert([{ name, todo_list_id: id }])
+      .insert([
+        {
+          name,
+          todo_list_id: id,
+          position: nextPosition,
+        },
+      ])
       .select()
       .single();
 

@@ -6,7 +6,7 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import { Masonry } from 'masonic';
 import { useEffect, useMemo, useRef } from 'react';
 import { usePrevious } from 'react-use';
-import { TodoCard } from './todo-card';
+import { TodoListGridTodoCard } from './todo-list-grid-todo-card';
 
 interface DraggableTodoListProps {
   todos: TodoItem[];
@@ -85,7 +85,7 @@ export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
     <Masonry
       key={gridKeyPostfix}
       items={todos}
-      render={({ data }) => <TodoCard listId={listId} todo={data} />}
+      render={({ data }) => <TodoListGridTodoCard listId={listId} todo={data} />}
       columnGutter={16}
       columnWidth={300}
     />

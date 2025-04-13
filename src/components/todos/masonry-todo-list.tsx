@@ -6,14 +6,14 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import { Masonry } from 'masonic';
 import { useEffect, useMemo, useRef } from 'react';
 import { usePrevious } from 'react-use';
-import { TodoListGridTodoCard } from './todo-list-grid-todo-card';
+import { MasonryTodoListCard } from './masonry-todo-list-card';
 
-interface DraggableTodoListProps {
+interface MasonryTodoListProps {
   todos: TodoItem[];
   listId: string;
 }
 
-export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
+export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
   const { reorderTodos } = useTodos(listId);
 
   /**
@@ -85,7 +85,7 @@ export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
     <Masonry
       key={gridKeyPostfix}
       items={todos}
-      render={({ data }) => <TodoListGridTodoCard listId={listId} todo={data} />}
+      render={({ data }) => <MasonryTodoListCard listId={listId} todo={data} />}
       columnGutter={16}
       columnWidth={300}
     />

@@ -5,12 +5,12 @@ import { TodoItem } from '@/types';
 import { Draggable } from './draggable';
 import { TodoCard } from './todo-card';
 
-interface TodoListGridTodoCardProps {
+interface MasonryTodoListCardProps {
   todo: TodoItem;
   listId: string;
 }
 
-export function TodoListGridTodoCard({ todo, listId }: TodoListGridTodoCardProps) {
+export function MasonryTodoListCard({ todo, listId }: MasonryTodoListCardProps) {
   return (
     <Draggable todo={todo}>
       {(state) => (

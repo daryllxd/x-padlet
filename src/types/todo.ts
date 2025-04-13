@@ -22,4 +22,5 @@ export interface TodoItem {
   todo_group_id: string;
   todo_group_name: string;
   todo_group_position: number;
+  position_in_group: number;
 }

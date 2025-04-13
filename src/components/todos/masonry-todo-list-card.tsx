@@ -8,11 +8,12 @@ import { TodoCard } from './todo-card';
 interface MasonryTodoListCardProps {
   todo: TodoItem;
   listId: string;
+  positionType: 'position' | 'position_in_group';
 }
 
-export function MasonryTodoListCard({ todo, listId }: MasonryTodoListCardProps) {
+export function MasonryTodoListCard({ todo, listId, positionType }: MasonryTodoListCardProps) {
   return (
-    <Draggable todo={todo}>
+    <Draggable todo={todo} positionType={positionType}>
       {(state) => (
         <TodoCard
           todo={todo}

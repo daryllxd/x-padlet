@@ -1,6 +1,7 @@
 'use client';
 
 import { useTodoGroups } from '@/hooks/useTodoGroups';
+import { useTodos } from '@/hooks/useTodos';
 import { PugletDraggableState } from '@/lib/puglet-drag/puglet-draggable-state';
 import { cn } from '@/lib/utils';
 import { TodoGroup, TodoItem } from '@/types';
@@ -9,7 +10,7 @@ import { useEffect } from 'react';
 import { DraggableTodoGroup } from '../todo-groups/draggable-todo-group';
 import { GroupedTodoCreate } from './grouped-todo-create';
 import { GroupedTodoHead } from './grouped-todo-head';
-import { TodoCard } from './todo-card';
+import { MasonryTodoListCard } from './masonry-todo-list-card';
 
 interface GroupedTodoListProps {
   todos: TodoItem[];
@@ -18,6 +19,7 @@ interface GroupedTodoListProps {
 
 export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
   const { groups, isLoading, reorderGroups } = useTodoGroups(listId);
+  const { reorderGroupTodos } = useTodos(listId);
 
   // Group todos by their group_id
   const groupedTodos = todos.reduce(
@@ -38,44 +40,72 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
   useEffect(() => {
     return monitorForElements({
       onDrop: ({ source, location }) => {
-        const dropTarget = location.current.dropTargets[0] as unknown as {
-          data: { id: string; title: string };
+        const todoDropTarget = location.current.dropTargets.find(
+          (target) => target.data.type == 'todo'
+        ) as unknown as {
+          data: { id: string; title: string; type: string; position_in_group: number };
         };
 
-        if (!dropTarget) {
+        const groupDropTarget = location.current.dropTargets.find(
+          (target) => target.data.type == 'todo-group'
+        ) as unknown as {
+          data: { id: string; title: string; type: string };
+        };
+
+        if (!groupDropTarget) {
           return;
         }
 
         const sourceId = source.data as unknown as {
           id: string;
           title: string;
+          type: string;
+          position_in_group: number;
         };
-        const dropTargetId = dropTarget.data.id;
 
-        const [closestEdgeSymbol] = Object.getOwnPropertySymbols(dropTarget.data);
+        if (sourceId.type === 'todo-group') {
+          const {
+            data: { id: groupDropTargetId },
+          } = groupDropTarget;
 
-        if (sourceId.id === dropTargetId) {
-          return;
+          const [closestEdgeSymbol] = Object.getOwnPropertySymbols(groupDropTarget.data);
+
+          if (sourceId.id === groupDropTargetId) {
+            return;
+          }
+
+          const currentOrder = groups.filter((t) => t.id !== sourceId.id).map((t) => t.id);
+
+          const newOrder = currentOrder
+            .map((x) => {
+              if (x === groupDropTargetId) {
+                // @ts-expect-error closestEdgeSymbol is a symbol
+                if (groupDropTarget.data[closestEdgeSymbol] === 'left') {
+                  return [sourceId.id, groupDropTargetId];
+                } else {
+                  return [groupDropTargetId, sourceId.id];
+                }
+              }
+
+              return x;
+            })
+            .flat();
+
+          reorderGroups(newOrder);
         }
 
-        const currentOrder = groups.filter((t) => t.id !== sourceId.id).map((t) => t.id);
+        if (sourceId.type === 'todo') {
+          if (!todoDropTarget) {
+            reorderGroupTodos(groupDropTarget.data.id, { id: sourceId.id, position_in_group: 1 });
+          }
 
-        const newOrder = currentOrder
-          .map((x) => {
-            if (x === dropTargetId) {
-              // @ts-expect-error closestEdgeSymbol is a symbol
-              if (dropTarget.data[closestEdgeSymbol] === 'left') {
-                return [sourceId.id, dropTargetId];
-              } else {
-                return [dropTargetId, sourceId.id];
-              }
-            }
-
-            return x;
-          })
-          .flat();
-
-        reorderGroups(newOrder);
+          if (todoDropTarget) {
+            reorderGroupTodos(groupDropTarget.data.id, {
+              id: sourceId.id,
+              position_in_group: todoDropTarget.data.position_in_group,
+            });
+          }
+        }
       },
     });
   }, [groups]);
@@ -102,9 +132,16 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
               <GroupedTodoHead todoListId={listId} group={group} />
               <GroupedTodoCreate todoListId={listId} todoGroupId={group.id} />
               <div className="grid w-full gap-2">
-                {groupedTodos[group.id]?.todos.map((todo) => (
-                  <TodoCard key={todo.id} todo={todo} listId={listId} />
-                ))}
+                {groupedTodos[group.id]?.todos
+                  .sort((a, b) => a.position_in_group - b.position_in_group)
+                  .map((todo) => (
+                    <MasonryTodoListCard
+                      key={todo.id}
+                      listId={listId}
+                      todo={todo}
+                      positionType="position_in_group"
+                    />
+                  ))}
               </div>
             </div>
           )}

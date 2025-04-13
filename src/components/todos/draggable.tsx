@@ -16,10 +16,11 @@ import { PugletDragIndicator } from '../puglet-draggable/drag-indicator';
 
 interface DraggableProps {
   todo: TodoItem;
+  positionType: 'position' | 'position_in_group';
   children: (state: PugletDraggableState) => React.ReactNode;
 }
 
-export function Draggable({ todo, children }: DraggableProps) {
+export function Draggable({ todo, positionType, children }: DraggableProps) {
   const ref = useRef(null);
   const { state, setDragging, setDraggedOver, reset } = usePugletDraggableState();
 
@@ -33,6 +34,9 @@ export function Draggable({ todo, children }: DraggableProps) {
         id: todo.id,
         title: todo.title,
         description: todo.description,
+        type: 'todo',
+        position_in_group: todo.position_in_group,
+        positionType,
       }),
       onDragStart: () => setDragging(),
       onDrop: () => reset(),
@@ -50,6 +54,9 @@ export function Draggable({ todo, children }: DraggableProps) {
           id: todo.id,
           title: todo.title,
           description: todo.description,
+          positionType,
+          position_in_group: todo.position_in_group,
+          type: 'todo',
         };
         return attachClosestEdge(data, {
           input,

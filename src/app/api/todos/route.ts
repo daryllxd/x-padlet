@@ -52,6 +52,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * @description Create a new todo, push all todos in the list and group down
+ * @param request
+ */
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -115,6 +119,8 @@ export async function POST(request: NextRequest) {
       is_completed: isCompleted,
       theme: todoFormData.theme,
       todo_group_id: groupId,
+      position: 1,
+      position_in_group: 1,
     };
 
     if (todoFormData.imageFile) {
@@ -132,6 +138,46 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
       }
     }
+
+    const { data: todos, error: fetchError } = await supabase
+      .from('todos')
+      .select('id, position')
+      .eq('todo_list_id', todoListId)
+      .order('position', { ascending: true });
+
+    if (fetchError) {
+      console.error('Error fetching todos:', fetchError);
+      return NextResponse.json({ error: 'Failed to fetch todos' }, { status: 500 });
+    }
+
+    const updatePromises = todos.map((todo, index) =>
+      supabase
+        .from('todos')
+        .update({ position: index + 2 })
+        .eq('id', todo.id)
+    );
+
+    const { data: groupTodos, error: groupFetchError } = await supabase
+      .from('todos')
+      .select('id, position_in_group')
+      .eq('todo_group_id', groupId)
+      .order('position_in_group', { ascending: true });
+
+    if (groupFetchError) {
+      console.error('Error fetching group todos:', groupFetchError);
+      return NextResponse.json({ error: 'Failed to fetch group todos' }, { status: 500 });
+    }
+
+    const updateGroupPromises = groupTodos.map((todo, index) =>
+      supabase
+        .from('todos')
+        .update({ position_in_group: index + 2 })
+        .eq('id', todo.id)
+    );
+
+    // todo - this is a bit of a hack, we should be able to do this in a single query, and this also should be wrapped in a transaction
+    await Promise.all(updatePromises);
+    await Promise.all(updateGroupPromises);
 
     const { data, error } = await supabase.from('todos').insert([newTodo]).select().single();
 

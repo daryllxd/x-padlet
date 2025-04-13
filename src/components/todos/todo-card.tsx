@@ -18,7 +18,6 @@ interface TodoCardProps {
 
 export function TodoCard({ todo, listId }: TodoCardProps) {
   const { toggleTodo, deleteTodo } = useTodos(listId);
-  const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const hoverClasses = cn(

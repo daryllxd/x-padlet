@@ -32,6 +32,7 @@ export function DraggableTodoGroup({ todoGroup, children }: DraggableTodoGroupPr
       getInitialData: () => ({
         id: todoGroup.id,
         name: todoGroup.name,
+        type: 'todo-group',
       }),
       onDragStart: () => setDragging(),
       onDrop: () => reset(),
@@ -48,6 +49,7 @@ export function DraggableTodoGroup({ todoGroup, children }: DraggableTodoGroupPr
         const data = {
           id: todoGroup.id,
           name: todoGroup.name,
+          type: 'todo-group',
         };
         return attachClosestEdge(data, {
           input,

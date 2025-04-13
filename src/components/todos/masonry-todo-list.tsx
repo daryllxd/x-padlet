@@ -101,7 +101,9 @@ export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
     <Masonry
       key={gridKeyPostfix}
       items={todos}
-      render={({ data }) => <MasonryTodoListCard listId={listId} todo={data} />}
+      render={({ data }) => (
+        <MasonryTodoListCard listId={listId} todo={data} positionType="position" />
+      )}
       columnGutter={16}
       columnWidth={300}
     />

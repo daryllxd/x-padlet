@@ -44,7 +44,7 @@ export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDi
         {children || (
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Todo
+            <span className="sr-only">Add to list</span>
           </Button>
         )}
       </DialogTrigger>

@@ -34,11 +34,6 @@ export function TodoListCard({ todoList }: TodoListCardProps) {
           {description && (
             <p className="text-muted-foreground line-clamp-2 text-sm">{description}</p>
           )}
-          {todoCount > 0 && (
-            <div className="text-muted-foreground text-sm">
-              {todoCount} {todoCount === 1 ? 'todo' : 'todos'}
-            </div>
-          )}
         </div>
       </Card>
     );

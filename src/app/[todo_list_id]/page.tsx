@@ -1,10 +1,10 @@
 'use client';
 
 import { TodoCreateDialog } from '@/components/todos/todo-create-dialog';
+import { TodoListAppearanceEditor } from '@/components/todos/todo-list-appearance-editor';
 import { TodoListView } from '@/components/todos/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
-import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
@@ -70,49 +70,17 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
             <div className="flex flex-col gap-1 sm:gap-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-bold sm:text-3xl">{todoList?.title}</h1>
-                {todos && todos.length > 0 && (
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-sm text-slate-600">
-                    {todos.length} {todos.length === 1 ? 'todo' : 'todos'}
-                  </span>
-                )}
               </div>
               <p className="text-sm text-slate-500">{todoList?.description}</p>
             </div>
             <div className="flex flex-col gap-4 lg:flex-row">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-500">Theme:</span>
-                <div className="flex gap-1">
-                  {Object.keys(THEME_COLORS).map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setThemeColor(color as ThemeColor)}
-                      className={`h-6 w-6 rounded-full border-2 ${
-                        THEME_COLORS[color as ThemeColor]
-                      } ${themeColor === color ? 'border-slate-900' : 'border-transparent'}`}
-                      title={color}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-500">Font:</span>
-                <div className="relative">
-                  <select
-                    value={font}
-                    onChange={(e) => setFont(e.target.value as Font)}
-                    className="appearance-none rounded-md border border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm focus:ring-2 focus:ring-slate-400 focus:outline-none"
-                    style={{ fontFamily: FONTS[font] }}
-                  >
-                    {Object.keys(FONTS).map((font) => (
-                      <option key={font} value={font} style={{ fontFamily: FONTS[font as Font] }}>
-                        {font}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute top-2 right-2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                </div>
-              </div>
               <TodoCreateDialog listId={todoListId} />
+              <TodoListAppearanceEditor
+                themeColor={themeColor}
+                font={font}
+                onThemeColorChange={setThemeColor}
+                onFontChange={setFont}
+              />
             </div>
           </div>
         </header>

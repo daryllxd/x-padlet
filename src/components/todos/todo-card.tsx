@@ -3,7 +3,7 @@
 import { MarkdownContent } from '@/components/markdown/markdown-content';
 import { TodoEditDialog } from '@/components/todos/todo-edit-dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTodos } from '@/hooks/useTodos';
 import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
@@ -18,7 +18,6 @@ interface TodoCardProps {
 
 export function TodoCard({ todo, listId }: TodoCardProps) {
   const { toggleTodo, deleteTodo } = useTodos(listId);
-  const formattedDate = new Date(todo.created_at).toLocaleDateString();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const hoverClasses = cn(
@@ -101,9 +100,6 @@ export function TodoCard({ todo, listId }: TodoCardProps) {
                 )}
               />
             </CardContent>
-            <CardFooter className="mt-auto pt-0">
-              <p className="text-xs text-slate-500">Created: {formattedDate}</p>
-            </CardFooter>
           </Card>
 
           <TodoEditDialog

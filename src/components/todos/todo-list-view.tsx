@@ -24,7 +24,7 @@ export function TodoListView({ todos, listId }: TodoListViewProps) {
           variant="outline"
           size="icon"
           onClick={() => setViewType('masonry')}
-          className={viewType === 'masonry' ? 'bg-accent' : ''}
+          className={viewType === 'masonry' ? 'bg-slate-200 hover:bg-slate-300' : ''}
         >
           <LayoutGrid className="h-4 w-4" />
         </Button>
@@ -32,7 +32,7 @@ export function TodoListView({ todos, listId }: TodoListViewProps) {
           variant="outline"
           size="icon"
           onClick={() => setViewType('columnar')}
-          className={viewType === 'columnar' ? 'bg-accent' : ''}
+          className={viewType === 'columnar' ? 'bg-slate-200 hover:bg-slate-300' : ''}
         >
           <LayoutList className="h-4 w-4" />
         </Button>

@@ -1,3 +1,4 @@
+import { TodoGroup } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useTodoGroups(todoListId: string) {
@@ -7,9 +8,9 @@ export function useTodoGroups(todoListId: string) {
     data: groups = [],
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<TodoGroup[]>({
     queryKey: ['todo-groups', todoListId],
-    queryFn: async () => {
+    queryFn: async (): Promise<TodoGroup[]> => {
       const response = await fetch(`/api/todo-lists/${todoListId}/groups`);
       if (!response.ok) {
         throw new Error('Failed to fetch groups');
@@ -77,6 +78,27 @@ export function useTodoGroups(todoListId: string) {
     },
   });
 
+  const reorderGroupsMutation = useMutation({
+    mutationFn: async (groupIds: string[]) => {
+      const formData = new FormData();
+      formData.append('todo_group_ids', JSON.stringify(groupIds));
+
+      const response = await fetch('/api/todo-groups/reorder', {
+        method: 'PATCH',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reorder groups');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] });
+    },
+  });
+
   return {
     groups,
     isLoading,
@@ -84,6 +106,7 @@ export function useTodoGroups(todoListId: string) {
     createGroupMutation,
     updateGroup: updateGroupMutation.mutate,
     deleteGroupMutation,
+    reorderGroups: reorderGroupsMutation.mutateAsync,
     refetch: () => queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] }),
   };
 }

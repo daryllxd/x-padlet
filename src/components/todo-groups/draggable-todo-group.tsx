@@ -1,7 +1,7 @@
 'use client';
 
 import { isHorizontalEdge, PugletDraggableState, usePugletDraggableState } from '@/lib/puglet-drag';
-import { TodoItem } from '@/types';
+import { TodoGroup } from '@/types';
 import {
   attachClosestEdge,
   extractClosestEdge,
@@ -14,12 +14,12 @@ import { useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
 import { PugletDragIndicator } from '../puglet-draggable/drag-indicator';
 
-interface DraggableProps {
-  todo: TodoItem;
+interface DraggableTodoGroupProps {
+  todoGroup: TodoGroup;
   children: (state: PugletDraggableState) => React.ReactNode;
 }
 
-export function Draggable({ todo, children }: DraggableProps) {
+export function DraggableTodoGroup({ todoGroup, children }: DraggableTodoGroupProps) {
   const ref = useRef(null);
   const { state, setDragging, setDraggedOver, reset } = usePugletDraggableState();
 
@@ -30,9 +30,8 @@ export function Draggable({ todo, children }: DraggableProps) {
     return draggable({
       element: el,
       getInitialData: () => ({
-        id: todo.id,
-        title: todo.title,
-        description: todo.description,
+        id: todoGroup.id,
+        name: todoGroup.name,
       }),
       onDragStart: () => setDragging(),
       onDrop: () => reset(),
@@ -47,9 +46,8 @@ export function Draggable({ todo, children }: DraggableProps) {
       element: el,
       getData: ({ input, element }) => {
         const data = {
-          id: todo.id,
-          title: todo.title,
-          description: todo.description,
+          id: todoGroup.id,
+          name: todoGroup.name,
         };
         return attachClosestEdge(data, {
           input,

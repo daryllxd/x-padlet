@@ -119,11 +119,8 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{mode === 'create' ? 'Create Todo' : 'Edit Todo'}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <label htmlFor="title" className="text-sm font-medium">
+            <DialogTitle className="pb-4 text-left">
+              <label htmlFor="title" className="sr-only">
                 Title
               </label>
               <Input
@@ -132,10 +129,25 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
                 onChange={(e) => setEditedTitle(e.target.value)}
                 placeholder="Enter title"
                 maxLength={255}
+                className="rounded-none border-0 border-b border-dashed py-0 text-lg focus-visible:ring-0 lg:text-lg"
               />
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pb-4">
+            <div className="space-y-2">
+              <label htmlFor="description" className="sr-only">
+                Description
+              </label>
+              <div className="group">
+                <LexicalEditor
+                  initialContent={editedDescription}
+                  onChange={handleEditorChange}
+                  className="min-h-[200px] rounded-md border border-dashed p-4 group-focus-within:border-gray-700"
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <div className="space-y-2">
+              <div className="flex flex-col gap-1">
                 <Label>Image (optional)</Label>
                 {imagePreview ? (
                   <div className="relative">
@@ -157,17 +169,8 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
                 )}
               </div>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="description" className="text-sm font-medium">
-                Description
-              </label>
-              <LexicalEditor
-                initialContent={editedDescription}
-                onChange={handleEditorChange}
-                className="min-h-[200px] rounded-md border p-4"
-              />
-            </div>
-            <div className="space-y-2">
+
+            <div className="flex flex-col gap-1">
               <Label>Theme Color</Label>
               <Select
                 items={[{ value: 'none', label: 'None' }, ...THEME_COLORS]}

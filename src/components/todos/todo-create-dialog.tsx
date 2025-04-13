@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useTodos } from '@/hooks/useTodos';
+import { useCreateTodo } from '@/hooks/todos/useCreateTodo';
 import { Plus } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -23,8 +23,7 @@ interface TodoCreateDialogProps extends ComponentProps<typeof Dialog> {
 export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDialogProps) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<TodoDialogRef>(null);
-
-  const { addTodo } = useTodos(listId);
+  const createTodo = useCreateTodo({ listId });
 
   const handleSave = async (formData: FormData) => {
     formData.append('todo_list_id', listId);
@@ -34,7 +33,7 @@ export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDi
     formData.append('is_completed', 'false');
 
     try {
-      await addTodo(formData);
+      await createTodo.mutateAsync(formData);
       toast.success('Todo created successfully');
       setOpen(false);
       dialogRef.current?.resetForm();

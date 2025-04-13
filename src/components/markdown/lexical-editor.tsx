@@ -84,7 +84,7 @@ export function LexicalEditor({
           ErrorBoundary={LexicalErrorBoundary}
           placeholder={
             <div className="pointer-events-none absolute top-4 left-4 text-slate-500">
-              Enter your todo description...
+              Enter your description...
             </div>
           }
         />

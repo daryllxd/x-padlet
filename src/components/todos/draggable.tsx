@@ -13,7 +13,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import invariant from 'tiny-invariant';
 
-type DraggableState = {
+export type DraggableState = {
   state: 'idle' | 'dragging' | 'draggedOver';
   closestEdge: 'left' | 'right' | null;
 };

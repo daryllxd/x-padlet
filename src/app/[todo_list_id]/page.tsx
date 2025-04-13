@@ -5,7 +5,6 @@ import { TodoListAppearanceEditor } from '@/components/todos/todo-list-appearanc
 import { TodoListView } from '@/components/todos/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -85,20 +84,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
           </div>
         </header>
 
-        {todos && todos.length > 0 ? (
-          <TodoListView todos={todos} listId={todoListId} />
-        ) : (
-          <div className="m-10 flex flex-col items-center justify-center text-slate-500 sm:m-20">
-            <Image
-              src="/meditating-doodle.svg"
-              alt="Meditating Doodle"
-              className="h-32 w-32 sm:h-40 sm:w-40"
-              width={160}
-              height={160}
-            />
-            <p className="mt-4 text-center">Nothing yet here! Let's get started.</p>
-          </div>
-        )}
+        <TodoListView todos={todos} listId={todoListId} />
       </div>
     </div>
   );

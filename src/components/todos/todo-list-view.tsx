@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { TodoItem } from '@/types';
 import { LayoutGrid, LayoutList } from 'lucide-react';
 import { useState } from 'react';
-import { DraggableTodoList } from './draggable-todo-list';
 import { GroupedTodoList } from './grouped-todo-list';
+import { MasonryTodoList } from './masonry-todo-list';
 
 type TodoListViewType = 'masonry' | 'columnar';
 
@@ -24,7 +24,7 @@ export function TodoListView({ todos, listId }: TodoListViewProps) {
           variant="outline"
           size="icon"
           onClick={() => setViewType('masonry')}
-          className={viewType === 'masonry' ? 'bg-accent' : ''}
+          className={viewType === 'masonry' ? 'bg-slate-200 hover:bg-slate-300' : ''}
         >
           <LayoutGrid className="h-4 w-4" />
         </Button>
@@ -32,14 +32,14 @@ export function TodoListView({ todos, listId }: TodoListViewProps) {
           variant="outline"
           size="icon"
           onClick={() => setViewType('columnar')}
-          className={viewType === 'columnar' ? 'bg-accent' : ''}
+          className={viewType === 'columnar' ? 'bg-slate-200 hover:bg-slate-300' : ''}
         >
           <LayoutList className="h-4 w-4" />
         </Button>
       </div>
 
       {viewType === 'masonry' ? (
-        <DraggableTodoList todos={todos} listId={listId} />
+        <MasonryTodoList todos={todos} listId={listId} />
       ) : (
         <GroupedTodoList todos={todos} listId={listId} />
       )}

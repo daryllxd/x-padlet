@@ -4,16 +4,16 @@ import { useTodos } from '@/hooks/useTodos';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Masonry } from 'masonic';
+import Image from 'next/image';
 import { useEffect, useMemo, useRef } from 'react';
 import { usePrevious } from 'react-use';
-import { TodoCard } from './todo-card';
-
-interface DraggableTodoListProps {
+import { MasonryTodoListCard } from './masonry-todo-list-card';
+interface MasonryTodoListProps {
   todos: TodoItem[];
   listId: string;
 }
 
-export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
+export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
   const { reorderTodos } = useTodos(listId);
 
   /**
@@ -81,11 +81,27 @@ export function DraggableTodoList({ todos, listId }: DraggableTodoListProps) {
     });
   }, [todos]);
 
+  if (todos && todos.length === 0) {
+    return (
+      <div className="m-10 flex flex-col items-center justify-center text-slate-500 sm:m-20">
+        {/* TODO: Add a better empty state */}
+        <Image
+          src="/empty-state.png"
+          alt="Empty state"
+          className="h-[384px] w-[256px] sm:h-[384px] sm:w-[256px]"
+          width={256}
+          height={384}
+        />
+        <p className="sr-only mt-4 text-center">Nothing yet here!</p>
+      </div>
+    );
+  }
+
   return (
     <Masonry
       key={gridKeyPostfix}
       items={todos}
-      render={({ data }) => <TodoCard listId={listId} todo={data} />}
+      render={({ data }) => <MasonryTodoListCard listId={listId} todo={data} />}
       columnGutter={16}
       columnWidth={300}
     />

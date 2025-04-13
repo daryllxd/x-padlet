@@ -41,7 +41,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
           <div key={group.id} className="w-[320px] space-y-4">
             <GroupedTodoHead todoListId={listId} group={group} />
             <GroupedTodoCreate todoListId={listId} todoGroupId={group.id} />
-            <div className="w-[320px] space-y-4">
+            <div className="grid w-[320px] gap-2">
               {groupedTodos[group.id]?.todos.map((todo) => (
                 <TodoCard key={todo.id} todo={todo} listId={listId} />
               ))}

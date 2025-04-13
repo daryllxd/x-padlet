@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTodos } from '@/hooks/useTodos';
 import { cn } from '@/lib/utils';
+import { getTodoHoverClasses, getTodoThemeStyles } from '@/lib/utils/todo-theme';
 import { TodoItem } from '@/types';
 import { Check, EllipsisVertical, X } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
 import { TodoCardContextMenu, TodoCardContextMenuRef } from './todo-card-context-menu';
-
 interface TodoCardProps extends ComponentProps<typeof Card> {
   todo: TodoItem;
   listId: string;
@@ -19,16 +19,8 @@ interface TodoCardProps extends ComponentProps<typeof Card> {
 export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
   const { toggleTodo, deleteTodo } = useTodos(listId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const contextMenuRef = useRef<TodoCardContextMenuRef>(null);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
-  const hoverClasses = cn(
-    todo.theme === 'blue' && `hover:bg-blue-100`,
-    todo.theme === 'green' && `hover:bg-green-100`,
-    todo.theme === 'yellow' && `hover:bg-yellow-100`,
-    todo.theme === 'purple' && `hover:bg-purple-100`,
-    todo.theme === 'red' && `hover:bg-red-100`,
-    !todo.theme && `hover:bg-slate-100`
-  );
+  const contextMenuRef = useRef<TodoCardContextMenuRef>(null);
 
   const handleEllipsisClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,13 +39,7 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
           'h-full w-full',
           'hover:cursor-pointer',
           todo.is_completed && 'border-2 bg-slate-50 opacity-75',
-          todo.theme === 'blue' && 'bg-blue-200 transition-colors hover:bg-blue-300',
-          todo.theme === 'green' && 'bg-green-200 transition-colors hover:bg-green-300',
-          todo.theme === 'yellow' && 'bg-yellow-200 transition-colors hover:bg-yellow-300',
-          todo.theme === 'purple' && 'bg-purple-200 transition-colors hover:bg-purple-300',
-          todo.theme === 'red' && 'bg-red-200 transition-colors hover:bg-red-300',
-          todo.theme === 'red' && contextMenuOpen && 'bg-red-300',
-          !todo.theme && 'bg-slate-200 transition-colors hover:bg-slate-300',
+          getTodoThemeStyles(todo.theme, contextMenuOpen),
           className
         )}
         onDoubleClick={() => setIsEditModalOpen(true)}
@@ -63,7 +49,7 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
           <div className="flex items-start justify-between">
             <CardTitle
               className={cn(
-                'line-clamp-1 text-lg font-medium',
+                'text-lg font-medium',
                 todo.is_completed && 'text-slate-500 line-through'
               )}
             >
@@ -73,7 +59,7 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
               <Button
                 size="icon"
                 variant="ghost"
-                className={cn(hoverClasses)}
+                className={cn(getTodoHoverClasses(todo.theme))}
                 onClick={() => toggleTodo(todo.id)}
               >
                 {todo.is_completed ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
@@ -81,7 +67,7 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
               <Button
                 size="icon"
                 variant="ghost"
-                className={cn(hoverClasses)}
+                className={cn(getTodoHoverClasses(todo.theme))}
                 onClick={handleEllipsisClick}
               >
                 <EllipsisVertical className="h-4 w-4" />

@@ -42,10 +42,6 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
           data: { id: string; title: string };
         };
 
-        console.log('source', source);
-
-        console.log('location.current', location.current);
-
         if (!dropTarget) {
           return;
         }
@@ -94,10 +90,18 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
       {groups.map((group: TodoGroup) => (
         <DraggableTodoGroup key={group.id} todoGroup={group}>
           {({ state }: PugletDraggableState) => (
-            <div key={group.id} className={cn('w-[320px] space-y-4', state === 'dragging')}>
+            <div
+              key={group.id}
+              className={cn(
+                'w-[320px] space-y-4 border-2 border-transparent px-1',
+                'relative rounded-lg',
+                state === 'dragging' && 'border-gray-700 opacity-50',
+                state === 'draggedOver' && 'opacity-40'
+              )}
+            >
               <GroupedTodoHead todoListId={listId} group={group} />
               <GroupedTodoCreate todoListId={listId} todoGroupId={group.id} />
-              <div className="grid w-[320px] gap-2">
+              <div className="grid w-full gap-2">
                 {groupedTodos[group.id]?.todos.map((todo) => (
                   <TodoCard key={todo.id} todo={todo} listId={listId} />
                 ))}

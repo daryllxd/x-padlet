@@ -12,6 +12,7 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
+import { PugletDragIndicator } from '../puglet-draggable/drag-indicator';
 
 interface DraggableProps {
   todo: TodoItem;
@@ -69,12 +70,8 @@ export function Draggable({ todo, children }: DraggableProps) {
 
   return (
     <div ref={ref} className="relative h-full">
-      {state.closestEdge === 'left' && (
-        <div className="absolute top-[8px] left-[-10px] h-[calc(100%-16px)] w-1 -translate-x-full transform bg-blue-500 opacity-50" />
-      )}
-      {state.closestEdge === 'right' && (
-        <div className="absolute top-[8px] right-[-10px] h-[calc(100%-16px)] w-1 translate-x-full transform bg-blue-500 opacity-50" />
-      )}
+      {state.closestEdge === 'left' && <PugletDragIndicator direction="left" />}
+      {state.closestEdge === 'right' && <PugletDragIndicator direction="right" />}
       {children(state)}
     </div>
   );

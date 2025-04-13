@@ -8,7 +8,7 @@ import { useTodos } from '@/hooks/useTodos';
 import { cn } from '@/lib/utils';
 import { getTodoHoverClasses, getTodoThemeStyles } from '@/lib/utils/todo-theme';
 import { TodoItem } from '@/types';
-import { Check, EllipsisVertical, X } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
 import { TodoCardContextMenu, TodoCardContextMenuRef } from './todo-card-context-menu';
 interface TodoCardProps extends ComponentProps<typeof Card> {
@@ -17,7 +17,7 @@ interface TodoCardProps extends ComponentProps<typeof Card> {
 }
 
 export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
-  const { toggleTodo, deleteTodo } = useTodos(listId);
+  const { deleteTodo } = useTodos(listId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const contextMenuRef = useRef<TodoCardContextMenuRef>(null);
@@ -56,14 +56,6 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
               {todo.title}
             </CardTitle>
             <div className="flex space-x-1">
-              <Button
-                size="icon"
-                variant="ghost"
-                className={cn(getTodoHoverClasses(todo.theme))}
-                onClick={() => toggleTodo(todo.id)}
-              >
-                {todo.is_completed ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
-              </Button>
               <Button
                 size="icon"
                 variant="ghost"

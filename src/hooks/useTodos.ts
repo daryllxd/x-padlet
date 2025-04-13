@@ -2,18 +2,6 @@ import { supabase } from '@/lib/db';
 import { TodoItem } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-async function updateTodo(id: string, formData: FormData) {
-  const response = await fetch(`/api/todos/${id}`, {
-    method: 'PATCH',
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to update todo');
-  }
-  return response.json();
-}
-
 async function reorderTodos(todoIds: string[]) {
   const response = await fetch('/api/todos/reorder', {
     method: 'PATCH',
@@ -54,13 +42,6 @@ export function useTodos(listId: string) {
       const response = await fetch(`/api/todos?todo_list_id=${listId}`);
 
       return response.json();
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, formData }: { id: string; formData: FormData }) => updateTodo(id, formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos', listId] });
     },
   });
 
@@ -118,13 +99,11 @@ export function useTodos(listId: string) {
   return {
     todos,
     isLoading,
-    updateTodo: (id: string, formData: FormData) => updateMutation.mutateAsync({ id, formData }),
     toggleTodo: (id: string) => toggleTodoMutation.mutateAsync(id),
     deleteTodo: (id: string) => deleteTodoMutation.mutateAsync(id),
     reorderTodos: (todoIds: string[]) => reorderMutation.mutateAsync(todoIds),
     reorderGroupTodos: (groupId: string, todo: { id: string; position_in_group: number }) =>
       reorderMutation.mutateAsync({ groupId, todo }),
-    isUpdating: updateMutation.isPending,
     isToggling: toggleTodoMutation.isPending,
     isDeleting: deleteTodoMutation.isPending,
     isReordering: reorderMutation.isPending,

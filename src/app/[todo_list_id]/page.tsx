@@ -89,14 +89,15 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
           <TodoListView todos={todos} listId={todoListId} />
         ) : (
           <div className="m-10 flex flex-col items-center justify-center text-slate-500 sm:m-20">
+            {/* TODO: The empty state should not have text in it lol */}
             <Image
-              src="/meditating-doodle.svg"
-              alt="Meditating Doodle"
-              className="h-32 w-32 sm:h-40 sm:w-40"
-              width={160}
-              height={160}
+              src="/empty-state.png"
+              alt="Empty state"
+              className="h-[384px] w-[256px] sm:h-[384px] sm:w-[256px]"
+              width={256}
+              height={384}
             />
-            <p className="mt-4 text-center">Nothing yet here! Let's get started.</p>
+            <p className="sr-only mt-4 text-center">Nothing yet here!</p>
           </div>
         )}
       </div>

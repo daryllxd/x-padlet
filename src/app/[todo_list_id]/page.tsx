@@ -33,15 +33,11 @@ type Font = keyof typeof FONTS;
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const router = useRouter();
   const { todo_list_id: todoListId } = use(params);
-  const [themeColor, setThemeColor] = useState<ThemeColor>(
-    Object.keys(THEME_COLORS)[
-      Math.floor(Math.random() * Object.keys(THEME_COLORS).length)
-    ] as ThemeColor
-  );
+  const [themeColor, setThemeColor] = useState<ThemeColor>('blue');
   const [font, setFont] = useState<Font>('Playpen_Sans');
 
   const { data: todoList } = useTodoList(todoListId);
-  const { todos, isLoading } = useTodos(todoListId);
+  const { todos } = useTodos(todoListId);
 
   useEffect(() => {
     if (todoList?.status === 'archived') {
@@ -52,10 +48,6 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
       }, 500);
     }
   }, [todoList?.status]);
-
-  if (isLoading) {
-    return null;
-  }
 
   if (todoList?.status === 'archived') {
     return null;

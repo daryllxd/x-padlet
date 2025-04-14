@@ -1,10 +1,10 @@
 import { useTodoList } from '@/hooks/useTodoLists';
-import router from 'next/router';
+import { AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { TodoCreateDialog } from './todo-create-dialog';
 import { TodoListAppearanceEditor } from './todo-list-appearance-editor';
-import { AlertCircle } from 'lucide-react';
 
 const THEME_COLORS = {
   red: 'bg-red-100',
@@ -43,6 +43,7 @@ export function TodoListHeroSection({
   onFontChange,
 }: TodoListHeaderProps) {
   const { data: todoList, isPending, error } = useTodoList(todoListId);
+  const router = useRouter();
 
   useEffect(() => {
     if (todoList?.status === 'archived') {

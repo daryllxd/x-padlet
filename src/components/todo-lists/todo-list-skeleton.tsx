@@ -1,7 +1,7 @@
 export function TodoListSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {[...Array(6)].map((_, index) => (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {[...Array(8)].map((_, index) => (
         <div
           key={index}
           className="animate-pulse rounded-lg bg-white p-6 shadow-md dark:bg-gray-800"

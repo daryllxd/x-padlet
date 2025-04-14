@@ -17,8 +17,8 @@ export default function Loading() {
           </div>
         </header>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[...Array(6)].map((_, i) => (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
             <div
               key={i}
               className="flex h-32 animate-pulse flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4"

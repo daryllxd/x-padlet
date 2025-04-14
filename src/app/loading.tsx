@@ -1,5 +1,3 @@
-import { TodoListSkeleton } from '@/components/todo-lists/todo-list-skeleton';
-
 export default function Loading() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-slate-50">
@@ -11,7 +9,21 @@ export default function Loading() {
           </div>
         </div>
 
-        <TodoListSkeleton />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="flex h-32 animate-pulse flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4"
+            >
+              <div className="h-4 w-3/4 rounded-md bg-slate-200" />
+              <div className="h-4 w-1/2 rounded-md bg-slate-200" />
+              <div className="mt-auto flex justify-end gap-2">
+                <div className="h-8 w-8 rounded-md bg-slate-200" />
+                <div className="h-8 w-8 rounded-md bg-slate-200" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

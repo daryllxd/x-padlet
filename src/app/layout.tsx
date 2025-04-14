@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { DevBanner } from '@/components/DevBanner';
 import { NavBar } from '@/components/NavBar';
 import { Providers } from '@/components/Providers';
 import { Toaster } from '@/components/ui/sonner';
@@ -22,7 +23,7 @@ const playpen = Playpen_Sans({ subsets: ['latin'], variable: '--font-playpen' })
 
 export const metadata: Metadata = {
   title: 'Puglet - Mock Padlet',
-  description: 'A simple todo list application',
+  description: 'One of the todo list trackers of all time',
   icons: {
     icon: [
       { url: '/puglet.ico', sizes: 'any' },
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>
           <Toaster />
+          <DevBanner />
           <div className="flex min-h-screen flex-col">
             <NavBar />
             <main className="flex-1">{children}</main>

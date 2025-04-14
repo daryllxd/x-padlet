@@ -29,7 +29,7 @@ export default async function Home() {
                 Puglet
               </h1>
               <p className="max-w-2xl text-sm text-slate-600 sm:text-base">
-                One of the todo lists of all time
+                One of the todo list trackers of all time
               </p>
             </div>
           </div>

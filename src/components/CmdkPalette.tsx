@@ -2,7 +2,7 @@
 
 import { Dialog } from '@/components/ui/dialog';
 import { useTodoLists } from '@/hooks/useTodoLists';
-import { DogIcon, HomeIcon, WrenchIcon } from 'lucide-react';
+import { DogIcon, HomeIcon, ShieldQuestion, WrenchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk';
@@ -33,6 +33,24 @@ export function CmdkPalette() {
     const result = filterItems(
       [
         {
+          id: 'open-pages',
+          heading: 'Pages',
+          items: [
+            {
+              id: 'open-home',
+              children: 'Open Home',
+              icon: HomeIcon,
+              onClick: () => router.push('/'),
+            },
+            {
+              id: 'open-about',
+              children: 'Open About',
+              icon: ShieldQuestion,
+              onClick: () => router.push('/about'),
+            },
+          ],
+        },
+        {
           heading: 'Puglets',
           id: 'puglets',
           items:
@@ -43,18 +61,7 @@ export function CmdkPalette() {
               onClick: () => router.push(`/${list.id}`),
             })) ?? [],
         },
-        {
-          id: 'open-about',
-          heading: 'Open About',
-          items: [
-            {
-              id: 'open-about',
-              children: 'Open About',
-              icon: HomeIcon,
-              onClick: () => router.push('/about'),
-            },
-          ],
-        },
+
         process.env.NODE_ENV === 'development'
           ? {
               id: 'dev-tool-actions',

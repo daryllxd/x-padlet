@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Info, ListTodo } from 'lucide-react';
+import { HomeIcon, ShieldQuestion } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -15,13 +15,13 @@ export function NavBar() {
     {
       name: 'My work',
       href: '/',
-      icon: <ListTodo className="mr-2 h-4 w-4" />,
+      icon: <HomeIcon className="mr-2 h-4 w-4" />,
       active: pathname === '/',
     },
     {
       name: 'About',
       href: '/about',
-      icon: <Info className="mr-2 h-4 w-4" />,
+      icon: <ShieldQuestion className="mr-2 h-4 w-4" />,
       active: pathname === '/about',
     },
   ];

@@ -7,9 +7,9 @@ import { CreateTodoListButton } from './create-todo-list-button';
 import { TodoListCard } from './todo-list-card';
 
 export function TodoListGrid() {
-  const { data, isLoading, error } = useTodoLists({ status: 'active' });
+  const { data, isPending, error } = useTodoLists({ status: 'active' });
 
-  if (isLoading) {
+  if (isPending && !data) {
     return <TodoListSkeleton />;
   }
 

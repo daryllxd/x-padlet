@@ -1,10 +1,10 @@
 import { useTodoList } from '@/hooks/useTodoLists';
-import { AlertCircle } from 'lucide-react';
 import router from 'next/router';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { TodoCreateDialog } from './todo-create-dialog';
 import { TodoListAppearanceEditor } from './todo-list-appearance-editor';
+import { AlertCircle } from 'lucide-react';
 
 const THEME_COLORS = {
   red: 'bg-red-100',

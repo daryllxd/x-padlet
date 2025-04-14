@@ -2,12 +2,15 @@
 
 import { Dialog } from '@/components/ui/dialog';
 import { useTodoLists } from '@/hooks/useTodoLists';
+import { DogIcon, HomeIcon, WrenchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk';
 import 'react-cmdk/dist/cmdk.css';
+import { DevToolsContext } from './Providers';
 
 export function CmdkPalette() {
+  const { isReactQueryDevtoolsOpen, setIsReactQueryDevtoolsOpen } = useContext(DevToolsContext);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const router = useRouter();
@@ -29,19 +32,43 @@ export function CmdkPalette() {
   const filteredItems = filterItems(
     [
       {
-        id: 'actions',
         heading: 'Puglets',
+        id: 'puglets',
         items:
-          todoLists?.map((todoList) => ({
-            id: todoList.id,
-            children: todoList.title,
-            onClick: () => {
-              router.push(`/${todoList.id}`);
-              setOpen(false);
-            },
-          })) || [],
+          todoLists?.map((list) => ({
+            id: list.id,
+            children: list.title,
+            icon: DogIcon,
+            onClick: () => router.push(`/${list.id}`),
+          })) ?? [],
       },
-    ],
+      {
+        id: 'open-about',
+        heading: 'Open About',
+        items: [
+          {
+            id: 'open-about',
+            children: 'Open About',
+            icon: HomeIcon,
+            onClick: () => router.push('/about'),
+          },
+        ],
+      },
+      process.env.NODE_ENV === 'development'
+        ? {
+            id: 'dev-tool-actions',
+            heading: 'Dev tools',
+            items: [
+              {
+                id: 'toggle-react-query-dev-tools',
+                children: 'Toggle react-query dev tools',
+                icon: WrenchIcon,
+                onClick: () => setIsReactQueryDevtoolsOpen(!isReactQueryDevtoolsOpen),
+              },
+            ],
+          }
+        : null,
+    ].filter((item): item is NonNullable<typeof item> => item !== null),
     search
   );
 

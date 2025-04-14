@@ -16,6 +16,7 @@ const clientFetchTodoLists = async (params: {
 export function useTodoLists({ status }: { status?: 'active' | 'archived' }) {
   return useQuery({
     queryKey: ['todoLists', { status }],
+    staleTime: 36_000,
     queryFn: () => clientFetchTodoLists({ status }),
   });
 }

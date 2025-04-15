@@ -7,10 +7,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status');
 
-    let query = supabase
-      .from('todo_lists')
-      .select('*, todos!inner(count)')
-      .order('created_at', { ascending: false });
+    let query = supabase.from('todo_lists').select('*, todos!inner(count)').order('position');
 
     if (status) {
       query = query.eq('status', status);
@@ -44,12 +41,20 @@ const createTodoList = async (request: NextRequest) => {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
+    const { data: maxPosition } = await supabase
+      .from('todo_lists')
+      .select('position')
+      .order('position', { ascending: false })
+      .limit(1)
+      .single();
+
     const { data, error } = await supabase
       .from('todo_lists')
       .insert([
         {
           title,
           description: description || null,
+          position: (maxPosition?.position ?? 0) + 1,
         },
       ])
       .select()

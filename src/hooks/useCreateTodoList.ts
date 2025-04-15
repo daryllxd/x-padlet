@@ -53,7 +53,7 @@ export function useCreateTodoList() {
       queryClient.setQueryData<TodoListWithCreating[]>(
         ['todoLists', { status: 'active' }],
         (old = []) => {
-          return [optimisticTodoList, ...old];
+          return [...old, optimisticTodoList];
         }
       );
 

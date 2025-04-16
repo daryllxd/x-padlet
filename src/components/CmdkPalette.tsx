@@ -1,8 +1,10 @@
 'use client';
 
 import { Dialog } from '@/components/ui/dialog';
+import { navigationItems } from '@/config/navigation';
+import { navigationIcons } from '@/config/navigation-icons';
 import { useTodoLists } from '@/hooks/useTodoLists';
-import { DogIcon, HomeIcon, ShieldQuestion, WrenchIcon } from 'lucide-react';
+import { DogIcon, WrenchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk';
@@ -35,20 +37,12 @@ export function CmdkPalette() {
         {
           id: 'open-pages',
           heading: 'Pages',
-          items: [
-            {
-              id: 'open-home',
-              children: 'Open Home',
-              icon: HomeIcon,
-              onClick: () => router.push('/'),
-            },
-            {
-              id: 'open-about',
-              children: 'Open About',
-              icon: ShieldQuestion,
-              onClick: () => router.push('/about'),
-            },
-          ],
+          items: navigationItems.map((item) => ({
+            id: item.href,
+            children: item.name,
+            icon: navigationIcons[item.icon],
+            onClick: () => router.push(item.href),
+          })),
         },
         {
           heading: 'Puglets',

@@ -1,7 +1,8 @@
 'use client';
 
+import { navigationItems } from '@/config/navigation';
+import { navigationIcons } from '@/config/navigation-icons';
 import { cn } from '@/lib/utils';
-import { HomeIcon, ShieldQuestion } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -10,27 +11,6 @@ import { XPadletLink } from './ui/link';
 
 export function NavBar() {
   const pathname = usePathname();
-
-  const links = [
-    {
-      name: 'My work',
-      href: '/',
-      icon: <HomeIcon className="mr-2 h-4 w-4" />,
-      active: pathname === '/',
-    },
-    {
-      name: 'About',
-      href: '/about',
-      icon: <ShieldQuestion className="mr-2 h-4 w-4" />,
-      active: pathname === '/about',
-    },
-    {
-      name: 'Self-learning',
-      href: '/react-performance',
-      icon: <ShieldQuestion className="mr-2 h-4 w-4" />,
-      active: pathname === '/react-performance',
-    },
-  ];
 
   return (
     <nav className="border-b bg-white">
@@ -49,17 +29,23 @@ export function NavBar() {
           </Link>
         </div>
         <div className="flex space-x-4">
-          {links.map((link) => (
-            <XPadletLink href={link.href} key={link.href}>
-              <Button
-                variant={link.active ? 'default' : 'ghost'}
-                className={cn('flex items-center', link.active && 'pointer-events-none')}
-              >
-                {link.icon}
-                {link.name}
-              </Button>
-            </XPadletLink>
-          ))}
+          {navigationItems.map((item) => {
+            const Icon = navigationIcons[item.icon];
+            return (
+              <XPadletLink variant="muted" href={item.href} key={item.href}>
+                <Button
+                  variant={pathname === item.href ? 'default' : 'ghost'}
+                  className={cn(
+                    'flex items-center',
+                    pathname === item.href && 'pointer-events-none'
+                  )}
+                >
+                  <Icon className="mr-2 h-4 w-4" />
+                  {item.name}
+                </Button>
+              </XPadletLink>
+            );
+          })}
         </div>
       </div>
     </nav>

@@ -92,9 +92,9 @@ export default function ReactPerformancePage() {
         <section className="rounded-lg border p-6">
           <h2 className="mb-4 text-xl font-semibold">Regular vs Memoized Components</h2>
           <p className="mb-4">
-            Check the code out at{' '}
+            Check the code out{' '}
             <XPadletLink variant="link" href="https://github.com/daryllxd/x-padlet/pull/58">
-              PR #58
+              here
             </XPadletLink>
           </p>
           <p className="mb-4">

@@ -2,38 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { XPadletLink } from '@/components/ui/link';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
-const useBlinkOnRender = <T extends HTMLElement>(ref: React.RefObject<T | null>) => {
-  const renderCount = useRef(0);
-  let timeout: NodeJS.Timeout | null = null;
-
-  useEffect(() => {
-    renderCount.current += 1;
-  });
-
-  useEffect(() => {
-    if (ref?.current) {
-      ref.current.style.borderColor = 'red';
-
-      timeout = setTimeout(() => {
-        if (ref?.current) {
-          ref.current.style.borderColor = 'var(--gray-200)';
-        }
-      }, 100);
-    }
-
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [renderCount.current, ref]);
-
-  return {
-    renderCount: renderCount.current,
-  };
-};
+import { useBlinkOnRender } from '@/hooks/useBlinkOnRender';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 // Regular (non-memoized) component
 function RegularCounter({
@@ -107,6 +77,11 @@ export default function ReactPerformancePage() {
               text="Regular (non-memoized callback)"
               count={count}
               onIncrement={handleIncrement}
+            />
+            <RegularCounter
+              text="Regular (memoized callback)"
+              count={count}
+              onIncrement={handleIncrementMemoized}
             />
             <MemoizedWithMemoCounter
               text="Memoized with React.memo (non-memoized callback)"

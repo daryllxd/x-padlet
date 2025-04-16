@@ -37,7 +37,7 @@ export function useCreateTodo({ listId }: CreateTodoParams) {
         position: 1,
         position_in_group: 1,
         theme: (newTodo.get('theme')?.toString() ?? 'blue') as TodoItem['theme'],
-        image_url: null,
+        image_url: newTodo.get('image')?.toString() ? '/loading-image.png' : null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };

@@ -25,12 +25,13 @@ export function useUpdateTodo({ listId }: UpdateTodoParams) {
       await queryClient.cancelQueries({ queryKey: ['todos', listId] });
       const previousTodos = queryClient.getQueryData<TodoItem[]>(['todos', listId]) ?? [];
 
-      // Create optimistic todo
+      // Create optimistic todo with a placeholder image
       const optimisticTodo: TodoItem = {
         ...previousTodos.find((todo) => todo.id === id)!,
         title: formData.get('title')?.toString() ?? '',
         theme: (formData.get('theme')?.toString() ?? 'blue') as TodoItem['theme'],
         updated_at: new Date().toISOString(),
+        image_url: '/loading-image.png',
       };
 
       // Update the cache

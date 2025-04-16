@@ -41,10 +41,16 @@ export async function uploadToS3(
       Key: key,
       Body: processedFile,
       ContentType: contentType,
-      // Set CORS and other security headers
+      CacheControl: 'public, max-age=31536000',
       Metadata: {
         'Access-Control-Allow-Origin': ALLOWED_DOMAINS.join(','),
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'X-XSS-Protection': '1; mode=block',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
       },
+      ServerSideEncryption: 'AES256',
     });
 
     await s3Client.send(command);

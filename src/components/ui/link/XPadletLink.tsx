@@ -3,22 +3,20 @@ import Link from 'next/link';
 import { ComponentProps } from 'react';
 
 type XPadletLinkProps = ComponentProps<typeof Link> & {
-  variant?: 'default' | 'muted' | 'destructive';
+  variant?: 'link' | 'default' | 'muted' | 'destructive';
 };
 
-export function XPadletLink({
-  className,
-  variant = 'default',
-  target,
-  ...props
-}: XPadletLinkProps) {
+export function XPadletLink({ className, variant = 'link', target, ...props }: XPadletLinkProps) {
   return (
     <Link
       className={cn(
+        'transition-colors duration-200',
         {
-          'text-foreground': variant === 'default',
-          'text-muted-foreground': variant === 'muted',
-          'text-destructive': variant === 'destructive',
+          'text-blue-600 underline-offset-4 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300':
+            variant === 'link',
+          'text-foreground hover:text-foreground/80': variant === 'default',
+          'text-muted-foreground hover:text-muted-foreground/80': variant === 'muted',
+          'text-destructive hover:text-destructive/80': variant === 'destructive',
         },
         className
       )}

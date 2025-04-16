@@ -93,7 +93,9 @@ export default function ReactPerformancePage() {
           <h2 className="mb-4 text-xl font-semibold">Regular vs Memoized Components</h2>
           <p className="mb-4">
             Check the code out at{' '}
-            <XPadletLink href="https://github.com/daryllxd/x-padlet/pull/58">PR #58</XPadletLink>
+            <XPadletLink variant="link" href="https://github.com/daryllxd/x-padlet/pull/58">
+              PR #58
+            </XPadletLink>
           </p>
           <p className="mb-4">
             Type in the input below to see the difference in re-rendering behavior. The regular

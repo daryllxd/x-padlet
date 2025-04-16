@@ -22,7 +22,7 @@ export const navigationItems: NavItem[] = [
   },
   {
     name: 'Self-learning',
-    href: '/react-performance',
+    href: '/study',
     icon: 'learning',
     description: 'React performance examples',
   },

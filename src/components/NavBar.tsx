@@ -24,6 +24,12 @@ export function NavBar() {
       icon: <ShieldQuestion className="mr-2 h-4 w-4" />,
       active: pathname === '/about',
     },
+    {
+      name: 'Self-learning',
+      href: '/react-performance',
+      icon: <ShieldQuestion className="mr-2 h-4 w-4" />,
+      active: pathname === '/react-performance',
+    },
   ];
 
   return (

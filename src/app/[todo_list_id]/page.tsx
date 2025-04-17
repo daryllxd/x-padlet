@@ -2,6 +2,7 @@
 
 import { TodoListHeroSection } from '@/components/todos/todo-list-hero-section';
 import { TodoListView } from '@/components/todos/todo-list-view';
+import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { use, useState } from 'react';
 
@@ -28,7 +29,9 @@ type Font = keyof typeof FONTS;
 
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const { todo_list_id: todoListId } = use(params);
-  const [themeColor, setThemeColor] = useState<ThemeColor>('blue');
+  const { data: todoList } = useTodoList(todoListId);
+
+  const [themeColor, setThemeColor] = useState<ThemeColor>(todoList?.theme || 'white');
   const [font, setFont] = useState<Font>('Playpen_Sans');
 
   const { todos } = useTodos(todoListId);
@@ -44,7 +47,11 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
           onFontChange={setFont}
         />
 
-        <TodoListView todos={todos} listId={todoListId} />
+        <TodoListView
+          todos={todos}
+          listId={todoListId}
+          displayMode={todoList?.display_mode || 'masonry'}
+        />
       </div>
     </div>
   );

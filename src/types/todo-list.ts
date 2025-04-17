@@ -6,7 +6,7 @@ export interface TodoList {
   todoCount: number;
   theme: 'red' | 'blue' | 'green' | 'yellow' | 'purple' | null;
   background: 'white' | 'black' | 'gray' | 'blue' | 'green' | 'yellow' | 'purple' | null;
-  display_mode: 'masonry' | 'list' | 'grid' | 'kanban' | null;
+  display_mode: 'masonry' | 'columnar';
 }
 
 export type TodoListWithCreating = TodoList | (Omit<TodoList, 'status'> & { status: 'creating' });

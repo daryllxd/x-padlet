@@ -2,20 +2,20 @@
 
 import { Button } from '@/components/ui/button';
 import { TodoItem } from '@/types';
+import { TodoList } from '@/types/todo-list';
 import { LayoutGrid, LayoutList } from 'lucide-react';
 import { useState } from 'react';
 import { GroupedTodoList } from './grouped-todo-list';
 import { MasonryTodoList } from './masonry-todo-list';
 
-type TodoListViewType = 'masonry' | 'columnar';
-
 interface TodoListViewProps {
   todos: TodoItem[];
   listId: string;
+  displayMode: TodoList['display_mode'];
 }
 
-export function TodoListView({ todos, listId }: TodoListViewProps) {
-  const [viewType, setViewType] = useState<TodoListViewType>('columnar');
+export function TodoListView({ todos, listId, displayMode }: TodoListViewProps) {
+  const [viewType, setViewType] = useState<TodoList['display_mode']>(displayMode);
 
   return (
     <div className="space-y-4">

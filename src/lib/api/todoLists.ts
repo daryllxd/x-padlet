@@ -1,4 +1,4 @@
-import { TodoList } from '@/types';
+import { TodoList } from '@/types/todo-list';
 
 export async function fetchTodoLists({
   status,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useTodoLists } from '@/hooks/useTodoLists';
-import { TodoList } from '@/types/todo';
+import { TodoList } from '@/types/todo-list';
 import { TodoListSkeleton } from '../todo-lists/todo-list-skeleton';
 import { CreateTodoListButton } from './create-todo-list-button';
 import { TodoListCard } from './todo-list-card';

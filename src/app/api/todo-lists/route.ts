@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status');
 
-    let query = supabase.from('todo_lists').select('*, todos!inner(count)').order('position');
+    let query = supabase.from('todo_lists').select('*').order('position');
 
     if (status) {
       query = query.eq('status', status);
@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
 
     const transformedData = data.map((list) => ({
       ...list,
-      todoCount: list.todos[0].count,
     }));
 
     return NextResponse.json(transformedData);

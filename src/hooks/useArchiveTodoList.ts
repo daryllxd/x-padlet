@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList } from '@/types/todo';
+import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const archiveTodoList = async (id: string): Promise<TodoList> => {

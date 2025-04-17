@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { TodoListWithCreating } from '@/types/todo';
+import { TodoListWithCreating } from '@/types/todo-list';
 import { EllipsisVertical, Loader2 } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '../ui/button';

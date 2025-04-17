@@ -1,19 +1,12 @@
 import { useTodoList } from '@/hooks/useTodoLists';
+import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
+import { TodoList } from '@/types/todo-list';
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { TodoCreateDialog } from './todo-create-dialog';
 import { TodoListAppearanceEditor } from './todo-list-appearance-editor';
-
-const THEME_COLORS = {
-  red: 'bg-red-100',
-  yellow: 'bg-yellow-100',
-  green: 'bg-green-100',
-  purple: 'bg-purple-100',
-  blue: 'bg-blue-100',
-  white: 'bg-white',
-} as const;
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -24,26 +17,17 @@ const FONTS = {
   Playpen_Sans: 'Playpen Sans, sans-serif',
 } as const;
 
-type ThemeColor = keyof typeof THEME_COLORS;
 type Font = keyof typeof FONTS;
-
 interface TodoListHeaderProps {
   todoListId: string;
-  themeColor: ThemeColor;
+  themeColor: TodoList['theme'];
   font: Font;
-  onThemeColorChange: (color: ThemeColor) => void;
-  onFontChange: (font: Font) => void;
 }
 
-export function TodoListHeroSection({
-  todoListId,
-  themeColor,
-  font,
-  onThemeColorChange,
-  onFontChange,
-}: TodoListHeaderProps) {
+export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHeaderProps) {
   const { data: todoList, isPending, error } = useTodoList(todoListId);
   const router = useRouter();
+  const { mutate: updateTodoList } = useUpdateTodoList();
 
   useEffect(() => {
     if (todoList?.status === 'archived') {
@@ -60,6 +44,18 @@ export function TodoListHeroSection({
   if (status === 'archived') {
     return null;
   }
+
+  const onSave = (settings: {
+    themeColor: TodoList['theme'];
+    font: Font;
+    displayMode: TodoList['display_mode'];
+  }) => {
+    updateTodoList({
+      id: todoListId,
+      theme: settings.themeColor,
+      displayMode: settings.displayMode,
+    });
+  };
 
   if (isPending) {
     return (
@@ -108,8 +104,8 @@ export function TodoListHeroSection({
           <TodoListAppearanceEditor
             themeColor={themeColor}
             font={font}
-            onThemeColorChange={onThemeColorChange}
-            onFontChange={onFontChange}
+            displayMode={todoList?.display_mode}
+            onSave={onSave}
           />
         </div>
       </div>

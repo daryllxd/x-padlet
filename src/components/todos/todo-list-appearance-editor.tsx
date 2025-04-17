@@ -4,15 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { Settings2 } from 'lucide-react';
-const THEME_COLORS = {
-  red: 'bg-red-100',
-  yellow: 'bg-yellow-100',
-  green: 'bg-green-100',
-  purple: 'bg-purple-100',
-  blue: 'bg-blue-100',
-  white: 'bg-white',
-} as const;
+import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
+import { LayoutGrid, LayoutList, Settings2 } from 'lucide-react';
+import { useState } from 'react';
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -23,23 +17,36 @@ const FONTS = {
   Playpen_Sans: 'Playpen Sans, sans-serif',
 } as const;
 
-type ThemeColor = keyof typeof THEME_COLORS;
 type Font = keyof typeof FONTS;
 
 interface TodoListAppearanceEditorProps {
-  themeColor: ThemeColor;
+  themeColor: TodoList['theme'];
   font: Font;
-  onThemeColorChange: (color: ThemeColor) => void;
-  onFontChange: (font: Font) => void;
+  displayMode: TodoList['display_mode'];
+  onSave: (settings: {
+    themeColor: TodoList['theme'];
+    font: Font;
+    displayMode: TodoList['display_mode'];
+  }) => void;
 }
 
 export function TodoListAppearanceEditor({
   themeColor,
   font,
-  onThemeColorChange,
-  onFontChange,
+  displayMode,
+
+  onSave,
 }: TodoListAppearanceEditorProps) {
   const { isMobile } = useIsMobile();
+  const [previewSettings, setPreviewSettings] = useState({
+    themeColor,
+    font,
+    displayMode,
+  });
+
+  const handleSave = () => {
+    onSave(previewSettings);
+  };
 
   return (
     <Sheet>
@@ -58,22 +65,27 @@ export function TodoListAppearanceEditor({
       </Tooltip>
       <SheetContent
         side={isMobile ? 'bottom' : 'right'}
-        className="px-6 max-sm:rounded-t-lg max-sm:pb-12 sm:w-[400px] sm:max-w-[400px]"
+        className="flex flex-col px-6 max-sm:rounded-t-lg max-sm:pb-12 sm:w-[400px] sm:max-w-[400px]"
       >
         <SheetHeader className="px-0">
           <SheetTitle>Appearance Settings</SheetTitle>
         </SheetHeader>
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 flex-1 space-y-6">
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Theme Color</h3>
             <div className="flex gap-2">
-              {Object.keys(THEME_COLORS).map((color) => (
+              {Object.keys(TAILWIND_THEME_COLORS).map((color) => (
                 <button
                   key={color}
-                  onClick={() => onThemeColorChange(color as ThemeColor)}
+                  onClick={() =>
+                    setPreviewSettings((prev) => ({
+                      ...prev,
+                      themeColor: color as TodoList['theme'],
+                    }))
+                  }
                   className={`h-8 w-8 rounded-full border-2 ${
-                    THEME_COLORS[color as ThemeColor]
-                  } ${themeColor === color ? 'border-slate-900' : 'border-transparent'}`}
+                    TAILWIND_THEME_COLORS[color as keyof typeof TAILWIND_THEME_COLORS]
+                  } ${previewSettings.themeColor === color ? 'border-slate-900' : 'border-transparent'}`}
                   title={color}
                 />
               ))}
@@ -82,10 +94,12 @@ export function TodoListAppearanceEditor({
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Font</h3>
             <select
-              value={font}
-              onChange={(e) => onFontChange(e.target.value as Font)}
+              value={previewSettings.font}
+              onChange={(e) =>
+                setPreviewSettings((prev) => ({ ...prev, font: e.target.value as Font }))
+              }
               className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-slate-400 focus:outline-none"
-              style={{ fontFamily: FONTS[font] }}
+              style={{ fontFamily: FONTS[previewSettings.font] }}
             >
               {Object.keys(FONTS).map((font) => (
                 <option key={font} value={font} style={{ fontFamily: FONTS[font as Font] }}>
@@ -94,6 +108,42 @@ export function TodoListAppearanceEditor({
               ))}
             </select>
           </div>
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Display Mode</h3>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setPreviewSettings((prev) => ({ ...prev, displayMode: 'masonry' }))}
+                className={
+                  previewSettings.displayMode === 'masonry' ? 'bg-slate-200 hover:bg-slate-300' : ''
+                }
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setPreviewSettings((prev) => ({ ...prev, displayMode: 'columnar' }))}
+                className={
+                  previewSettings.displayMode === 'columnar'
+                    ? 'bg-slate-200 hover:bg-slate-300'
+                    : ''
+                }
+              >
+                <LayoutList className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="mt-6 flex justify-end gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setPreviewSettings({ themeColor, font, displayMode })}
+          >
+            Reset
+          </Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </div>
       </SheetContent>
     </Sheet>

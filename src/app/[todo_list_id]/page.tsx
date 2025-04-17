@@ -4,16 +4,8 @@ import { TodoListHeroSection } from '@/components/todos/todo-list-hero-section';
 import { TodoListView } from '@/components/todos/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
+import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
 import { use, useState } from 'react';
-
-const THEME_COLORS = {
-  red: 'bg-red-100',
-  yellow: 'bg-yellow-100',
-  green: 'bg-green-100',
-  purple: 'bg-purple-100',
-  blue: 'bg-blue-100',
-  white: 'bg-white',
-} as const;
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -24,28 +16,24 @@ const FONTS = {
   Playpen_Sans: 'Playpen Sans, sans-serif',
 } as const;
 
-type ThemeColor = keyof typeof THEME_COLORS;
 type Font = keyof typeof FONTS;
 
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const { todo_list_id: todoListId } = use(params);
   const { data: todoList } = useTodoList(todoListId);
 
-  const [themeColor, setThemeColor] = useState<ThemeColor>(todoList?.theme || 'white');
+  const [themeColor, setThemeColor] = useState<TodoList['theme']>(todoList?.theme || 'white');
   const [font, setFont] = useState<Font>('Playpen_Sans');
 
   const { todos } = useTodos(todoListId);
 
   return (
-    <div className={`min-h-screen ${THEME_COLORS[themeColor]}`} style={{ fontFamily: FONTS[font] }}>
+    <div
+      className={`min-h-screen ${TAILWIND_THEME_COLORS[themeColor as keyof typeof TAILWIND_THEME_COLORS]}`}
+      style={{ fontFamily: FONTS[font] }}
+    >
       <div className="container mx-auto px-4 py-6 sm:py-10">
-        <TodoListHeroSection
-          todoListId={todoListId}
-          themeColor={themeColor}
-          font={font}
-          onThemeColorChange={setThemeColor}
-          onFontChange={setFont}
-        />
+        <TodoListHeroSection todoListId={todoListId} themeColor={themeColor} font={font} />
 
         <TodoListView
           todos={todos}

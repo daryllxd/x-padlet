@@ -119,6 +119,9 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
             description,
             todoCount,
             status: 'active',
+            theme: 'white',
+            background: 'white',
+            display_mode: 'masonry',
           }}
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}

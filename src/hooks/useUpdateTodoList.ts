@@ -1,18 +1,29 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList, TodoListWithCreating } from '@/types/todo';
+import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type UpdateTodoListInput = {
   id: string;
-  title: string;
+  title?: string;
   description?: string;
+  theme?: TodoList['theme'];
+  displayMode?: TodoList['display_mode'];
 };
 
 const updateTodoList = async (input: UpdateTodoListInput): Promise<TodoList> => {
   const formData = new FormData();
-  formData.append('title', input.title);
+
+  if (input.title) {
+    formData.append('title', input.title);
+  }
   if (input.description) {
     formData.append('description', input.description);
+  }
+  if (input.theme) {
+    formData.append('theme', input.theme);
+  }
+  if (input.displayMode) {
+    formData.append('display_mode', input.displayMode);
   }
   const response = await fetch(API_ENDPOINTS.todoList(input.id), {
     method: 'PATCH',
@@ -35,20 +46,33 @@ export function useUpdateTodoList() {
       await queryClient.cancelQueries({ queryKey: ['todoLists'] });
       const previousTodoLists = queryClient.getQueryData<TodoList[]>(['todoLists']) ?? [];
 
-      queryClient.setQueryData<TodoListWithCreating[]>(
-        ['todoLists', { status: 'active' }],
-        (old = []) => {
-          return old.map((list) =>
-            list.id === updatedTodoList.id
-              ? {
-                  ...list,
-                  title: updatedTodoList.title,
-                  description: updatedTodoList.description,
-                }
-              : list
-          );
+      queryClient.setQueryData<TodoList[]>(['todoLists', { status: 'active' }], (old = []) => {
+        return old.map((list) =>
+          list.id === updatedTodoList.id
+            ? {
+                ...list,
+                ...(updatedTodoList.title && { title: updatedTodoList.title }),
+                ...(updatedTodoList.description && { description: updatedTodoList.description }),
+                ...(updatedTodoList.theme && { theme: updatedTodoList.theme }),
+                ...(updatedTodoList.displayMode && { display_mode: updatedTodoList.displayMode }),
+              }
+            : list
+        );
+      });
+
+      queryClient.setQueryData<TodoList>(['todoList', updatedTodoList.id], (old) => {
+        if (!old) {
+          return undefined;
         }
-      );
+
+        return {
+          ...old,
+          ...(updatedTodoList.title && { title: updatedTodoList.title }),
+          ...(updatedTodoList.description && { description: updatedTodoList.description }),
+          ...(updatedTodoList.theme && { theme: updatedTodoList.theme }),
+          ...(updatedTodoList.displayMode && { display_mode: updatedTodoList.displayMode }),
+        };
+      });
 
       return { previousTodoLists };
     },

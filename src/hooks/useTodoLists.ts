@@ -1,8 +1,8 @@
 'use client';
 
 import { fetchTodoLists as fetchTodoListsFromApi } from '@/lib/api/todoLists';
-import { TodoList } from '@/types/todo';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { TodoList } from '@/types/todo-list';
+import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 
 const clientFetchTodoLists = async (
   params: {
@@ -23,7 +23,7 @@ export function useTodoLists({ status }: { status?: 'active' | 'archived' }) {
   });
 }
 
-export function useTodoList(id: string) {
+export function useTodoList(id: string): UseQueryResult<TodoList, Error> {
   const queryClient = useQueryClient();
 
   return useQuery({

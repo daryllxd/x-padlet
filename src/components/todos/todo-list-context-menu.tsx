@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/context-menu';
 import { useArchiveTodoList } from '@/hooks/useArchiveTodoList';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
-import { TodoList } from '@/types';
+import { TodoList } from '@/types/todo-list';
 import { Archive, Clipboard, Copy, Link, Pencil } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -119,6 +119,9 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
             description,
             todoCount,
             status: 'active',
+            theme: 'white',
+            background: 'white',
+            display_mode: 'masonry',
           }}
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}

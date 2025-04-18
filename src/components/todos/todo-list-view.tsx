@@ -1,44 +1,20 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { TodoItem } from '@/types';
-import { LayoutGrid, LayoutList } from 'lucide-react';
-import { useState } from 'react';
+import { TodoList } from '@/types/todo-list';
 import { GroupedTodoList } from './grouped-todo-list';
 import { MasonryTodoList } from './masonry-todo-list';
-
-type TodoListViewType = 'masonry' | 'columnar';
 
 interface TodoListViewProps {
   todos: TodoItem[];
   listId: string;
+  displayMode: TodoList['display_mode'];
 }
 
-export function TodoListView({ todos, listId }: TodoListViewProps) {
-  const [viewType, setViewType] = useState<TodoListViewType>('columnar');
-
+export function TodoListView({ todos, listId, displayMode }: TodoListViewProps) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setViewType('masonry')}
-          className={viewType === 'masonry' ? 'bg-slate-200 hover:bg-slate-300' : ''}
-        >
-          <LayoutGrid className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setViewType('columnar')}
-          className={viewType === 'columnar' ? 'bg-slate-200 hover:bg-slate-300' : ''}
-        >
-          <LayoutList className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {viewType === 'masonry' ? (
+      {displayMode === 'masonry' ? (
         <MasonryTodoList todos={todos} listId={listId} />
       ) : (
         <GroupedTodoList todos={todos} listId={listId} />

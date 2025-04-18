@@ -1,6 +1,6 @@
 'use client';
 
-import { TodoList } from '@/types';
+import { TodoList } from '@/types/todo-list';
 import { useRef } from 'react';
 import { TodoListDialog, TodoListDialogRef } from './todo-list-dialog';
 

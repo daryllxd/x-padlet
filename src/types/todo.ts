@@ -1,13 +1,3 @@
-export interface TodoList {
-  id: string;
-  title: string;
-  description?: string;
-  status: 'active' | 'completed' | 'archived';
-  todoCount: number;
-}
-
-export type TodoListWithCreating = TodoList | (Omit<TodoList, 'status'> & { status: 'creating' });
-
 export interface TodoItem {
   id: string;
   title: string;

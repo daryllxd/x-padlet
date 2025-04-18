@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList, TodoListWithCreating } from '@/types/todo';
+import { TodoList, TodoListWithCreating } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type CreateTodoListInput = {
@@ -48,6 +48,9 @@ export function useCreateTodoList() {
         description: newTodoList.description,
         status: 'creating',
         todoCount: 0,
+        theme: 'white',
+        display_mode: 'masonry',
+        background: 'white',
       };
 
       queryClient.setQueryData<TodoListWithCreating[]>(

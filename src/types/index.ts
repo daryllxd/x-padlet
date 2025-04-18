@@ -1,7 +1,7 @@
-import { TodoItem, TodoList } from '@/types/todo';
+import { TodoItem } from '@/types/todo';
 import { TodoGroup } from '@/types/todo-group';
 
-export type { TodoGroup, TodoItem, TodoList };
+export type { TodoGroup, TodoItem };
 export interface TodoFormData {
   title: string;
   description: string;

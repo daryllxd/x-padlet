@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
 import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
 import { LayoutGrid, LayoutList, Settings2 } from 'lucide-react';
 import { useState } from 'react';
@@ -74,21 +75,25 @@ export function TodoListAppearanceEditor({
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Theme Color</h3>
             <div className="flex gap-2">
-              {Object.keys(TAILWIND_THEME_COLORS).map((color) => (
-                <button
-                  key={color}
-                  onClick={() =>
-                    setPreviewSettings((prev) => ({
-                      ...prev,
-                      themeColor: color as TodoList['theme'],
-                    }))
-                  }
-                  className={`h-8 w-8 rounded-full border-2 ${
-                    TAILWIND_THEME_COLORS[color as keyof typeof TAILWIND_THEME_COLORS]
-                  } ${previewSettings.themeColor === color ? 'border-slate-900' : 'border-transparent'}`}
-                  title={color}
-                />
-              ))}
+              {Object.keys(TAILWIND_THEME_COLORS).map((color) => {
+                if (isObjectKeysTraversing(TAILWIND_THEME_COLORS, color)) {
+                  return (
+                    <button
+                      key={color}
+                      onClick={() =>
+                        setPreviewSettings((prev) => ({
+                          ...prev,
+                          themeColor: color as TodoList['theme'],
+                        }))
+                      }
+                      className={`h-8 w-8 rounded-full border-2 ${
+                        TAILWIND_THEME_COLORS[color]
+                      } ${previewSettings.themeColor === color ? 'border-slate-900' : 'border-transparent'}`}
+                      title={color}
+                    />
+                  );
+                }
+              })}
             </div>
           </div>
           <div className="space-y-2">

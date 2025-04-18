@@ -5,7 +5,7 @@ import { fetchTodoList } from '@/lib/api/todoLists';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { headers } from 'next/headers';
 
-export default async function Page({ params }: { params: { todo_list_id: string } }) {
+export default async function Page({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const queryClient = new QueryClient();
   const { todo_list_id: todoListId } = await params;
   const headersList = await headers();

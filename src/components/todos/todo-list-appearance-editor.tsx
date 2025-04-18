@@ -13,8 +13,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
 import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
-import { LayoutGrid, LayoutList, Settings2 } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { useState } from 'react';
+import { DisplayModeSelector } from '../todo-lists/display-mode-selector';
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -121,32 +122,18 @@ export function TodoListAppearanceEditor({
               ))}
             </select>
           </div>
-          <div className="space-y-2">
+          <div className="w-full space-y-2">
             <h3 className="text-sm font-medium">Display Mode</h3>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setPreviewSettings((prev) => ({ ...prev, displayMode: 'masonry' }))}
-                className={
-                  previewSettings.displayMode === 'masonry' ? 'bg-slate-200 hover:bg-slate-300' : ''
-                }
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setPreviewSettings((prev) => ({ ...prev, displayMode: 'columnar' }))}
-                className={
-                  previewSettings.displayMode === 'columnar'
-                    ? 'bg-slate-200 hover:bg-slate-300'
-                    : ''
-                }
-              >
-                <LayoutList className="h-4 w-4" />
-              </Button>
-            </div>
+            <DisplayModeSelector
+              className="w-full"
+              value={previewSettings.displayMode}
+              onChange={(newMode) =>
+                setPreviewSettings((prev) => ({
+                  ...prev,
+                  displayMode: newMode as TodoList['display_mode'],
+                }))
+              }
+            />
           </div>
         </div>
         <SheetFooter>

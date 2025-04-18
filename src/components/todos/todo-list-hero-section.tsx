@@ -1,3 +1,5 @@
+'use client';
+
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { TodoList } from '@/types/todo-list';
@@ -22,6 +24,7 @@ interface TodoListHeaderProps {
   todoListId: string;
   themeColor: TodoList['theme'];
   font: Font;
+  onFontChange: (font: Font) => void;
 }
 
 export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHeaderProps) {

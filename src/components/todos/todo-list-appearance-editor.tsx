@@ -1,7 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
@@ -35,10 +42,10 @@ export function TodoListAppearanceEditor({
   themeColor,
   font,
   displayMode,
-
   onSave,
 }: TodoListAppearanceEditorProps) {
   const { isMobile } = useIsMobile();
+  const [open, setOpen] = useState(false);
   const [previewSettings, setPreviewSettings] = useState({
     themeColor,
     font,
@@ -47,10 +54,11 @@ export function TodoListAppearanceEditor({
 
   const handleSave = () => {
     onSave(previewSettings);
+    setOpen(false);
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <SheetTrigger asChild>
@@ -71,7 +79,7 @@ export function TodoListAppearanceEditor({
         <SheetHeader className="px-0">
           <SheetTitle>Appearance Settings</SheetTitle>
         </SheetHeader>
-        <div className="mt-6 flex-1 space-y-6">
+        <div className="flex-1 space-y-6">
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Theme Color</h3>
             <div className="flex gap-2">
@@ -88,7 +96,7 @@ export function TodoListAppearanceEditor({
                       }
                       className={`h-8 w-8 rounded-full border-2 ${
                         TAILWIND_THEME_COLORS[color]
-                      } ${previewSettings.themeColor === color ? 'border-slate-900' : 'border-transparent'}`}
+                      } ${previewSettings.themeColor === color ? 'border-slate-900' : 'border-slate-200'}`}
                       title={color}
                     />
                   );
@@ -141,7 +149,7 @@ export function TodoListAppearanceEditor({
             </div>
           </div>
         </div>
-        <div className="mt-6 flex justify-end gap-2">
+        <SheetFooter>
           <Button
             variant="outline"
             onClick={() => setPreviewSettings({ themeColor, font, displayMode })}
@@ -149,7 +157,7 @@ export function TodoListAppearanceEditor({
             Reset
           </Button>
           <Button onClick={handleSave}>Save Changes</Button>
-        </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

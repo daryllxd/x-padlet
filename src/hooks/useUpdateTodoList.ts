@@ -60,6 +60,20 @@ export function useUpdateTodoList() {
         );
       });
 
+      queryClient.setQueryData<TodoList>(['todoList', updatedTodoList.id], (old) => {
+        if (!old) {
+          return undefined;
+        }
+
+        return {
+          ...old,
+          ...(updatedTodoList.title && { title: updatedTodoList.title }),
+          ...(updatedTodoList.description && { description: updatedTodoList.description }),
+          ...(updatedTodoList.theme && { theme: updatedTodoList.theme }),
+          ...(updatedTodoList.displayMode && { display_mode: updatedTodoList.displayMode }),
+        };
+      });
+
       return { previousTodoLists };
     },
     onError: (err, newTodoList, context) => {

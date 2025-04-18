@@ -21,7 +21,7 @@ type Font = keyof typeof FONTS;
 export default function TodoListPage({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const { todo_list_id: todoListId } = use(params);
   const { data: todoList } = useTodoList(todoListId);
-  const { todos } = useTodos(todoListId);
+  const { todos, isLoading: isTodosLoading } = useTodos(todoListId);
   const [font, setFont] = useState<Font>('Playpen_Sans');
 
   return (
@@ -40,6 +40,7 @@ export default function TodoListPage({ params }: { params: Promise<{ todo_list_i
           todos={todos}
           listId={todoListId}
           displayMode={todoList?.display_mode || 'masonry'}
+          isLoading={isTodosLoading}
         />
       </div>
     </div>

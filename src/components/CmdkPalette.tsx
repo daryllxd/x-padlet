@@ -1,14 +1,11 @@
 'use client';
 
 import { Dialog } from '@/components/ui/dialog';
-import { navigationItems } from '@/config/navigation';
-import { navigationIcons } from '@/config/navigation-icons';
 import { useTodoLists } from '@/hooks/useTodoLists';
-import { DogIcon, WrenchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk';
-import 'react-cmdk/dist/cmdk.css';
+import { useContext, useEffect, useState } from 'react';
+// import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk';
+// import 'react-cmdk/dist/cmdk.css';
 import { DevToolsContext } from './Providers';
 
 export function CmdkPalette() {
@@ -31,54 +28,54 @@ export function CmdkPalette() {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
-  const filteredItems = useMemo(() => {
-    const result = filterItems(
-      [
-        {
-          id: 'open-pages',
-          heading: 'Pages',
-          items: navigationItems.map((item) => ({
-            id: item.href,
-            children: item.name,
-            icon: navigationIcons[item.icon],
-            onClick: () => router.push(item.href),
-          })),
-        },
-        {
-          heading: 'Puglets',
-          id: 'puglets',
-          items:
-            todoLists?.map((list) => ({
-              id: list.id,
-              children: list.title,
-              icon: DogIcon,
-              onClick: () => router.push(`/${list.id}`),
-            })) ?? [],
-        },
+  // const filteredItems = useMemo(() => {
+  //   const result = filterItems(
+  //     [
+  //       {
+  //         id: 'open-pages',
+  //         heading: 'Pages',
+  //         items: navigationItems.map((item) => ({
+  //           id: item.href,
+  //           children: item.name,
+  //           icon: navigationIcons[item.icon],
+  //           onClick: () => router.push(item.href),
+  //         })),
+  //       },
+  //       {
+  //         heading: 'Puglets',
+  //         id: 'puglets',
+  //         items:
+  //           todoLists?.map((list) => ({
+  //             id: list.id,
+  //             children: list.title,
+  //             icon: DogIcon,
+  //             onClick: () => router.push(`/${list.id}`),
+  //           })) ?? [],
+  //       },
 
-        process.env.NODE_ENV === 'development'
-          ? {
-              id: 'dev-tool-actions',
-              heading: 'Dev tools',
-              items: [
-                {
-                  id: 'toggle-react-query-dev-tools',
-                  children: 'Toggle react-query dev tools',
-                  icon: WrenchIcon,
-                  onClick: () => setIsReactQueryDevtoolsOpen(!isReactQueryDevtoolsOpen),
-                },
-              ],
-            }
-          : null,
-      ].filter((item): item is NonNullable<typeof item> => item !== null),
-      search
-    );
-    return result;
-  }, [todoLists, isReactQueryDevtoolsOpen, search]);
+  //       process.env.NODE_ENV === 'development'
+  //         ? {
+  //             id: 'dev-tool-actions',
+  //             heading: 'Dev tools',
+  //             items: [
+  //               {
+  //                 id: 'toggle-react-query-dev-tools',
+  //                 children: 'Toggle react-query dev tools',
+  //                 icon: WrenchIcon,
+  //                 onClick: () => setIsReactQueryDevtoolsOpen(!isReactQueryDevtoolsOpen),
+  //               },
+  //             ],
+  //           }
+  //         : null,
+  //     ].filter((item): item is NonNullable<typeof item> => item !== null),
+  //     search
+  //   );
+  //   return result;
+  // }, [todoLists, isReactQueryDevtoolsOpen, search]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <CommandPalette
+      {/* <CommandPalette
         onChangeSearch={setSearch}
         onChangeOpen={setOpen}
         search={search}
@@ -102,7 +99,7 @@ export function CmdkPalette() {
             <CommandPalette.FreeSearchAction />
           )}
         </CommandPalette.Page>
-      </CommandPalette>
+      </CommandPalette> */}
     </Dialog>
   );
 }

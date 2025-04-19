@@ -2,8 +2,8 @@
 
 import { TodoItem } from '@/types';
 import { TodoList } from '@/types/todo-list';
-import { GroupedTodoList } from './grouped-todo-list';
-import { MasonryTodoList } from './masonry-todo-list';
+import { GroupedTodoList } from '../todos/grouped-todo-list';
+import { MasonryTodoList } from '../todos/masonry-todo-list';
 
 interface TodoListViewProps {
   todos: TodoItem[];

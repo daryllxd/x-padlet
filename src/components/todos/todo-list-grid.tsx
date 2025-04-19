@@ -2,9 +2,9 @@
 
 import { useTodoLists } from '@/hooks/useTodoLists';
 import { TodoList } from '@/types/todo-list';
+import { CreateTodoListButton } from '../todo-lists/create-todo-list-button';
+import { TodoListCard } from '../todo-lists/todo-list-card';
 import { TodoListSkeleton } from '../todo-lists/todo-list-skeleton';
-import { CreateTodoListButton } from './create-todo-list-button';
-import { TodoListCard } from './todo-list-card';
 
 export function TodoListGrid() {
   const { data, isPending, error } = useTodoLists({ status: 'active' });

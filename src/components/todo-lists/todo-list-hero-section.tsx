@@ -1,5 +1,6 @@
 'use client';
 
+import { TodoListAppearanceEditor } from '@/components/todo-lists/todo-list-appearance-editor';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { TodoList } from '@/types/todo-list';
@@ -7,8 +8,7 @@ import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
-import { TodoCreateDialog } from './todo-create-dialog';
-import { TodoListAppearanceEditor } from './todo-list-appearance-editor';
+import { TodoCreateDialog } from '../todos/todo-create-dialog';
 
 const FONTS = {
   Inter: 'Inter, sans-serif',

@@ -12,7 +12,7 @@ import { TodoList } from '@/types/todo-list';
 import { Archive, Clipboard, Copy, Link, Pencil } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { TodoListEditDialog } from './todo-list-edit-dialog';
+import { TodoListEditDialog } from '../todo-lists/todo-list-edit-dialog';
 
 // Export the interface so other components can use it
 export interface TodoListContextMenuRef {

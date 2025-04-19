@@ -1,7 +1,7 @@
 'use client';
 
-import { TodoListHeroSection } from '@/components/todos/todo-list-hero-section';
-import { TodoListView } from '@/components/todos/todo-list-view';
+import { TodoListHeroSection } from '@/components/todo-lists/todo-list-hero-section';
+import { TodoListView } from '@/components/todo-lists/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { TAILWIND_THEME_COLORS } from '@/types/todo-list';

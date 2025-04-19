@@ -132,5 +132,10 @@
     "extends": [
       "plugin:storybook/recommended"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.24.0"
+    }
   }
 }

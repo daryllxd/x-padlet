@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { ReactNode, useState } from 'react';
+import '../src/app/globals.css';
 
 const preview: Preview = {
   parameters: {

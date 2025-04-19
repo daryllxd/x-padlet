@@ -9,10 +9,10 @@ export type NavItem = {
 
 export const navigationItems: NavItem[] = [
   {
-    name: 'My work',
-    href: '/',
+    name: 'Dashboard',
+    href: '/dashboard',
     icon: 'home',
-    description: 'View your work dashboard',
+    description: 'View your dashboard',
   },
   {
     name: 'About',

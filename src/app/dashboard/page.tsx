@@ -5,7 +5,7 @@ import { fetchTodoLists } from '@/lib/api/todoLists';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { headers } from 'next/headers';
 
-export default async function Home() {
+export default async function Dashboard() {
   const queryClient = new QueryClient();
   const headersList = await headers();
   const host = headersList.get('host');

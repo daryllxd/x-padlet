@@ -20,7 +20,7 @@ interface DraggableProps {
   children: (state: PugletDraggableState) => React.ReactNode;
 }
 
-export function Draggable({ todo, positionType, children }: DraggableProps) {
+export function DraggableTodo({ todo, positionType, children }: DraggableProps) {
   const ref = useRef(null);
   const { state, setDragging, setDraggedOver, reset } = usePugletDraggableState();
 

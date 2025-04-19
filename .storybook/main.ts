@@ -25,6 +25,13 @@ const config: StorybookConfig = {
       };
     }
 
+    if (config.build) {
+      config.build.commonjsOptions = {
+        ...config.build.commonjsOptions,
+        transformMixedEsModules: true,
+      };
+    }
+
     return config;
   },
 };

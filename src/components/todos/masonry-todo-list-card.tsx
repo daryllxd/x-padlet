@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
-import { Draggable } from './draggable';
+import { DraggableTodo } from './draggable-todo';
 import { TodoCard } from './todo-card';
 
 interface MasonryTodoListCardProps {
@@ -13,7 +13,7 @@ interface MasonryTodoListCardProps {
 
 export function MasonryTodoListCard({ todo, listId, positionType }: MasonryTodoListCardProps) {
   return (
-    <Draggable todo={todo} positionType={positionType}>
+    <DraggableTodo todo={todo} positionType={positionType}>
       {(state) => (
         <TodoCard
           todo={todo}
@@ -25,6 +25,6 @@ export function MasonryTodoListCard({ todo, listId, positionType }: MasonryTodoL
           )}
         />
       )}
-    </Draggable>
+    </DraggableTodo>
   );
 }

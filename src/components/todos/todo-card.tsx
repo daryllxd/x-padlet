@@ -10,7 +10,9 @@ import { getTodoHoverClasses, getTodoThemeStyles } from '@/lib/utils/todo-theme'
 import { TodoItem } from '@/types';
 import { EllipsisVertical } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
+import LinkPreview from '../ui/link-preview/link-preview';
 import { TodoCardContextMenu, TodoCardContextMenuRef } from './todo-card-context-menu';
+
 interface TodoCardProps extends ComponentProps<typeof Card> {
   todo: TodoItem;
   listId: string;
@@ -21,6 +23,9 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const contextMenuRef = useRef<TodoCardContextMenuRef>(null);
+
+  // Extract URLs from description using regex
+  const urls = todo.description?.match(/(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g) || [];
 
   const handleEllipsisClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -67,7 +72,7 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-2">
+        <CardContent className="flex flex-col gap-4">
           {todo.image_url && (
             <img src={todo.image_url} alt="Todo" className="h-full w-full rounded-xl" />
           )}
@@ -78,6 +83,18 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
               todo.is_completed && 'text-slate-500 line-through'
             )}
           />
+          {/* Link Previews */}
+          {urls.length > 0 && (
+            <div className="space-y-3">
+              {urls.map((url, index) => (
+                <LinkPreview
+                  key={`${url}-${index}`}
+                  url={url}
+                  className={cn('transition-opacity', todo.is_completed && 'opacity-75')}
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

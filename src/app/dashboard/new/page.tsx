@@ -1,12 +1,19 @@
+import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { CreateTodoListForm } from '@/components/todo-lists/create-todo-list-form';
 
 export default function NewTodoListPage() {
   return (
-    <div className="mx-auto max-w-2xl py-8">
-      <div className="rounded-lg border border-slate-200 bg-white p-6">
-        <h1 className="mb-6 text-2xl font-bold">Create New Todo List</h1>
+    <>
+      <DashboardHeader
+        description="Create a new list"
+        backLink={{
+          href: '/dashboard',
+          label: 'Back to lists',
+        }}
+      />
+      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <CreateTodoListForm />
       </div>
-    </div>
+    </>
   );
 }

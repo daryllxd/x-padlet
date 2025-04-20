@@ -1,6 +1,6 @@
-import { TodoList } from '@/types/todo-list';
-import { TodoGroup } from '@/types/todo-group';
 import { TodoItem } from '@/types/todo';
+import { TodoGroup } from '@/types/todo-group';
+import { TodoList } from '@/types/todo-list';
 
 /**
  * Template metadata containing UI and behavior configuration
@@ -45,7 +45,13 @@ export type CreateFromTemplateRequest = {
 /**
  * Available template IDs
  */
-export const TEMPLATE_IDS = ['bucket-list', 'groceries'] as const;
+export const TEMPLATE_IDS = [
+  'bucket-list',
+  'groceries',
+  'book-list',
+  'travel-checklist',
+  'blank',
+] as const;
 export type TemplateId = (typeof TEMPLATE_IDS)[number];
 
 /**

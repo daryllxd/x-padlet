@@ -23,7 +23,6 @@ export function CreateTodoListForm() {
     <form action={createTodoListFromTemplate}>
       <div className="space-y-6">
         <div>
-          <label className="text-sm font-medium text-slate-700">Choose a Template</label>
           <div className="mt-3 grid gap-4">
             {TEMPLATE_IDS.map((templateId) => {
               const template = TODO_TEMPLATES[templateId];
@@ -51,34 +50,6 @@ export function CreateTodoListForm() {
                 </label>
               );
             })}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-slate-700">
-              Title (Optional)
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              placeholder="Custom title for your todo list"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-slate-700">
-              Description (Optional)
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={3}
-              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              placeholder="Custom description for your todo list"
-            />
           </div>
         </div>
 

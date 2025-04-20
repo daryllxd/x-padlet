@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from './ui/button';
-import { XPadletLink } from './ui/link';
+import { Button } from '../ui/button';
+import { XPadletLink } from '../ui/link';
+import { NavMobile } from './nav-mobile';
 
 export function NavBar() {
   const pathname = usePathname();
@@ -15,7 +16,7 @@ export function NavBar() {
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto flex h-14 items-center px-4">
-        <div className="mr-4">
+        <div className="flex items-center">
           <Link href="/" className="flex items-center text-lg font-bold">
             <Image
               src="/puglet.png"
@@ -28,7 +29,9 @@ export function NavBar() {
             Puglet
           </Link>
         </div>
-        <div className="flex space-x-4">
+
+        {/* Desktop Navigation */}
+        <div className="ml-4 hidden space-x-4 lg:flex">
           {navigationItems.map((item) => {
             const Icon = navigationIcons[item.icon];
             return (
@@ -46,6 +49,11 @@ export function NavBar() {
               </XPadletLink>
             );
           })}
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="ml-auto">
+          <NavMobile />
         </div>
       </div>
     </nav>

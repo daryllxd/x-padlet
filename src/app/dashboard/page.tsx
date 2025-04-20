@@ -13,9 +13,16 @@ export default async function Dashboard() {
   const protocol = headersList.get('x-forwarded-proto') || 'http';
   const baseUrl = `${protocol}://${host}/api/todo-lists`;
 
+  /**
+   * @description We want to use a NextJS fetch here to warm the cache
+   * @description But, we also want to use the query client to prefetch the data so that the data exists in react-query too.
+   */
+  const dashboardFetch = fetchTodoLists({ status: 'active', baseUrl });
+  await dashboardFetch;
+
   await queryClient.prefetchQuery({
     queryKey: ['todoLists', { status: 'active' }],
-    queryFn: () => fetchTodoLists({ status: 'active', baseUrl }),
+    queryFn: () => dashboardFetch,
   });
 
   const dehydratedState = dehydrate(queryClient);

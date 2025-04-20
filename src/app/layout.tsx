@@ -1,6 +1,6 @@
 import '@/app/globals.css';
 import { DevBanner } from '@/components/DevBanner';
-import { NavBar } from '@/components/NavBar';
+import { NavBar } from '@/components/navigation/nav-bar';
 import { Providers } from '@/components/Providers';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';

@@ -1,0 +1,37 @@
+name: Auto Create Pull Request
+
+on:
+  push:
+    branches:
+      - 'feat/**'
+      - 'ee/**'
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'feat: ${{ github.ref_name }}'
+          body: |
+            ## Automated Pull Request
+
+            Branch: ${{ github.ref_name }}
+            Triggered by: ${{ github.actor }}
+
+            ### 🔍 Changes Overview
+            This PR was automatically created from a feature branch.
+
+          base: main
+          delete-branch: false
+          labels: |
+            automated pr

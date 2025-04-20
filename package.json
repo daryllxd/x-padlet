@@ -139,5 +139,10 @@
     "overrides": {
       "esbuild": "0.24.2"
     }
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

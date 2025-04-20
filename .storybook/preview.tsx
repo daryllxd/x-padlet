@@ -1,10 +1,14 @@
 import type { Preview } from '@storybook/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { initialize, mswLoader } from 'msw-storybook-addon';
 import React, { ReactNode, useState } from 'react';
 import '../src/app/globals.css';
 
 const preview: Preview = {
+  beforeAll: () => {
+    initialize();
+  },
   parameters: {
     controls: {
       matchers: {
@@ -16,6 +20,7 @@ const preview: Preview = {
       showDevTools: false, // Default to false
     },
   },
+  loaders: [mswLoader],
   decorators: [
     (Story: () => ReactNode, context) => {
       const [queryClient] = useState(

@@ -19,7 +19,7 @@ import { FileUploader } from '../ui/file-uploader';
 type Nullable<T> = T | null;
 
 interface TodoListDialogProps {
-  todoList: Nullable<TodoList>;
+  todoList: Nullable<Pick<TodoList, 'id' | 'title' | 'description'>>;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (data: FormData) => void;

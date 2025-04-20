@@ -20,12 +20,12 @@ export interface TodoListContextMenuRef {
 }
 
 interface TodoListContextMenuProps {
-  todoList: TodoList;
+  todoList: Pick<TodoList, 'id' | 'title' | 'description'>;
   children: React.ReactNode;
 }
 
 export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListContextMenuProps>(
-  function TodoListContextMenu({ todoList: { id, title, description, todoCount }, children }, ref) {
+  function TodoListContextMenu({ todoList: { id, title, description }, children }, ref) {
     const triggerRef = useRef<HTMLDivElement>(null);
     const { mutate: archiveTodoList } = useArchiveTodoList();
     const { mutate: updateTodoList } = useUpdateTodoList();
@@ -117,11 +117,6 @@ export const TodoListContextMenu = forwardRef<TodoListContextMenuRef, TodoListCo
             id,
             title,
             description,
-            todoCount,
-            status: 'active',
-            theme: 'white',
-            background: 'white',
-            display_mode: 'masonry',
           }}
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}

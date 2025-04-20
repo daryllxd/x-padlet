@@ -2,7 +2,7 @@
 
 import { useTodoLists } from '@/hooks/useTodoLists';
 import { TodoList } from '@/types/todo-list';
-import { CreateTodoListButton } from '../todo-lists/create-todo-list-button';
+import { Plus } from 'lucide-react';
 import { TodoListCard } from '../todo-lists/todo-list-card';
 import { TodoListSkeleton } from '../todo-lists/todo-list-skeleton';
 
@@ -33,9 +33,22 @@ export function TodoListGrid() {
 
   return (
     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      <CreateTodoListButton />
+      <TodoListCard
+        title="Create New List"
+        description="Start organizing your tasks in a new list"
+        href="/dashboard/new"
+      >
+        <div className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600 transition-colors group-hover:bg-blue-200">
+          <Plus className="h-4 w-4" />
+        </div>
+      </TodoListCard>
       {data.map((todoList: TodoList) => (
-        <TodoListCard key={todoList.id} todoList={todoList} />
+        <TodoListCard
+          key={todoList.id}
+          id={todoList.id}
+          title={todoList.title}
+          description={todoList.description}
+        />
       ))}
     </div>
   );

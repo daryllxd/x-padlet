@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { TodoListDialog, TodoListDialogRef } from './todo-list-dialog';
 
 interface TodoListEditDialogProps {
-  todoList: TodoList;
+  todoList: Pick<TodoList, 'id' | 'title' | 'description'>;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (data: FormData) => void;

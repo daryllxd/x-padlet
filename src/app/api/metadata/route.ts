@@ -1,5 +1,62 @@
 import * as cheerio from 'cheerio';
+import DOMPurify from 'isomorphic-dompurify';
 import { NextResponse } from 'next/server';
+
+// Constants for security limits
+const MAX_RESPONSE_SIZE = 10 * 1024 * 1024; // 10MB
+const FETCH_TIMEOUT = 5000; // 5 seconds
+const ALLOWED_PROTOCOLS = ['http:', 'https:'];
+
+// Basic URL validation
+function isValidUrl(urlString: string): boolean {
+  try {
+    const url = new URL(urlString);
+    return (
+      ALLOWED_PROTOCOLS.includes(url.protocol) &&
+      !url.hostname.includes('localhost') &&
+      !url.hostname.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)
+    ); // Block IP addresses
+  } catch {
+    return false;
+  }
+}
+
+// Sanitize metadata fields
+function sanitizeMetadata(metadata: Record<string, string | undefined>): Record<string, string> {
+  return Object.entries(metadata).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: value ? DOMPurify.sanitize(value.toString().slice(0, 1000)) : '',
+    }),
+    {}
+  );
+}
+
+// Controller for fetching with timeout
+async function fetchWithTimeout(url: string, options = {}) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; PugletBot/1.0; +http://puglet.com)',
+      },
+    });
+
+    // Check response size
+    const contentLength = response.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) > MAX_RESPONSE_SIZE) {
+      throw new Error('Response too large');
+    }
+
+    return response;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 async function getTwitterMetadata(url: string) {
   try {
@@ -56,39 +113,41 @@ async function getRedditMetadata($: cheerio.CheerioAPI) {
 }
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const url = searchParams.get('url');
-
-  if (!url) {
-    return NextResponse.json({ message: 'URL parameter is required' }, { status: 400 });
-  }
-
   try {
+    const { searchParams } = new URL(request.url);
+    const url = searchParams.get('url');
+
+    // Input validation
+    if (!url) {
+      return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
+    }
+
+    if (!isValidUrl(url)) {
+      return NextResponse.json({ error: 'Invalid URL provided' }, { status: 400 });
+    }
+
     const parsedUrl = new URL(url);
 
-    const allowedHosts = ['twitter.com', 'x.com'];
-
-    if (allowedHosts.includes(parsedUrl.hostname)) {
+    // Twitter/X specific handling
+    if (['twitter.com', 'x.com'].includes(parsedUrl.hostname)) {
       const metadata = await getTwitterMetadata(url);
-      return NextResponse.json(metadata);
+      return NextResponse.json(sanitizeMetadata(metadata));
     }
 
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; PugletBot/1.0; +http://puglet.com)',
-      },
-    });
-
+    // Fetch and size-limit check
+    const response = await fetchWithTimeout(url);
     const html = await response.text();
+
+    // Parse with cheerio
     const $ = cheerio.load(html);
 
-    const allowedRedditHosts = ['reddit.com', 'www.reddit.com'];
-
-    if (allowedRedditHosts.includes(parsedUrl.hostname)) {
+    // Reddit specific handling
+    if (['reddit.com', 'www.reddit.com'].includes(parsedUrl.hostname)) {
       const metadata = await getRedditMetadata($);
-      return NextResponse.json(metadata);
+      return NextResponse.json(sanitizeMetadata(metadata));
     }
 
+    // General metadata extraction
     const metadata = {
       title: $('meta[property="og:title"]').attr('content') || $('title').text(),
       description:
@@ -101,12 +160,20 @@ export async function GET(request: Request) {
         new URL(url).origin + '/favicon.ico',
       siteName:
         $('meta[property="og:site_name"]').attr('content') ||
-        new URL(url).hostname.replace(/^www\./, ''),
+        parsedUrl.hostname.replace(/^www\./, ''),
     };
 
-    return NextResponse.json(metadata);
+    return NextResponse.json(sanitizeMetadata(metadata));
   } catch (error) {
-    console.error('Error fetching metadata:', error);
-    return NextResponse.json({ message: 'Failed to fetch metadata' }, { status: 500 });
+    console.error('Error fetching metadata:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString(),
+    });
+
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json({ error: 'Request timeout' }, { status: 408 });
+    }
+
+    return NextResponse.json({ error: 'Failed to fetch metadata' }, { status: 500 });
   }
 }

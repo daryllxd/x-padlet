@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import DOMPurify from 'isomorphic-dompurify';
+import { unstable_cache } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 // Constants for security limits
@@ -112,12 +113,51 @@ async function getRedditMetadata($: cheerio.CheerioAPI) {
   };
 }
 
+async function fetchMetadata(url: string) {
+  const parsedUrl = new URL(url);
+
+  if (['twitter.com', 'x.com'].includes(parsedUrl.hostname)) {
+    return await getTwitterMetadata(url);
+  }
+
+  const response = await fetchWithTimeout(url);
+  const html = await response.text();
+  const $ = cheerio.load(html);
+
+  if (['reddit.com', 'www.reddit.com'].includes(parsedUrl.hostname)) {
+    return await getRedditMetadata($);
+  }
+
+  return {
+    title: $('meta[property="og:title"]').attr('content') || $('title').text(),
+    description:
+      $('meta[property="og:description"]').attr('content') ||
+      $('meta[name="description"]').attr('content'),
+    image: $('meta[property="og:image"]').attr('content') || '/puglet.webp',
+    favicon:
+      $('link[rel="icon"]').attr('href') ||
+      $('link[rel="shortcut icon"]').attr('href') ||
+      new URL(url).origin + '/favicon.ico',
+    siteName:
+      $('meta[property="og:site_name"]').attr('content') ||
+      parsedUrl.hostname.replace(/^www\./, ''),
+  };
+}
+
+const getCachedMetadata = unstable_cache(
+  async (url: string) => {
+    const metadata = await fetchMetadata(url);
+    return sanitizeMetadata(metadata);
+  },
+  ['link-metadata'],
+  { revalidate: 3600 } // Cache for 1 hour
+);
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const url = searchParams.get('url');
 
-    // Input validation
     if (!url) {
       return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
     }
@@ -126,44 +166,8 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Invalid URL provided' }, { status: 400 });
     }
 
-    const parsedUrl = new URL(url);
-
-    // Twitter/X specific handling
-    if (['twitter.com', 'x.com'].includes(parsedUrl.hostname)) {
-      const metadata = await getTwitterMetadata(url);
-      return NextResponse.json(sanitizeMetadata(metadata));
-    }
-
-    // Fetch and size-limit check
-    const response = await fetchWithTimeout(url);
-    const html = await response.text();
-
-    // Parse with cheerio
-    const $ = cheerio.load(html);
-
-    // Reddit specific handling
-    if (['reddit.com', 'www.reddit.com'].includes(parsedUrl.hostname)) {
-      const metadata = await getRedditMetadata($);
-      return NextResponse.json(sanitizeMetadata(metadata));
-    }
-
-    // General metadata extraction
-    const metadata = {
-      title: $('meta[property="og:title"]').attr('content') || $('title').text(),
-      description:
-        $('meta[property="og:description"]').attr('content') ||
-        $('meta[name="description"]').attr('content'),
-      image: $('meta[property="og:image"]').attr('content') || '/puglet.webp',
-      favicon:
-        $('link[rel="icon"]').attr('href') ||
-        $('link[rel="shortcut icon"]').attr('href') ||
-        new URL(url).origin + '/favicon.ico',
-      siteName:
-        $('meta[property="og:site_name"]').attr('content') ||
-        parsedUrl.hostname.replace(/^www\./, ''),
-    };
-
-    return NextResponse.json(sanitizeMetadata(metadata));
+    const metadata = await getCachedMetadata(url);
+    return NextResponse.json(metadata);
   } catch (error) {
     console.error('Error fetching metadata:', {
       error: error instanceof Error ? error.message : 'Unknown error',

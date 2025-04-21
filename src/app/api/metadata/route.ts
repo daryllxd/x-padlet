@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 async function getTwitterMetadata(url: string) {
   try {
     // Twitter/X requires a different approach since they block regular fetches
-    // We'll use their oembed API
     const oembedUrl = `https://publish.twitter.com/oembed?url=${encodeURIComponent(url)}`;
     const response = await fetch(oembedUrl);
     const data = await response.json();
@@ -65,8 +64,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Handle Twitter/X URLs
-    if (url.includes('twitter.com') || url.includes('x.com')) {
+    const parsedUrl = new URL(url);
+
+    const allowedHosts = ['twitter.com', 'x.com'];
+
+    if (allowedHosts.includes(parsedUrl.hostname)) {
       const metadata = await getTwitterMetadata(url);
       return NextResponse.json(metadata);
     }
@@ -80,7 +82,9 @@ export async function GET(request: Request) {
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    if (url.includes('reddit.com')) {
+    const allowedRedditHosts = ['reddit.com', 'www.reddit.com'];
+
+    if (allowedRedditHosts.includes(parsedUrl.hostname)) {
       const metadata = await getRedditMetadata($);
       return NextResponse.json(metadata);
     }

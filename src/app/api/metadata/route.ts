@@ -68,7 +68,7 @@ async function getTwitterMetadata(url: string) {
 
     return {
       title: data.author_name ? `${data.author_name} on Twitter` : 'Twitter Post',
-      description: DOMPurify.sanitize(data.html?.replace(/<[^>]*>/g, '').slice(0, 200) || ''),
+      description: DOMPurify.sanitize(data.html).slice(0, 200),
       image: '/puglet.webp', // Twitter blocks image fetching, use fallback
       favicon: 'https://twitter.com/favicon.ico',
       siteName: 'Twitter',

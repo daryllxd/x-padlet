@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTodos } from '@/hooks/useTodos';
 import { cn } from '@/lib/utils';
+import { extractUrls } from '@/lib/utils/extract-urls';
 import { getTodoHoverClasses, getTodoThemeStyles } from '@/lib/utils/todo-theme';
 import { TodoItem } from '@/types';
 import { EllipsisVertical } from 'lucide-react';
@@ -24,8 +25,11 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const contextMenuRef = useRef<TodoCardContextMenuRef>(null);
 
-  // Extract URLs from description using regex
-  const urls = todo.description?.match(/(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g) || [];
+  // Extract URLs and clean description
+  const urls = extractUrls(todo.description || '');
+  const cleanDescription = (todo.description || '')
+    .replace(/(?<!\()(?<!\[.*\]\()(https?:\/\/[^\s<]+[^<.,:;"')\]\s])(?!\))/g, '')
+    .trim();
 
   const handleEllipsisClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -76,13 +80,15 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
           {todo.image_url && (
             <img src={todo.image_url} alt="Todo" className="h-full w-full rounded-xl" />
           )}
-          <MarkdownContent
-            content={todo.description || ''}
-            className={cn(
-              'text-sm text-slate-700',
-              todo.is_completed && 'text-slate-500 line-through'
-            )}
-          />
+          {cleanDescription && (
+            <MarkdownContent
+              content={cleanDescription}
+              className={cn(
+                'text-sm text-slate-700',
+                todo.is_completed && 'text-slate-500 line-through'
+              )}
+            />
+          )}
           {/* Link Previews */}
           {urls.length > 0 && (
             <div className="space-y-3">

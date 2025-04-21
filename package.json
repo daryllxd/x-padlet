@@ -50,6 +50,7 @@
     "clsx": "^2.1.1",
     "downshift": "^9.0.9",
     "isomorphic-dompurify": "^2.23.0",
+    "jsdom": "^26.1.0",
     "lexical": "^0.29.0",
     "masonic": "^4.0.1",
     "next": "15.2.4",

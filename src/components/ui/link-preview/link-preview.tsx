@@ -52,7 +52,7 @@ export default function LinkPreview({ url, className }: LinkPreviewProps) {
     >
       <div className="flex flex-col p-3 sm:flex-row sm:gap-4">
         {metadata?.image && (
-          <div className="relative mb-3 h-32 flex-shrink-0 sm:mb-0 sm:h-20 sm:w-20">
+          <div className="relative mb-3 h-20 flex-shrink-0 sm:mb-0 sm:h-20 sm:w-20">
             <img
               src={metadata.image}
               alt={metadata.title || 'Link preview'}

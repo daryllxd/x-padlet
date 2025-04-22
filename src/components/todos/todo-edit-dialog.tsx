@@ -17,6 +17,7 @@ export function TodoEditDialog({ todo, open, onOpenChange, listId }: TodoEditDia
 
   const handleSave = async (formData: FormData) => {
     try {
+      formData.append('todoListId', todo.todo_list_id);
       await updateTodo({ id: todo.id, formData });
       toast.success('Todo updated successfully');
       onOpenChange(false);

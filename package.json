@@ -65,6 +65,7 @@
     "react-rough-notation": "^1.0.5",
     "react-use": "^17.6.0",
     "sharp": "^0.34.1",
+    "slugify": "^1.6.6",
     "socket.io-client": "^4.8.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.0.2",

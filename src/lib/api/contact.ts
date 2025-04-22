@@ -1,4 +1,13 @@
-import { ContactFormSubmission, supabase } from '../supabase';
+import { supabase } from '../db';
+
+export type ContactFormSubmission = {
+  id?: string;
+  name: string;
+  email: string;
+  message: string;
+  category?: string;
+  created_at?: string;
+};
 
 export async function submitContactForm(data: Omit<ContactFormSubmission, 'id' | 'created_at'>) {
   try {

@@ -48,4 +48,26 @@ const updateTodoList = async (
   }
 };
 
+const getTodoList = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  const { id } = await params;
+
+  try {
+    const { data, error } = await supabase.from('todo_lists').select('*').eq('id', id).single();
+
+    if (error) {
+      console.error('Supabase fetch error:', error);
+      return NextResponse.json({ error: 'Failed to fetch todo list' }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error processing request:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+};
+
 export const PATCH = withRevalidation<{ id: string }>('todo-lists')(updateTodoList);
+export const GET = getTodoList;

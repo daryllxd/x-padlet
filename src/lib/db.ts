@@ -1,12 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Create a Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+let supabase: ReturnType<typeof createClient>;
 
-// Helper function to run queries
+if (supabaseUrl && supabaseKey) {
+  supabase = createClient(supabaseUrl, supabaseKey);
+} else {
+  console.error(
+    '\x1b[31m%s\x1b[0m',
+    '❗️ Missing Supabase environment variables. Supabase features will not be available.'
+  );
+  if (!supabaseUrl) console.error('\x1b[31m%s\x1b[0m', '❗ Missing NEXT_PUBLIC_SUPABASE_URL');
+  if (!supabaseKey) console.error('\x1b[31m%s\x1b[0m', '❗ Missing NEXT_PUBLIC_SUPABASE_ANON_KEY');
+}
+
+export { supabase };
+
 export async function query(text: string, params?: any[]) {
   const start = Date.now();
   try {
@@ -20,7 +31,7 @@ export async function query(text: string, params?: any[]) {
     if (error) throw error;
 
     const duration = Date.now() - start;
-    console.log('Executed query', { text, duration, rows: data?.length });
+    console.log('Executed query', { text, duration, rows: Array.isArray(data) ? data.length : 0 });
     return { rows: data };
   } catch (error) {
     console.error('Error executing query', { text, error });

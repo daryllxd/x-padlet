@@ -1,4 +1,4 @@
-import { SUPABASE_NO_ITEMS_FOUND } from '@/lib/api/supabase-errors';
+import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
@@ -56,31 +56,17 @@ const getTodoList = async (
   const { id } = await params;
 
   try {
-    let { data, error } = await supabase
-      .from('todo_lists')
-      .select('*')
-      .eq('custom_url', id)
-      .single();
+    const result = await lookupTodoList({
+      id,
+      select: '*',
+      supabase,
+    });
 
-    if (error && error.code === SUPABASE_NO_ITEMS_FOUND) {
-      const { data: idData, error: idError } = await supabase
-        .from('todo_lists')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (idError) {
-        console.error('Supabase fetch error:', idError);
-        return NextResponse.json({ error: 'Failed to fetch todo list' }, { status: 500 });
-      }
-
-      data = idData;
-    } else if (error) {
-      console.error('Supabase fetch error:', error);
-      return NextResponse.json({ error: 'Failed to fetch todo list' }, { status: 500 });
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(result.data);
   } catch (error) {
     console.error('Error processing request:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

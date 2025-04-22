@@ -1,4 +1,4 @@
-import { SUPABASE_NO_ITEMS_FOUND } from '@/lib/api/supabase-errors';
+import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
@@ -14,32 +14,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'todo_list_id is required' }, { status: 400 });
     }
 
-    let todoListId: string;
-    let { data: todoList, error: todoListError } = await supabase
-      .from('todo_lists')
-      .select('id')
-      .eq('custom_url', todoListIdOrUrl)
-      .single();
+    const result = await lookupTodoList({
+      id: todoListIdOrUrl,
+      select: 'id',
+      supabase,
+    });
 
-    if (todoListError && todoListError.code === SUPABASE_NO_ITEMS_FOUND) {
-      const { data: idData, error: idError } = await supabase
-        .from('todo_lists')
-        .select('id')
-        .eq('id', todoListIdOrUrl)
-        .single();
-
-      if (idError) {
-        console.error('Error fetching todo list:', idError);
-        return NextResponse.json({ error: 'Failed to find todo list' }, { status: 404 });
-      }
-
-      todoListId = idData.id;
-    } else if (todoListError) {
-      console.error('Error fetching todo list:', todoListError);
-      return NextResponse.json({ error: 'Failed to find todo list' }, { status: 404 });
-    } else {
-      todoListId = todoList.id;
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
     }
+
+    const todoListId = result.data.id;
 
     // Now fetch todos using the found todo_list_id
     const { data, error } = await supabase

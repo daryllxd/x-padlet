@@ -5,6 +5,7 @@ import { Providers } from '@/components/Providers';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
 import { Inter, Montserrat, Open_Sans, Playpen_Sans, Poppins, Roboto } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const roboto = Roboto({
@@ -45,6 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <DevBanner />
           <div className="flex min-h-screen flex-col">
             <NavBar />
+            <NextTopLoader />
+
             <main className="flex-1">{children}</main>
           </div>
         </Providers>

@@ -10,7 +10,7 @@ interface MasonryTodoListCardProps {
   todo: TodoItem;
   listId: string;
   positionType: 'position' | 'position_in_group';
-  allowedEdges?: PugletDraggableState['closestEdge'][];
+  allowedEdges?: Exclude<PugletDraggableState['closestEdge'], null>[];
 }
 
 export function MasonryTodoListCard({

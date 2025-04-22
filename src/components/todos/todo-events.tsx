@@ -19,6 +19,7 @@ export function TodoEvents({ todoListId }: TodoEventsProps) {
     eventSource.onmessage = (event) => {
       console.log('🔍 Client: Received SSE message:', event.data);
       const data = JSON.parse(event.data);
+      console.log('🔍 Client: Data:', data);
 
       if (data.type === 'title-updated') {
         console.log('🔍 Client: Showing toast for title update in todo:', data.todoId);

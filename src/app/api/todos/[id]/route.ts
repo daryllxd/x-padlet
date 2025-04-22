@@ -74,7 +74,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     // Emit title update event if title was in the payload
     if (title) {
-      todoEvents.emit(formData.get('todoListId') as string, {
+      const todoListId = formData.get('todoListId');
+      console.log('🔍 PATCH: Emitting event for todoListId:', todoListId);
+      todoEvents.emit(todoListId as string, {
         type: 'title-updated',
         todoId: id,
         message: `Todo title updated to "${todoFormData.title}"`,

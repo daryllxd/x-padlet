@@ -1,3 +1,4 @@
+import { SUPABASE_NO_ITEMS_FOUND } from '@/lib/api/supabase-errors';
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
@@ -55,9 +56,26 @@ const getTodoList = async (
   const { id } = await params;
 
   try {
-    const { data, error } = await supabase.from('todo_lists').select('*').eq('id', id).single();
+    let { data, error } = await supabase
+      .from('todo_lists')
+      .select('*')
+      .eq('custom_url', id)
+      .single();
 
-    if (error) {
+    if (error && error.code === SUPABASE_NO_ITEMS_FOUND) {
+      const { data: idData, error: idError } = await supabase
+        .from('todo_lists')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (idError) {
+        console.error('Supabase fetch error:', idError);
+        return NextResponse.json({ error: 'Failed to fetch todo list' }, { status: 500 });
+      }
+
+      data = idData;
+    } else if (error) {
       console.error('Supabase fetch error:', error);
       return NextResponse.json({ error: 'Failed to fetch todo list' }, { status: 500 });
     }

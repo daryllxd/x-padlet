@@ -1,3 +1,4 @@
+import { SUPABASE_NO_ITEMS_FOUND } from '@/lib/api/supabase-errors';
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
@@ -52,7 +53,7 @@ const createTodoGroup = async (
       .limit(1)
       .single();
 
-    if (maxPositionError && maxPositionError.code !== 'PGRST116') {
+    if (maxPositionError && maxPositionError.code !== SUPABASE_NO_ITEMS_FOUND) {
       console.error('Supabase max position error:', maxPositionError);
       return NextResponse.json({ error: 'Failed to get max position' }, { status: 500 });
     }

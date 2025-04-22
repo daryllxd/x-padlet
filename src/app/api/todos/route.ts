@@ -1,3 +1,4 @@
+import { SUPABASE_NO_ITEMS_FOUND } from '@/lib/api/supabase-errors';
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
@@ -7,9 +8,41 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const todoListId = searchParams.get('todo_list_id');
+    const todoListIdOrUrl = searchParams.get('todo_list_id');
 
-    let query = supabase
+    if (!todoListIdOrUrl) {
+      return NextResponse.json({ error: 'todo_list_id is required' }, { status: 400 });
+    }
+
+    let todoListId: string;
+    let { data: todoList, error: todoListError } = await supabase
+      .from('todo_lists')
+      .select('id')
+      .eq('custom_url', todoListIdOrUrl)
+      .single();
+
+    if (todoListError && todoListError.code === SUPABASE_NO_ITEMS_FOUND) {
+      const { data: idData, error: idError } = await supabase
+        .from('todo_lists')
+        .select('id')
+        .eq('id', todoListIdOrUrl)
+        .single();
+
+      if (idError) {
+        console.error('Error fetching todo list:', idError);
+        return NextResponse.json({ error: 'Failed to find todo list' }, { status: 404 });
+      }
+
+      todoListId = idData.id;
+    } else if (todoListError) {
+      console.error('Error fetching todo list:', todoListError);
+      return NextResponse.json({ error: 'Failed to find todo list' }, { status: 404 });
+    } else {
+      todoListId = todoList.id;
+    }
+
+    // Now fetch todos using the found todo_list_id
+    const { data, error } = await supabase
       .from('todos')
       .select(
         `
@@ -21,13 +54,8 @@ export async function GET(request: NextRequest) {
         )
       `
       )
+      .eq('todo_list_id', todoListId)
       .order('position', { ascending: true });
-
-    if (todoListId) {
-      query = query.eq('todo_list_id', todoListId);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching todos:', error);

@@ -1,3 +1,5 @@
+export const dynamic = 'force-static';
+
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { CreateTodoListForm } from '@/components/todo-lists/create-todo-list-form';
 

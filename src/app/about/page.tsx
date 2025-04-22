@@ -1,3 +1,5 @@
+export const dynamic = 'force-static';
+
 import { ContactForm } from '@/components/about/contact-form';
 import { FeatureCard } from '@/components/about/feature-card';
 import { XPadletLink } from '@/components/ui/link/';

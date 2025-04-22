@@ -2,20 +2,26 @@
 
 import { cn } from '@/lib/utils';
 import Downshift from 'downshift';
-import { LayoutGrid, LayoutList } from 'lucide-react';
+import { LayoutGrid, LayoutList, List } from 'lucide-react';
 
 const DISPLAY_MODES = [
   {
     value: 'masonry',
     label: 'Masonry',
     icon: LayoutGrid,
-    description: 'Items are arranged in a masonry grid layout',
+    description: 'Items are arranged in a masonry grid layout so they are pretty',
   },
   {
     value: 'columnar',
     label: 'Columnar',
     icon: LayoutList,
-    description: 'Items are arranged in a single column',
+    description: 'Items are arranged in a columnar layout',
+  },
+  {
+    value: 'stream',
+    label: 'Stream',
+    icon: List,
+    description: 'Items are arranged in a stream layout',
   },
 ];
 
@@ -67,7 +73,7 @@ export function DisplayModeSelector({ value, onChange, className }: DisplayModeS
           <ul
             {...getMenuProps()}
             className={cn(
-              'absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-1 shadow-lg',
+              'absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-2 shadow-lg',
               !isOpen && 'hidden'
             )}
           >
@@ -80,16 +86,18 @@ export function DisplayModeSelector({ value, onChange, className }: DisplayModeS
                     index,
                   })}
                   className={cn(
-                    'flex cursor-pointer flex-col gap-1 px-3 py-2',
+                    'flex cursor-pointer flex-col gap-1 px-3 py-1 lg:py-2',
                     highlightedIndex === index && 'bg-slate-100',
                     value === item.value && 'bg-slate-50'
                   )}
                 >
-                  <div className="flex items-center gap-2">
-                    <item.icon className="h-4 w-4" />
-                    <span className="font-medium">{item.label}</span>
+                  <div className="flex items-center gap-4">
+                    <div className="mt-2 flex h-8 w-8 items-center justify-center rounded-md bg-slate-200">
+                      <item.icon className="h-4 w-4 text-slate-600" />
+                    </div>
+                    <span className="text-sm font-medium sm:text-base">{item.label}</span>
                   </div>
-                  <p className="text-xs text-slate-500">{item.description}</p>
+                  <p className="ml-12 text-xs text-slate-500 max-sm:hidden">{item.description}</p>
                 </li>
               ))}
           </ul>

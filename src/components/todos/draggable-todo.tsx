@@ -1,6 +1,6 @@
 'use client';
 
-import { isHorizontalEdge, PugletDraggableState, usePugletDraggableState } from '@/lib/puglet-drag';
+import { PugletDraggableState, usePugletDraggableState } from '@/lib/puglet-drag';
 import { TodoItem } from '@/types';
 import {
   attachClosestEdge,
@@ -17,10 +17,16 @@ import { PugletDragIndicator } from '../puglet-draggable/drag-indicator';
 interface DraggableProps {
   todo: TodoItem;
   positionType: 'position' | 'position_in_group';
+  allowedEdges?: Exclude<PugletDraggableState['closestEdge'], null>[];
   children: (state: PugletDraggableState) => React.ReactNode;
 }
 
-export function DraggableTodo({ todo, positionType, children }: DraggableProps) {
+export function DraggableTodo({
+  todo,
+  positionType,
+  allowedEdges = ['left', 'right'],
+  children,
+}: DraggableProps) {
   const ref = useRef(null);
   const { state, setDragging, setDraggedOver, reset } = usePugletDraggableState();
 
@@ -61,24 +67,26 @@ export function DraggableTodo({ todo, positionType, children }: DraggableProps) 
         return attachClosestEdge(data, {
           input,
           element,
-          allowedEdges: ['left', 'right'],
+          allowedEdges,
         });
       },
       onDragEnter: ({ self }) => {
         const closestEdge = extractClosestEdge(self.data);
-        if (closestEdge && isHorizontalEdge(closestEdge)) {
+        if (closestEdge) {
           setDraggedOver(closestEdge);
         }
       },
       onDrop: () => reset(),
       onDragLeave: () => reset(),
     });
-  }, []);
+  }, [allowedEdges]);
 
   return (
     <div ref={ref} className="relative h-full">
       {state.closestEdge === 'left' && <PugletDragIndicator direction="left" />}
       {state.closestEdge === 'right' && <PugletDragIndicator direction="right" />}
+      {state.closestEdge === 'top' && <PugletDragIndicator direction="top" />}
+      {state.closestEdge === 'bottom' && <PugletDragIndicator direction="bottom" />}
       {children(state)}
     </div>
   );

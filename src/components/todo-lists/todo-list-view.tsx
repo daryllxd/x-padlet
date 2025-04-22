@@ -4,6 +4,7 @@ import { TodoItem } from '@/types';
 import { TodoList } from '@/types/todo-list';
 import { GroupedTodoList } from '../todos/grouped-todo-list';
 import { MasonryTodoList } from '../todos/masonry-todo-list';
+import { StreamTodoList } from '../todos/stream-todo-list';
 
 interface TodoListViewProps {
   todos: TodoItem[];
@@ -27,8 +28,10 @@ export function TodoListView({ todos, listId, displayMode, isLoading }: TodoList
     <div className="space-y-4">
       {displayMode === 'masonry' ? (
         <MasonryTodoList todos={todos} listId={listId} />
-      ) : (
+      ) : displayMode === 'columnar' ? (
         <GroupedTodoList todos={todos} listId={listId} />
+      ) : (
+        <StreamTodoList todos={todos} listId={listId} />
       )}
     </div>
   );

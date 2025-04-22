@@ -1,23 +1,34 @@
+import { cn } from '@/lib/utils';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NavLinks } from './nav-links';
 import { NavMobile } from './nav-mobile';
 
-export function NavBar() {
+export async function NavBar() {
+  const headersList = await headers();
+  const host = headersList.get('host');
+  const isKawaiiPug = host === 'kawaii-pug.daryll.codes';
+
   return (
-    <nav className="border-b bg-white">
+    <nav
+      className={cn(
+        'border-b bg-white',
+        isKawaiiPug && 'border-b-purple-300 bg-gradient-to-b from-blue-200 to-purple-200'
+      )}
+    >
       <div className="container mx-auto flex h-14 items-center px-4">
         <div className="flex items-center">
           <Link href="/" className="flex items-center text-lg font-bold">
             <Image
-              src="/puglet.png"
+              src={isKawaiiPug ? '/kawaii-pug.webp' : '/puglet.png'}
               alt="Puglet"
               width={48}
               height={48}
               className="mr-2"
               priority
             />
-            Puglet
+            {isKawaiiPug ? 'Kawaii Pug' : 'Puglet'}
           </Link>
         </div>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { PugletDraggableState } from '@/lib/puglet-drag';
 import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
 import { DraggableTodo } from './draggable-todo';
@@ -9,11 +10,17 @@ interface MasonryTodoListCardProps {
   todo: TodoItem;
   listId: string;
   positionType: 'position' | 'position_in_group';
+  allowedEdges?: PugletDraggableState['closestEdge'][];
 }
 
-export function MasonryTodoListCard({ todo, listId, positionType }: MasonryTodoListCardProps) {
+export function MasonryTodoListCard({
+  todo,
+  listId,
+  positionType,
+  allowedEdges = ['left', 'right'],
+}: MasonryTodoListCardProps) {
   return (
-    <DraggableTodo todo={todo} positionType={positionType}>
+    <DraggableTodo todo={todo} positionType={positionType} allowedEdges={allowedEdges}>
       {(state) => (
         <TodoCard
           todo={todo}

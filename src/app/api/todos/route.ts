@@ -1,3 +1,4 @@
+import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
@@ -7,9 +8,26 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const todoListId = searchParams.get('todo_list_id');
+    const todoListIdOrUrl = searchParams.get('todo_list_id');
 
-    let query = supabase
+    if (!todoListIdOrUrl) {
+      return NextResponse.json({ error: 'todo_list_id is required' }, { status: 400 });
+    }
+
+    const result = await lookupTodoList({
+      id: todoListIdOrUrl,
+      select: 'id',
+      supabase,
+    });
+
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    const todoListId = result.data.id;
+
+    // Now fetch todos using the found todo_list_id
+    const { data, error } = await supabase
       .from('todos')
       .select(
         `
@@ -21,13 +39,8 @@ export async function GET(request: NextRequest) {
         )
       `
       )
+      .eq('todo_list_id', todoListId)
       .order('position', { ascending: true });
-
-    if (todoListId) {
-      query = query.eq('todo_list_id', todoListId);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching todos:', error);

@@ -1,0 +1,1 @@
+export const SUPABASE_NO_ITEMS_FOUND = 'PGRST116';

@@ -40,29 +40,19 @@ export async function fetchTodoList({
   baseUrl?: string;
   id: string;
 }): Promise<TodoList> {
-  const params = new URLSearchParams();
-  params.append('id', id);
-
-  const fullUrl = `${baseUrl}${params.toString() ? '?' + params.toString() : ''}`;
-
-  console.log('fullUrl', fullUrl);
-  console.log('id', id);
-
   try {
-    const response = await fetch(fullUrl, {
+    const response = await fetch(`${baseUrl}`, {
       next: { revalidate: 10, tags: ['todo-list', id] },
     });
 
     if (!response.ok) {
       console.error('Fetch failed with status:', response.status);
-      throw new Error('Failed to fetch todo lists');
+      throw new Error('Failed to fetch todo list');
     }
 
-    const data = await response.json();
-
-    return data.find((list: TodoList) => list.id === id);
+    return await response.json();
   } catch (error) {
-    console.error('Error in fetchTodoLists:', error);
+    console.error('Error in fetchTodoList:', error);
     throw error;
   }
 }

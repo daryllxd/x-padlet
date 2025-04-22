@@ -1,3 +1,4 @@
+import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
@@ -48,4 +49,29 @@ const updateTodoList = async (
   }
 };
 
+const getTodoList = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  const { id } = await params;
+
+  try {
+    const result = await lookupTodoList({
+      id,
+      select: '*',
+      supabase,
+    });
+
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    return NextResponse.json(result.data);
+  } catch (error) {
+    console.error('Error processing request:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+};
+
 export const PATCH = withRevalidation<{ id: string }>('todo-lists')(updateTodoList);
+export const GET = getTodoList;

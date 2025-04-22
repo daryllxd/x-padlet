@@ -131,7 +131,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
             >
               <GroupedTodoHead todoListId={listId} group={group} />
               <GroupedTodoCreate todoListId={listId} todoGroupId={group.id} />
-              <div className="flex w-full flex-col gap-2">
+              <div className="flex w-full flex-col gap-4">
                 {groupedTodos[group.id]?.todos
                   .sort((a, b) => a.position_in_group - b.position_in_group)
                   .map((todo) => (
@@ -140,6 +140,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
                       listId={listId}
                       todo={todo}
                       positionType="position_in_group"
+                      allowedEdges={['top', 'bottom']}
                     />
                   ))}
               </div>

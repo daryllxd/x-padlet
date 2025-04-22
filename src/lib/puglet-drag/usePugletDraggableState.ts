@@ -11,7 +11,7 @@ export function usePugletDraggableState() {
     setState({ state: 'dragging', closestEdge: null });
   };
 
-  const setDraggedOver = (edge: 'left' | 'right') => {
+  const setDraggedOver = (edge: Exclude<PugletDraggableState['closestEdge'], null>) => {
     setState({ state: 'draggedOver', closestEdge: edge });
   };
 

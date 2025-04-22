@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import Downshift from 'downshift';
-import { LayoutGrid, LayoutList } from 'lucide-react';
+import { LayoutGrid, LayoutList, List } from 'lucide-react';
 
 const DISPLAY_MODES = [
   {
@@ -16,6 +16,12 @@ const DISPLAY_MODES = [
     label: 'Columnar',
     icon: LayoutList,
     description: 'Items are arranged in a single column',
+  },
+  {
+    value: 'stream',
+    label: 'Stream',
+    icon: List,
+    description: 'Items are arranged in a stream layout',
   },
 ];
 

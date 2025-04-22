@@ -23,7 +23,7 @@ export interface TodoList {
   todoCount: number;
   theme: ThemeColor | null;
   background: ThemeColor | null;
-  display_mode: 'masonry' | 'columnar';
+  display_mode: 'masonry' | 'columnar' | 'stream';
 }
 
 export type TodoListWithCreating = TodoList | (Omit<TodoList, 'status'> & { status: 'creating' });

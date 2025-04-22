@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/db';
+import { todoEvents } from '@/lib/events';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData, TodoItem } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
@@ -69,6 +70,17 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     if (error) {
       console.error('Supabase update error:', error);
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
+    }
+
+    // Emit title update event if title was in the payload
+    if (title) {
+      const todoListId = formData.get('todoListId');
+      console.log('🔍 PATCH: Emitting event for todoListId:', todoListId);
+      todoEvents.emit(todoListId as string, {
+        type: 'title-updated',
+        todoId: id,
+        message: `Todo title updated to "${todoFormData.title}"`,
+      });
     }
 
     return NextResponse.json(data);

@@ -6,6 +6,7 @@ import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { TAILWIND_THEME_COLORS } from '@/types/todo-list';
 import { useState } from 'react';
+import { TodoEvents } from '../todos/todo-events';
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -32,6 +33,7 @@ export function TodoListPage({ todoListId }: TodoListPageProps) {
       className={`min-h-screen ${TAILWIND_THEME_COLORS[todoList?.theme || 'white']}`}
       style={{ fontFamily: FONTS[font] }}
     >
+      <TodoEvents todoListId={todoListId} />
       <div className="container mx-auto px-4 py-6 sm:py-10">
         <TodoListHeroSection
           todoListId={todoListId}

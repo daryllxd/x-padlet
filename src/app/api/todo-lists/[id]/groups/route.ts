@@ -1,5 +1,5 @@
 import { withRevalidation } from '@/lib/api/withRevalidation';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 const getTodoGroups = async (

@@ -29,7 +29,7 @@ export function TodoListCard({
   };
 
   const CardContent = (
-    <XPadletLink target="_blank" href={href ?? `/${id}`} variant="muted">
+    <XPadletLink target="_blank" href={href ?? `/board/${id}`} variant="muted">
       <Card className="group hover:bg-accent/50 relative h-full p-6 transition-colors">
         {id && (
           <Button

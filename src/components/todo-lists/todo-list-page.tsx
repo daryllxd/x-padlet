@@ -22,9 +22,13 @@ interface TodoListPageProps {
   todoListId: string;
 }
 
-export function TodoListPage({ todoListId }: TodoListPageProps) {
-  const { data: todoList } = useTodoList(todoListId);
-  const { todos, isLoading: isTodosLoading } = useTodos(todoListId);
+/**
+ * @description We pass in either a UUID or a URL in "todoListId" - we need to load the TodoList and get the real UUID first - then pass that UUID to the underlying components.
+ */
+export function TodoListPage({ todoListId: todoListIdOrUrl }: TodoListPageProps) {
+  const { data: todoList } = useTodoList(todoListIdOrUrl);
+  const todoListId = todoList?.id;
+  const { todos, isLoading: isTodosLoading } = useTodos(todoListId ?? todoListIdOrUrl);
   const [font, setFont] = useState<Font>('Playpen_Sans');
 
   return (
@@ -34,7 +38,7 @@ export function TodoListPage({ todoListId }: TodoListPageProps) {
     >
       <div className="container mx-auto px-4 py-6 sm:py-10">
         <TodoListHeroSection
-          todoListId={todoListId}
+          todoListId={todoListId ?? todoListIdOrUrl}
           themeColor={todoList?.theme || 'white'}
           font={font}
           onFontChange={setFont}
@@ -42,7 +46,7 @@ export function TodoListPage({ todoListId }: TodoListPageProps) {
 
         <TodoListView
           todos={todos}
-          listId={todoListId}
+          listId={todoListId ?? todoListIdOrUrl}
           displayMode={todoList?.display_mode || 'masonry'}
           isLoading={isTodosLoading}
         />

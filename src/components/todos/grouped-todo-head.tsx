@@ -1,6 +1,6 @@
 'use client';
 
-import { useTodoGroups } from '@/hooks/useTodoGroups';
+import { useTodoGroupMutations } from '@/hooks/todo-groups/useTodoGroupMutations';
 import { cn } from '@/lib/utils';
 import { TodoGroup } from '@/types';
 import { EllipsisVertical, Plus } from 'lucide-react';
@@ -16,7 +16,8 @@ interface GroupedTodoHeadProps {
 }
 
 export function GroupedTodoHead({ group, todoListId, isCreate = false }: GroupedTodoHeadProps) {
-  const { deleteGroupMutation, updateGroup, createGroupMutation } = useTodoGroups(todoListId);
+  const { deleteGroupMutation, updateGroupMutation, createGroupMutation } =
+    useTodoGroupMutations(todoListId);
   const [isHovered, setIsHovered] = useState(false);
   const contextMenuRef = useRef<GroupedTodoContextMenuRef>(null);
 
@@ -57,7 +58,7 @@ export function GroupedTodoHead({ group, todoListId, isCreate = false }: Grouped
 
     if (!newName) return;
     try {
-      await updateGroup({ groupId: group.id, name: newName });
+      await updateGroupMutation.mutateAsync({ groupId: group.id, name: newName });
       toast.success('Group updated successfully');
     } catch (error) {
       console.error('Failed to update group:', error);

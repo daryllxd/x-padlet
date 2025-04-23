@@ -16,7 +16,7 @@ export function CreateTodoListForm() {
     }
 
     const todoList = await response.json();
-    window.location.href = `/${todoList.id}`;
+    window.location.href = `/board/${todoList.custom_url}`;
   };
 
   return (

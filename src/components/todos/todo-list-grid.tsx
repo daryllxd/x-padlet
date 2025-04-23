@@ -47,6 +47,7 @@ export function TodoListGrid() {
           key={todoList.id}
           id={todoList.id}
           title={todoList.title}
+          href={todoList.custom_url ? `/board/${todoList.custom_url}` : `/board/${todoList.id}`}
           description={todoList.description}
         />
       ))}

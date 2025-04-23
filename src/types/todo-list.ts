@@ -24,6 +24,7 @@ export interface TodoList {
   theme: ThemeColor | null;
   background: ThemeColor | null;
   display_mode: 'masonry' | 'columnar' | 'stream';
+  custom_url: string | null;
 }
 
 export type TodoListWithCreating = TodoList | (Omit<TodoList, 'status'> & { status: 'creating' });

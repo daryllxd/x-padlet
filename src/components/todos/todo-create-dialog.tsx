@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ConditionalTooltip } from '@/components/ui/conditional-tooltip';
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCreateTodo } from '@/hooks/todos/useCreateTodo';
 import { Plus } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
@@ -47,19 +47,12 @@ export function TodoCreateDialog({ listId, children, todoGroupId }: TodoCreateDi
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button onClick={() => setOpen(true)}>
-                  <Plus className="h-4 w-4" />
-                  <span className="sr-only">Add to list</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Add a new todo</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <ConditionalTooltip content="Add a new todo">
+            <Button onClick={() => setOpen(true)}>
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add to list</span>
+            </Button>
+          </ConditionalTooltip>
         )}
       </DialogTrigger>
       <DialogContent>

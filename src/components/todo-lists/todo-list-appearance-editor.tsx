@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ConditionalTooltip } from '@/components/ui/conditional-tooltip';
 import {
   Sheet,
   SheetContent,
@@ -9,12 +10,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
 import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
 import { Settings2 } from 'lucide-react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { useMount } from 'react-use';
 import { DisplayModeSelector } from '../todo-lists/display-mode-selector';
 import { QRCode } from '../ui/qr-code';
@@ -30,7 +30,7 @@ const FONTS = {
 
 type Font = keyof typeof FONTS;
 
-interface TodoListAppearanceEditorProps {
+interface TodoListAppearanceEditorProps extends ComponentProps<typeof Sheet> {
   themeColor: TodoList['theme'];
   font: Font;
   displayMode: TodoList['display_mode'];
@@ -48,6 +48,7 @@ export function TodoListAppearanceEditor({
   displayMode,
   todoListId,
   onSave,
+  children,
 }: TodoListAppearanceEditorProps) {
   const { isMobile } = useIsMobile();
   const [open, setOpen] = useState(false);
@@ -69,21 +70,16 @@ export function TodoListAppearanceEditor({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      {isMobile ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <SheetTrigger asChild>
-              <Button>
-                <Settings2 className="h-4 w-4" />
-                <span className="sr-only">Open appearance settings</span>
-              </Button>
-            </SheetTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Appearance Settings</p>
-          </TooltipContent>
-        </Tooltip>
-      ) : null}
+      <ConditionalTooltip content={<p>Appearance Settings</p>}>
+        {children || (
+          <SheetTrigger asChild>
+            <Button>
+              <Settings2 className="h-4 w-4" />
+              <span className="sr-only">Open appearance settings</span>
+            </Button>
+          </SheetTrigger>
+        )}
+      </ConditionalTooltip>
       <SheetContent
         side={isMobile ? 'bottom' : 'right'}
         className="flex flex-col px-6 max-sm:rounded-t-lg max-sm:pb-12 sm:w-[400px] sm:max-w-[400px]"

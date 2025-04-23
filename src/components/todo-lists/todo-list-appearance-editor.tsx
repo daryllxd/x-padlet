@@ -16,6 +16,7 @@ import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
 import { Settings2 } from 'lucide-react';
 import { useState } from 'react';
 import { DisplayModeSelector } from '../todo-lists/display-mode-selector';
+import { QRCode } from '../ui/qr-code';
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -32,6 +33,7 @@ interface TodoListAppearanceEditorProps {
   themeColor: TodoList['theme'];
   font: Font;
   displayMode: TodoList['display_mode'];
+  todoListId: string;
   onSave: (settings: {
     themeColor: TodoList['theme'];
     font: Font;
@@ -43,6 +45,7 @@ export function TodoListAppearanceEditor({
   themeColor,
   font,
   displayMode,
+  todoListId,
   onSave,
 }: TodoListAppearanceEditorProps) {
   const { isMobile } = useIsMobile();
@@ -60,19 +63,21 @@ export function TodoListAppearanceEditor({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <SheetTrigger asChild>
-            <Button>
-              <Settings2 className="h-4 w-4" />
-              <span className="sr-only">Open appearance settings</span>
-            </Button>
-          </SheetTrigger>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Appearance Settings</p>
-        </TooltipContent>
-      </Tooltip>
+      {isMobile ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SheetTrigger asChild>
+              <Button>
+                <Settings2 className="h-4 w-4" />
+                <span className="sr-only">Open appearance settings</span>
+              </Button>
+            </SheetTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Appearance Settings</p>
+          </TooltipContent>
+        </Tooltip>
+      ) : null}
       <SheetContent
         side={isMobile ? 'bottom' : 'right'}
         className="flex flex-col px-6 max-sm:rounded-t-lg max-sm:pb-12 sm:w-[400px] sm:max-w-[400px]"
@@ -135,6 +140,12 @@ export function TodoListAppearanceEditor({
               }
             />
           </div>
+
+          <QRCode
+            url={`${window.location.origin}/board/${todoListId}`}
+            size={96}
+            className="text-current opacity-80 transition-opacity hover:opacity-100"
+          />
         </div>
         <SheetFooter>
           <Button

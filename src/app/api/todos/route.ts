@@ -3,9 +3,12 @@ import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
 import { TodoItem } from '@/types/todo';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
+  console.log('❗GET todos');
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const todoListIdOrUrl = searchParams.get('todo_list_id');
@@ -199,6 +202,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create todo' }, { status: 500 });
     }
 
+    revalidateTag(`todos-${todoListId}`);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

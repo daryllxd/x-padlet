@@ -14,25 +14,27 @@ export default async function Page({ params }: { params: Promise<{ todo_list_id:
   const protocol = headersList.get('x-forwarded-proto') || 'http';
   const baseUrl = `${protocol}://${host}/api/todo-lists/${todoListId}`;
 
-  await queryClient.prefetchQuery({
-    queryKey: ['todoList', todoListId],
-    queryFn: () => fetchTodoList({ id: todoListId, baseUrl }),
-  });
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ['todoList', todoListId],
+      queryFn: () => fetchTodoList({ id: todoListId, baseUrl }),
+    }),
 
-  await queryClient.prefetchQuery<TodoList>({
-    queryKey: ['todos', todoListId],
-    queryFn: async () => {
-      const response = await fetch(`https://${host}/api/todos?todo_list_id=${todoListId}`, {
-        cache: 'force-cache',
-        next: {
-          revalidate: 60000,
-          tags: [`todos-${todoListId}`],
-        },
-      });
-      const data = await response.json();
-      return data;
-    },
-  });
+    queryClient.prefetchQuery<TodoList>({
+      queryKey: ['todos', todoListId],
+      queryFn: async () => {
+        const response = await fetch(`https://${host}/api/todos?todo_list_id=${todoListId}`, {
+          cache: 'force-cache',
+          next: {
+            revalidate: 60000,
+            tags: [`todos-${todoListId}`],
+          },
+        });
+        const data = await response.json();
+        return data;
+      },
+    }),
+  ]);
 
   const prefetchedTodoList = queryClient.getQueryData<TodoList>(['todoList', todoListId]);
   const prefetchedTodos = queryClient.getQueryData<TodoList>(['todos', todoListId]);

@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useTodoGroupMutations } from '@/hooks/todo-groups/useTodoGroupMutations';
 import { useTodoGroups } from '@/hooks/todo-groups/useTodoGroups';
 import { useTodos } from '@/hooks/useTodos';
@@ -19,7 +20,7 @@ interface GroupedTodoListProps {
 }
 
 export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
-  const { groups, isLoading } = useTodoGroups(listId);
+  const { groups, isLoading, error: groupsError } = useTodoGroups(listId);
   const { reorderGroupsMutation } = useTodoGroupMutations(listId);
   const { reorderGroupTodos } = useTodos(listId);
 
@@ -114,6 +115,29 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
 
   if (isLoading) {
     return <></>;
+  }
+
+  if (groupsError) {
+    return (
+      <>
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Unable to Load Groups</AlertTitle>
+          <AlertDescription>
+            We couldn't load your groups, but you can still view and interact with your todos below.
+          </AlertDescription>
+        </Alert>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {todos.map((todo) => (
+            <MasonryTodoListCard
+              key={todo.id}
+              listId={listId}
+              todo={todo}
+              positionType="position"
+            />
+          ))}
+        </div>
+      </>
+    );
   }
 
   return (

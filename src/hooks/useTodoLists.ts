@@ -28,7 +28,13 @@ export function useTodoList(id: string): UseQueryResult<TodoList, Error> {
 
   return useQuery({
     queryKey: ['todoList', id],
-    queryFn: () => clientFetchTodoLists({ id }),
+    queryFn: async () => {
+      const response = await fetch(`/api/todo-lists/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch todo list');
+      }
+      return response.json();
+    },
     select: (data) => {
       if (Array.isArray(data)) {
         return data.find((list: TodoList) => list.id === id);

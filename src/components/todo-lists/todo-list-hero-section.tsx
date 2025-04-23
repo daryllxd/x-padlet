@@ -1,6 +1,8 @@
 'use client';
 
 import { TodoListAppearanceEditor } from '@/components/todo-lists/todo-list-appearance-editor';
+import { TodoListMobileActions } from '@/components/todo-lists/todo-list-mobile-actions';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { TodoList } from '@/types/todo-list';
@@ -31,6 +33,7 @@ export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHe
   const { data: todoList, isPending, error } = useTodoList(todoListId);
   const router = useRouter();
   const { mutate: updateTodoList } = useUpdateTodoList();
+  const { isMobile } = useIsMobile();
 
   useEffect(() => {
     if (todoList?.status === 'archived') {
@@ -102,9 +105,10 @@ export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHe
           </div>
           <p className="text-sm text-slate-500">{description}</p>
         </div>
-        <div className="flex flex-col gap-4 lg:flex-row">
+        <div className="hidden flex-col gap-4 sm:flex lg:flex-row">
           <TodoCreateDialog listId={todoListId} />
           <TodoListAppearanceEditor
+            todoListId={todoListId}
             themeColor={themeColor}
             font={font}
             displayMode={todoList?.display_mode}
@@ -112,6 +116,13 @@ export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHe
           />
         </div>
       </div>
+      <TodoListMobileActions
+        todoListId={todoListId}
+        themeColor={themeColor}
+        font={font}
+        displayMode={todoList?.display_mode}
+        onSave={onSave}
+      />
     </header>
   );
 }

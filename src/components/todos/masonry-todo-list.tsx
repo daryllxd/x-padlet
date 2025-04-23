@@ -5,8 +5,8 @@ import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Masonry } from 'masonic';
 import Image from 'next/image';
-import { useEffect, useMemo, useRef } from 'react';
-import { usePrevious } from 'react-use';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMount, usePrevious } from 'react-use';
 import { MasonryTodoListCard } from './masonry-todo-list-card';
 interface MasonryTodoListProps {
   todos: TodoItem[];
@@ -15,6 +15,12 @@ interface MasonryTodoListProps {
 
 export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
   const { reorderTodos } = useReorderTodo(listId);
+
+  const [mounted, setMounted] = useState(false);
+
+  useMount(() => {
+    setMounted(true);
+  });
 
   /**
    * @description Workaround for Masonry grid re-render when items are deleted
@@ -97,7 +103,7 @@ export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
     );
   }
 
-  return (
+  return mounted ? (
     <Masonry
       key={gridKeyPostfix}
       items={todos}
@@ -107,5 +113,5 @@ export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
       columnGutter={16}
       columnWidth={300}
     />
-  );
+  ) : null;
 }

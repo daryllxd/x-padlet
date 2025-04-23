@@ -15,6 +15,7 @@ export function useTodos(listId: string) {
       const response = await fetch(`/api/todos?todo_list_id=${listId}`);
       return response.json();
     },
+    staleTime: 600000,
   });
 
   const toggleTodoMutation = useMutation({

@@ -6,6 +6,8 @@ import { TodoItem } from '@/types/todo';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
+  console.log('❗GET todos');
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const todoListIdOrUrl = searchParams.get('todo_list_id');

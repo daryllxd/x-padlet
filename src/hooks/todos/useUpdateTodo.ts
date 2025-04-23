@@ -10,6 +10,7 @@ export function useUpdateTodo({ listId }: UpdateTodoParams) {
 
   return useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      formData.append('todo_list_id', listId);
       const response = await fetch(`/api/todos/${id}`, {
         method: 'PATCH',
         body: formData,

@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData, TodoItem } from '@/types';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -12,7 +13,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const title = formData.get('title');
     const description = formData.get('description');
     const imageFile = formData.get('image') as File | null;
+    const todoListId = formData.get('todo_list_id') as string;
     const theme = formData.get('theme') as TodoItem['theme'] | null;
+
+    console.log('❗update todo', todoListId);
 
     if (!title || !description) {
       return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
@@ -71,6 +75,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
     }
 
+    revalidateTag(`todos-${todoListId}`);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

@@ -26,6 +26,7 @@ export default async function Page({ params }: { params: Promise<{ todo_list_id:
         cache: 'force-cache',
         next: {
           revalidate: 60000,
+          tags: [`todos-${todoListId}`],
         },
       });
       const data = await response.json();

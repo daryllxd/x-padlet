@@ -1,4 +1,5 @@
 import { TodoItem } from '@/types';
+import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface CreateTodoParams {
@@ -54,7 +55,13 @@ export function useCreateTodo({ listId }: CreateTodoParams) {
       }
     },
     onSettled: () => {
+      const todoList = queryClient.getQueryData<TodoList>(['todoList', listId]);
+      const customUrl = todoList?.custom_url;
+
       queryClient.invalidateQueries({ queryKey: ['todos', listId] });
+      if (customUrl) {
+        queryClient.invalidateQueries({ queryKey: ['todos', customUrl] });
+      }
     },
   });
 }

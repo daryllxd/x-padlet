@@ -6,6 +6,10 @@ import { TodoList } from '@/types/todo-list';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { headers } from 'next/headers';
 
+export async function generateStaticParams() {
+  return [{ todo_list_id: 'puglet-adventures' }, { todo_list_id: 'hello-world' }];
+}
+
 export default async function Page({ params }: { params: Promise<{ todo_list_id: string }> }) {
   const queryClient = new QueryClient();
   const { todo_list_id: todoListId } = await params;

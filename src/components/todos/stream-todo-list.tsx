@@ -1,6 +1,6 @@
 'use client';
 
-import { useTodos } from '@/hooks/useTodos';
+import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect } from 'react';
@@ -12,7 +12,7 @@ interface StreamTodoListProps {
 }
 
 export function StreamTodoList({ todos, listId }: StreamTodoListProps) {
-  const { reorderTodos } = useTodos(listId);
+  const { reorderTodos } = useReorderTodo(listId);
 
   useEffect(() => {
     return monitorForElements({

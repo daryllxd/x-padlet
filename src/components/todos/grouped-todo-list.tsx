@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useTodoGroupMutations } from '@/hooks/todo-groups/useTodoGroupMutations';
 import { useTodoGroups } from '@/hooks/todo-groups/useTodoGroups';
-import { useTodos } from '@/hooks/useTodos';
+import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
 import { PugletDraggableState } from '@/lib/puglet-drag/puglet-draggable-state';
 import { cn } from '@/lib/utils';
 import { TodoGroup, TodoItem } from '@/types';
@@ -22,7 +22,7 @@ interface GroupedTodoListProps {
 export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
   const { groups, isLoading, error: groupsError } = useTodoGroups(listId);
   const { reorderGroupsMutation } = useTodoGroupMutations(listId);
-  const { reorderGroupTodos } = useTodos(listId);
+  const { reorderGroupTodos } = useReorderTodo(listId);
 
   // Group todos by their group_id
   const groupedTodos = todos.reduce(

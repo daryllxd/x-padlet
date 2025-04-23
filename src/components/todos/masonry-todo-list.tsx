@@ -1,6 +1,6 @@
 'use client';
 
-import { useTodos } from '@/hooks/useTodos';
+import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Masonry } from 'masonic';
@@ -14,7 +14,7 @@ interface MasonryTodoListProps {
 }
 
 export function MasonryTodoList({ todos, listId }: MasonryTodoListProps) {
-  const { reorderTodos } = useTodos(listId);
+  const { reorderTodos } = useReorderTodo(listId);
 
   /**
    * @description Workaround for Masonry grid re-render when items are deleted

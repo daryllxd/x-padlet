@@ -51,6 +51,7 @@ export function useCreateTodoList() {
         theme: 'white',
         display_mode: 'masonry',
         background: 'white',
+        custom_url: null,
       };
 
       queryClient.setQueryData<TodoListWithCreating[]>(

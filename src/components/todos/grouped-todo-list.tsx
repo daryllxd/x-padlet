@@ -1,6 +1,7 @@
 'use client';
 
-import { useTodoGroups } from '@/hooks/useTodoGroups';
+import { useTodoGroupMutations } from '@/hooks/todo-groups/useTodoGroupMutations';
+import { useTodoGroups } from '@/hooks/todo-groups/useTodoGroups';
 import { useTodos } from '@/hooks/useTodos';
 import { PugletDraggableState } from '@/lib/puglet-drag/puglet-draggable-state';
 import { cn } from '@/lib/utils';
@@ -18,7 +19,8 @@ interface GroupedTodoListProps {
 }
 
 export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
-  const { groups, isLoading, reorderGroups } = useTodoGroups(listId);
+  const { groups, isLoading } = useTodoGroups(listId);
+  const { reorderGroupsMutation } = useTodoGroupMutations(listId);
   const { reorderGroupTodos } = useTodos(listId);
 
   // Group todos by their group_id
@@ -91,7 +93,7 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
             })
             .flat();
 
-          reorderGroups(newOrder);
+          reorderGroupsMutation.mutateAsync(newOrder);
         }
 
         if (sourceId.type === 'todo') {

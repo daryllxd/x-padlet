@@ -1,23 +1,7 @@
-import { TodoGroup } from '@/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export function useTodoGroups(todoListId: string) {
+export function useTodoGroupMutations(todoListId: string) {
   const queryClient = useQueryClient();
-
-  const {
-    data: groups = [],
-    isLoading,
-    error,
-  } = useQuery<TodoGroup[]>({
-    queryKey: ['todo-groups', todoListId],
-    queryFn: async (): Promise<TodoGroup[]> => {
-      const response = await fetch(`/api/todo-lists/${todoListId}/groups`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch groups');
-      }
-      return response.json();
-    },
-  });
 
   const createGroupMutation = useMutation({
     mutationFn: async (name: string) => {
@@ -100,13 +84,9 @@ export function useTodoGroups(todoListId: string) {
   });
 
   return {
-    groups,
-    isLoading,
-    error: error as Error | null,
     createGroupMutation,
-    updateGroup: updateGroupMutation.mutate,
+    updateGroupMutation,
     deleteGroupMutation,
-    reorderGroups: reorderGroupsMutation.mutateAsync,
-    refetch: () => queryClient.invalidateQueries({ queryKey: ['todo-groups', todoListId] }),
+    reorderGroupsMutation,
   };
 }

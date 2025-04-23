@@ -15,6 +15,7 @@ import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
 import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
 import { Settings2 } from 'lucide-react';
 import { useState } from 'react';
+import { useMount } from 'react-use';
 import { DisplayModeSelector } from '../todo-lists/display-mode-selector';
 import { QRCode } from '../ui/qr-code';
 
@@ -50,10 +51,15 @@ export function TodoListAppearanceEditor({
 }: TodoListAppearanceEditorProps) {
   const { isMobile } = useIsMobile();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [previewSettings, setPreviewSettings] = useState({
     themeColor,
     font,
     displayMode,
+  });
+
+  useMount(() => {
+    setMounted(true);
   });
 
   const handleSave = () => {
@@ -141,11 +147,13 @@ export function TodoListAppearanceEditor({
             />
           </div>
 
-          <QRCode
-            url={`${window.location.origin}/board/${todoListId}`}
-            size={96}
-            className="text-current opacity-80 transition-opacity hover:opacity-100"
-          />
+          {mounted && (
+            <QRCode
+              url={`${window.location.origin}/board/${todoListId}`}
+              size={96}
+              className="text-current opacity-80 transition-opacity hover:opacity-100"
+            />
+          )}
         </div>
         <SheetFooter>
           <Button

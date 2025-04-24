@@ -17,6 +17,10 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../public'],
+  docs: {
+    autodocs: true,
+    defaultName: 'Documentation',
+  },
   viteFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {

@@ -5,7 +5,7 @@ import { TEMPLATE_IDS } from '@/types/todo-list-template';
 
 export function CreateTodoListForm() {
   const createTodoListFromTemplate = async (formData: FormData) => {
-    const response = await fetch('/api/todo-lists/create-from-template', {
+    const response = await fetch('/api/todo-lists', {
       method: 'POST',
       body: formData,
     });
@@ -16,7 +16,7 @@ export function CreateTodoListForm() {
     }
 
     const todoList = await response.json();
-    window.location.href = `/board/${todoList.custom_url}`;
+    window.location.href = `/board/${todoList.id}`;
   };
 
   return (

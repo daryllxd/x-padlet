@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { TodoList } from '@/types/todo-list';
 import { LoaderIcon, X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
@@ -38,6 +39,7 @@ export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [titleError, setTitleError] = useState<string | null>(null);
 
     useImperativeHandle(ref, () => ({
       clearForm: () => {
@@ -45,10 +47,17 @@ export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>
         setDescription('');
         setImagePreview(null);
         setCoverImageFile(null);
+        setTitleError(null);
       },
     }));
 
     const handleSave = () => {
+      if (!title.trim()) {
+        setTitleError('Title is required');
+        return;
+      }
+      setTitleError(null);
+
       const formData = new FormData();
       formData.append('title', title);
       formData.append('description', description);
@@ -97,15 +106,28 @@ export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>
             <DialogTitle>{mode === 'create' ? 'Create Todo List' : 'Edit Todo List'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  if (titleError) {
+                    setTitleError(null);
+                  }
+                }}
                 placeholder="Enter list title"
                 required
+                aria-invalid={!!titleError}
+                aria-describedby={titleError ? 'title-error' : undefined}
+                className={cn('w-full', titleError && 'border-red-500 focus-visible:ring-red-500')}
               />
+              {titleError && (
+                <p id="title-error" className="text-sm text-red-500" role="alert">
+                  {titleError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description (optional)</Label>

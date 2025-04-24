@@ -15,6 +15,12 @@ export const navigationItems: NavItem[] = [
     description: 'View your dashboard',
   },
   {
+    name: 'Puglet Chronicles',
+    href: 'https://puglet-chronicles.daryll.codes/',
+    icon: 'storybook',
+    description: 'Puglet Storybook',
+  },
+  {
     name: 'About',
     href: '/about',
     icon: 'about',

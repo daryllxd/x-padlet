@@ -9,16 +9,16 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
-# Copy source code
+# Copy the rest of the application
 COPY . .
 
-# Build the application
-RUN pnpm build
+# Build Storybook
+RUN pnpm build-storybook
 
-# Expose the port the app runs on
-EXPOSE 3001
+# Expose the port Storybook runs on
+EXPOSE 6006
 
-# Start the application
-CMD ["pnpm", "start", "-p", "3001"]
+# Start Storybook
+CMD ["pnpm", "storybook"]

@@ -12,24 +12,17 @@ const updateTodoList = async (
   try {
     const formData = await request.formData();
     const title = formData.get('title');
-    const description = formData.get('description');
+    const description = formData.get('description') || '';
 
-    if (title && title.toString().length > 255) {
+    if (!title || (title && title.toString().length > 255)) {
       return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
-    }
-
-    if (description && description.toString().length > 255) {
-      return NextResponse.json(
-        { error: 'Description must be 255 characters or less' },
-        { status: 400 }
-      );
     }
 
     const { data, error } = await supabase
       .from('todo_lists')
       .update({
         title: title?.toString(),
-        description: description?.toString(),
+        description: description.toString(),
         theme: formData.get('theme')?.toString(),
         display_mode: formData.get('display_mode')?.toString(),
       })

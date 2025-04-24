@@ -7,6 +7,7 @@ const _dirname = path.dirname(fileURLToPath(import.meta.url));
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx|mdx)'],
   addons: [
+    '@storybook/addon-docs',
     '@storybook/addon-essentials',
     '@storybook/addon-onboarding',
     '@chromatic-com/storybook',
@@ -17,6 +18,10 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../public'],
+  docs: {
+    autodocs: true,
+    defaultName: 'Documentation',
+  },
   viteFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {

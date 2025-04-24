@@ -19,6 +19,9 @@ const preview: Preview = {
     reactQuery: {
       showDevTools: false, // Default to false
     },
+    docs: {
+      canvas: { sourceState: 'shown' },
+    },
   },
   loaders: [mswLoader],
   decorators: [

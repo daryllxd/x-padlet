@@ -78,6 +78,7 @@
     "@chromatic-com/storybook": "^3",
     "@eslint/eslintrc": "^3",
     "@shadcn/ui": "^0.0.4",
+    "@storybook/addon-docs": "^8.6.12",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-onboarding": "^8.6.12",
     "@storybook/blocks": "^8.6.12",

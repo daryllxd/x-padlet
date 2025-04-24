@@ -15,7 +15,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "knip": "knip"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.5.2",
@@ -89,7 +90,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.13.17",
+    "@types/node": "^22.14.0",
     "@types/pg": "^8.11.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -103,6 +104,7 @@
     "eslint-plugin-storybook": "^0.12.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.1.7",
+    "knip": "^5.50.5",
     "lint-staged": "^15.5.0",
     "lucide-react": "^0.485.0",
     "msw": "^2.7.5",
@@ -115,7 +117,7 @@
     "storybook": "^8.6.12",
     "supabase": "^2.20.12",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "^5.8.3",
     "vitest": "^3.1.1"
   },
   "lint-staged": {

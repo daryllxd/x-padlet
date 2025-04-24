@@ -29,7 +29,7 @@ export function TodoListPage({ todoListId: todoListIdOrUrl }: TodoListPageProps)
   const { data: todoList } = useTodoList(todoListIdOrUrl);
   const todoListId = todoList?.id;
   const { todos, isLoading: isTodosLoading } = useTodos(todoListId ?? todoListIdOrUrl);
-  const [font, setFont] = useState<Font>('Playpen_Sans');
+  const [font, setFont] = useState<Font>('Montserrat');
 
   return (
     <div

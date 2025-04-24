@@ -14,7 +14,7 @@ const updateTodoList = async (
     const title = formData.get('title');
     const description = formData.get('description') || '';
 
-    if (!title || (title && title.toString().length > 255)) {
+    if (title && title.toString().length > 255) {
       return NextResponse.json({ error: 'Title must be 255 characters or less' }, { status: 400 });
     }
 

@@ -81,7 +81,12 @@ export function TodoCard({ todo, listId, className, ...props }: TodoCardProps) {
         {hasImageOrDescription ? (
           <CardContent className="flex flex-col gap-4">
             {todo.image_url && (
-              <img src={todo.image_url} alt="Todo" className="h-full w-full rounded-xl" />
+              <img
+                src={todo.image_url}
+                alt={`${todo.title} image`}
+                className="h-full w-full object-contain lg:max-h-[300px]"
+                loading="lazy"
+              />
             )}
             {cleanDescription && (
               <MarkdownContent

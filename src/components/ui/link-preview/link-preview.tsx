@@ -20,6 +20,7 @@ export default function LinkPreview({ url, className }: LinkPreviewProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [faviconError, setFaviconError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -51,12 +52,13 @@ export default function LinkPreview({ url, className }: LinkPreviewProps) {
       className={`block overflow-hidden rounded-lg border border-gray-200 transition-colors hover:bg-gray-50 ${className}`}
     >
       <div className="flex flex-col p-3 sm:flex-row sm:gap-4">
-        {metadata?.image && (
+        {metadata?.image && !imageError && (
           <div className="relative mb-3 h-20 flex-shrink-0 sm:mb-0 sm:h-20 sm:w-20">
             <img
               src={metadata.image}
               alt={metadata.title || 'Link preview'}
               className="h-full w-full rounded-md object-cover"
+              onError={() => setImageError(true)}
             />
           </div>
         )}

@@ -37,6 +37,16 @@ const updateTodoList = async (input: UpdateTodoListInput): Promise<TodoList> => 
   return response.json();
 };
 
+const updateTodoListData = (old: TodoList, updates: UpdateTodoListInput): TodoList => {
+  return {
+    ...old,
+    ...(updates.title && { title: updates.title }),
+    ...(updates.description && { description: updates.description }),
+    ...(updates.theme && { theme: updates.theme }),
+    ...(updates.displayMode && { display_mode: updates.displayMode }),
+  };
+};
+
 export function useUpdateTodoList() {
   const queryClient = useQueryClient();
 
@@ -46,33 +56,29 @@ export function useUpdateTodoList() {
       await queryClient.cancelQueries({ queryKey: ['todoLists'] });
       const previousTodoLists = queryClient.getQueryData<TodoList[]>(['todoLists']) ?? [];
 
+      // Update todoLists query
       queryClient.setQueryData<TodoList[]>(['todoLists', { status: 'active' }], (old = []) => {
         return old.map((list) =>
-          list.id === updatedTodoList.id
-            ? {
-                ...list,
-                ...(updatedTodoList.title && { title: updatedTodoList.title }),
-                ...(updatedTodoList.description && { description: updatedTodoList.description }),
-                ...(updatedTodoList.theme && { theme: updatedTodoList.theme }),
-                ...(updatedTodoList.displayMode && { display_mode: updatedTodoList.displayMode }),
-              }
-            : list
+          list.id === updatedTodoList.id ? updateTodoListData(list, updatedTodoList) : list
         );
       });
 
-      queryClient.setQueryData<TodoList>(['todoList', updatedTodoList.id], (old) => {
-        if (!old) {
-          return undefined;
-        }
+      // Update individual todoList query
+      const currentTodoList = queryClient.getQueryData<TodoList>(['todoList', updatedTodoList.id]);
+      if (currentTodoList) {
+        queryClient.setQueryData<TodoList>(
+          ['todoList', updatedTodoList.id],
+          updateTodoListData(currentTodoList, updatedTodoList)
+        );
 
-        return {
-          ...old,
-          ...(updatedTodoList.title && { title: updatedTodoList.title }),
-          ...(updatedTodoList.description && { description: updatedTodoList.description }),
-          ...(updatedTodoList.theme && { theme: updatedTodoList.theme }),
-          ...(updatedTodoList.displayMode && { display_mode: updatedTodoList.displayMode }),
-        };
-      });
+        // Update custom URL query if exists
+        if (currentTodoList.custom_url) {
+          queryClient.setQueryData<TodoList>(
+            ['todoList', currentTodoList.custom_url],
+            updateTodoListData(currentTodoList, updatedTodoList)
+          );
+        }
+      }
 
       return { previousTodoLists };
     },

@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   frontend:
@@ -6,41 +6,19 @@ services:
       context: .
       dockerfile: Dockerfile.client
     ports:
-      - "${FRONTEND_PORT:-3001}:3001"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://backend:3002
+      - '${FRONTEND_PORT:-3001}:3001'
     volumes:
-      - .:/app # Mount the current directory to /app
-      - /app/node_modules # Prevent overwriting node_modules
-    depends_on:
-      - backend
+      - .:/app
+      - /app/node_modules
 
-  backend:
+  storybook:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.storybook
     ports:
-      - "${BACKEND_PORT:-3002}:3002"
-    environment:
-      - DB_USER=postgres
-      - DB_HOST=db
-      - DB_NAME=todo_db
-      - DB_PASSWORD=postgres
-      - DB_PORT=5432
-      - PORT=3002
-    depends_on:
-      - db
-
-  db:
-    image: postgres:14-alpine
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=todo_db
+      - '${STORYBOOK_PORT:-6006}:6006'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development

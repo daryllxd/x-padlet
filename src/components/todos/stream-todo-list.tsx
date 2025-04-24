@@ -1,10 +1,12 @@
 'use client';
 
 import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
+import { cn } from '@/lib/utils';
 import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect } from 'react';
-import { MasonryTodoListCard } from './masonry-todo-list-card';
+import { DraggableTodo } from './draggable-todo';
+import { TodoCard } from './todo-card';
 
 interface StreamTodoListProps {
   todos: TodoItem[];
@@ -66,13 +68,25 @@ export function StreamTodoList({ todos, listId }: StreamTodoListProps) {
   return (
     <div className="mx-auto flex flex-col gap-4 lg:w-[600px]">
       {todos.map((todo) => (
-        <MasonryTodoListCard
+        <DraggableTodo
           key={todo.id}
-          listId={listId}
           todo={todo}
           positionType="position"
           allowedEdges={['top', 'bottom']}
-        />
+        >
+          {(state) => (
+            <TodoCard
+              todo={todo}
+              listId={listId}
+              className={cn(
+                'px-2 py-4',
+                state.state === 'dragging' &&
+                  'border-slate-300 bg-slate-200 opacity-50 [&>*]:opacity-0',
+                state.state === 'draggedOver' && 'bg-slate-100'
+              )}
+            />
+          )}
+        </DraggableTodo>
       ))}
     </div>
   );

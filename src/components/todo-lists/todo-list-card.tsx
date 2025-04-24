@@ -45,7 +45,9 @@ export function TodoListCard({
             <h2 className="line-clamp-1 text-xl font-semibold">{title}</h2>
           </div>
           {description && (
-            <p className="text-muted-foreground line-clamp-2 text-sm">{description}</p>
+            <p className="text-muted-foreground line-clamp-2 text-sm whitespace-pre-line">
+              {description}
+            </p>
           )}
           {children}
         </div>

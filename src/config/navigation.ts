@@ -15,6 +15,12 @@ export const navigationItems: NavItem[] = [
     description: 'View your dashboard',
   },
   {
+    name: 'CV',
+    href: '/resume',
+    icon: 'document',
+    description: 'View my CV',
+  },
+  {
     name: 'Puglet Chronicles',
     href: 'https://puglet-chronicles.daryll.codes/',
     icon: 'storybook',

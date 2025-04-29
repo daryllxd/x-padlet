@@ -1,12 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { Download, ZoomIn, ZoomOut } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 
 export default function PDFViewer() {
-  const [numPages, setNumPages] = useState<number>();
+  const [numPages, setNumPages] = useState<number>(2);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pdfFile, setPdfFile] = useState<string>('/daryll-cv.pdf');
+  const [scale, setScale] = useState<number>(1);
+  const [containerWidth, setContainerWidth] = useState<number>(800);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Resize observer for responsive width
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(Math.min(entry.contentRect.width - 32, 800));
+      }
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(numPages);
@@ -23,13 +44,46 @@ export default function PDFViewer() {
     }
   };
 
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = pdfFile;
+    link.download = 'resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-4">
+    <div ref={containerRef} className="flex flex-col items-center">
+      <div className="mb-4 flex w-full max-w-4xl items-center justify-between gap-4">
         <label className="flex cursor-pointer items-center justify-center rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
           <span>Select PDF File</span>
           <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
         </label>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setScale((prev) => Math.min(prev + 0.1, 2))}
+            className="rounded bg-gray-200 p-2 hover:bg-gray-300"
+            title="Zoom In"
+          >
+            <ZoomIn size={20} />
+          </button>
+          <button
+            onClick={() => setScale((prev) => Math.max(prev - 0.1, 0.5))}
+            className="rounded bg-gray-200 p-2 hover:bg-gray-300"
+            title="Zoom Out"
+          >
+            <ZoomOut size={20} />
+          </button>
+          <button
+            onClick={handleDownload}
+            className="rounded bg-gray-200 p-2 hover:bg-gray-300"
+            title="Download PDF"
+          >
+            <Download size={20} />
+          </button>
+        </div>
       </div>
 
       <Document
@@ -44,7 +98,7 @@ export default function PDFViewer() {
       >
         <Page
           pageNumber={pageNumber}
-          width={800}
+          width={containerWidth * scale}
           className="my-4"
           renderTextLayer={true}
           renderAnnotationLayer={true}
@@ -68,7 +122,7 @@ export default function PDFViewer() {
         </p>
         <button
           onClick={() => setPageNumber(pageNumber + 1)}
-          disabled={pageNumber >= (numPages || 1)}
+          disabled={pageNumber >= (numPages ?? 1)}
           className="rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
         >
           Next

@@ -8,13 +8,10 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 
-// Lazy load the PDF viewer component using a more compatible approach
-const PDFViewer = lazy(() => {
-  return new Promise<{ default: React.ComponentType }>((resolve) => {
-    import('./PDFViewer').then((module) => {
-      resolve({ default: module.default });
-    });
-  });
+// Lazy load the PDF viewer component
+const PDFViewer = lazy(async () => {
+  const mod = await import('./PDFViewer');
+  return { default: mod.default };
 });
 
 export default function ResumePage() {

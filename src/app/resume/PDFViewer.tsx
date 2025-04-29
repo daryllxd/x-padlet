@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 
 export default function PDFViewer() {
+  const MIN_SCALE = 0.5;
+  const MAX_SCALE = 2;
+  const SCALE_STEP = 0.1;
   const [numPages, setNumPages] = useState<number>(2);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pdfFile, setPdfFile] = useState<string>('/daryll-cv.pdf');
@@ -58,12 +61,11 @@ export default function PDFViewer() {
   };
 
   const handleDownload = () => {
+    // Create a temporary anchor element without adding it to the DOM
     const link = document.createElement('a');
     link.href = pdfFile;
     link.download = 'resume.pdf';
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
   };
 
   return (
@@ -83,14 +85,14 @@ export default function PDFViewer() {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setScale((prev) => Math.min(prev + 0.1, 2))}
+            onClick={() => setScale((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE))}
             className="rounded bg-gray-200 p-2 hover:bg-gray-300"
             title="Zoom In"
           >
             <ZoomIn size={20} />
           </button>
           <button
-            onClick={() => setScale((prev) => Math.max(prev - 0.1, 0.5))}
+            onClick={() => setScale((prev) => Math.max(prev - SCALE_STEP, MIN_SCALE))}
             className="rounded bg-gray-200 p-2 hover:bg-gray-300"
             title="Zoom Out"
           >

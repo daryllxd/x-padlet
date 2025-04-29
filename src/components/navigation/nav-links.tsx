@@ -17,7 +17,7 @@ export function NavLinks() {
         return (
           <XPadletLink variant="muted" href={item.href} key={item.href}>
             <Button
-              variant={pathname === item.href ? 'default' : 'ghost'}
+              variant={pathname.startsWith(item.href) ? 'default' : 'ghost'}
               className={cn('flex items-center', 'aria-[current=page]:pointer-events-none')}
               aria-current={item.href === pathname ? 'page' : undefined}
             >

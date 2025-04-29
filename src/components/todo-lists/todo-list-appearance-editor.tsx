@@ -14,21 +14,45 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
 import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
 import { Settings2 } from 'lucide-react';
+import { Inter, Open_Sans, Playpen_Sans, Poppins, Roboto } from 'next/font/google';
 import { ComponentProps, useState } from 'react';
 import { useMount } from 'react-use';
 import { DisplayModeSelector } from '../todo-lists/display-mode-selector';
 import { QRCode } from '../ui/qr-code';
 
+// Initialize fonts with preload: false
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', preload: false });
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
+  preload: false,
+});
+const openSans = Open_Sans({ subsets: ['latin'], variable: '--font-open-sans', preload: false });
+const poppins = Poppins({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  preload: false,
+});
+const playpen = Playpen_Sans({ subsets: ['latin'], variable: '--font-playpen', preload: false });
+
 const FONTS = {
-  Inter: 'Inter, sans-serif',
-  Roboto: 'Roboto, sans-serif',
-  'Open Sans': 'Open Sans, sans-serif',
-  Montserrat: 'Montserrat, sans-serif',
-  Poppins: 'Poppins, sans-serif',
-  Playpen_Sans: 'Playpen Sans, sans-serif',
+  Inter: inter,
+  Roboto: roboto,
+  'Open Sans': openSans,
+  Montserrat: 'Montserrat, sans-serif', // This one is already loaded in layout.tsx
+  Poppins: poppins,
+  Playpen_Sans: playpen,
 } as const;
 
 type Font = keyof typeof FONTS;
+
+// Helper function to get font family
+const getFontFamily = (font: Font): string => {
+  const fontObj = FONTS[font];
+  return typeof fontObj === 'string' ? fontObj : fontObj.style.fontFamily;
+};
 
 interface TodoListAppearanceEditorProps extends ComponentProps<typeof Sheet> {
   themeColor: TodoList['theme'];
@@ -120,10 +144,10 @@ export function TodoListAppearanceEditor({
                 setPreviewSettings((prev) => ({ ...prev, font: e.target.value as Font }))
               }
               className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-slate-400 focus:outline-none"
-              style={{ fontFamily: FONTS[previewSettings.font] }}
+              style={{ fontFamily: getFontFamily(previewSettings.font) }}
             >
               {Object.keys(FONTS).map((font) => (
-                <option key={font} value={font} style={{ fontFamily: FONTS[font as Font] }}>
+                <option key={font} value={font} style={{ fontFamily: getFontFamily(font as Font) }}>
                   {font}
                 </option>
               ))}

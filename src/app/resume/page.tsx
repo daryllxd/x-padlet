@@ -6,22 +6,6 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-/**
- * @see https://github.com/wojtekmaj/react-pdf/issues/1811#issuecomment-2157866061
- */
-if (typeof Promise.withResolvers === 'undefined') {
-  if (window)
-    // @ts-expect-error This does not exist outside of polyfill which this is doing
-    window.Promise.withResolvers = function () {
-      let resolve, reject;
-      const promise = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-      });
-      return { promise, resolve, reject };
-    };
-}
-
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 
 const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false });

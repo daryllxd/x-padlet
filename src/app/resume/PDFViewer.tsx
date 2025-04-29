@@ -29,6 +29,15 @@ export default function PDFViewer() {
     };
   }, []);
 
+  // Cleanup function to revoke object URL when component unmounts
+  useEffect(() => {
+    return () => {
+      if (pdfFile && pdfFile.startsWith('blob:')) {
+        URL.revokeObjectURL(pdfFile);
+      }
+    };
+  }, [pdfFile]);
+
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(numPages);
   }
@@ -36,9 +45,13 @@ export default function PDFViewer() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
-      const fileUrl = URL.createObjectURL(file);
-      setPdfFile(fileUrl);
-      setPageNumber(1);
+      // Revoke any previous object URL to avoid memory leaks
+      if (pdfFile && pdfFile.startsWith('blob:')) {
+        URL.revokeObjectURL(pdfFile);
+        const fileUrl = URL.createObjectURL(file);
+        setPdfFile(fileUrl);
+        setPageNumber(1);
+      }
     } else {
       alert('Please select a valid PDF file');
     }
@@ -58,7 +71,14 @@ export default function PDFViewer() {
       <div className="mb-4 flex w-full max-w-4xl items-center justify-between gap-4">
         <label className="flex cursor-pointer items-center justify-center rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
           <span>Select PDF File</span>
-          <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleFileChange}
+            className="hidden"
+            aria-label="Select a PDF file to view"
+            id="pdf-file-input"
+          />
         </label>
 
         <div className="flex items-center gap-2">

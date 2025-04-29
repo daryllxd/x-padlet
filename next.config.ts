@@ -26,7 +26,31 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'youtube.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'xwing-daryll.s3.us-east-1.amazonaws.com',
+      },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Link',
+            value: [
+              '<https://fonts.googleapis.com>; rel=preconnect',
+              '<https://fonts.gstatic.com>; rel=preconnect',
+              '<https://www.google-analytics.com>; rel=preconnect',
+              '<https://www.youtube.com>; rel=preconnect',
+              '<https://i.ytimg.com>; rel=preconnect',
+              '<https://xwing-daryll.s3.us-east-1.amazonaws.com>; rel=preconnect',
+            ].join(','),
+          },
+        ],
+      },
+    ];
   },
 };
 

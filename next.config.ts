@@ -28,6 +28,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    turbo: {
+      resolveAlias: {
+        canvas: './empty-module.ts',
+      },
+    },
+  },
 };
 
 export default withBundleAnalyzer({

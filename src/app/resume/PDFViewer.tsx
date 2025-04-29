@@ -6,15 +6,34 @@ import { Document, Page } from 'react-pdf';
 export default function PDFViewer() {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pdfFile, setPdfFile] = useState<string>('/daryll-cv.pdf');
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(numPages);
   }
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      const fileUrl = URL.createObjectURL(file);
+      setPdfFile(fileUrl);
+      setPageNumber(1);
+    } else {
+      alert('Please select a valid PDF file');
+    }
+  };
+
   return (
-    <>
+    <div className="flex flex-col items-center">
+      <div className="mb-4">
+        <label className="flex cursor-pointer items-center justify-center rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+          <span>Select PDF File</span>
+          <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
+        </label>
+      </div>
+
       <Document
-        file="/daryll-cv.pdf"
+        file={pdfFile}
         onLoadSuccess={onDocumentLoadSuccess}
         className="flex flex-col items-center"
         loading={
@@ -55,6 +74,6 @@ export default function PDFViewer() {
           Next
         </button>
       </div>
-    </>
+    </div>
   );
 }

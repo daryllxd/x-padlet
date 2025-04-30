@@ -43,3 +43,20 @@ export const Small: Story = {
     size: 16,
   },
 };
+
+export const AllEmojis: Story = {
+  render: () => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {Object.entries(EMOJI_MAP).map(([name, code]) => (
+        <div key={name} className="flex flex-col items-center gap-2 rounded-lg border p-4">
+          <div className="text-sm font-medium capitalize">{name.replace(/-/g, ' ')}</div>
+          <EmojiDisplay code={code} size={48} />
+          <div className="flex flex-col items-center gap-1 text-xs text-gray-500">
+            <div>Key (set this in the database): {name}</div>
+            <div>Code: {code}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};

@@ -1,16 +1,22 @@
 'use client';
 
 import { getEmojiVariants } from '@/lib/utils/emoji';
+import type { Player } from '@lottiefiles/react-lottie-player';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
-const LottiePlayer = dynamic(
+/**
+ * We will state `ssr` to false, but Storybook needs a string ("false")
+ * @see Next.js uses process.env, Storybook uses import.meta.env
+ * @file vite-env.d.ts
+ */
+const LottiePlayer = dynamic<React.ComponentProps<typeof Player>>(
   () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
   {
-    ssr: false,
+    ssr: import.meta?.env?.STORYBOOK === 'true',
     loading: () => <div className="animate-pulse rounded-full bg-slate-200" />,
   }
-) as any; // Temporary type assertion to fix the error
+);
 
 interface EmojiDisplayProps {
   code: string;
@@ -18,6 +24,14 @@ interface EmojiDisplayProps {
   className?: string;
 }
 
+/**
+ * Displays an emoji using LottiePlayer
+ * @param code - The code of the emoji to display
+ * @param size - The size of the emoji to display
+ * @param className - The className of the emoji to display
+ * @see https://googlefonts.github.io/noto-emoji-animation/
+ * @returns The emoji display component
+ */
 export function EmojiDisplay({ code, size = 32, className = '' }: EmojiDisplayProps) {
   const { animated } = getEmojiVariants(code);
 

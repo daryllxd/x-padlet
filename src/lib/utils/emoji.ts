@@ -29,9 +29,6 @@ export function getEmojiVariants(code: string): {
   };
 }
 
-/**
- * Mapping of emoji names to their codes
- */
 export const EMOJI_MAP = {
   smile: '1f604',
   'smile-with-big-eyes': '1f603',
@@ -53,6 +50,7 @@ export const EMOJI_MAP = {
   'kissing-smiling-eyes': '1f619',
   melting: '1fae0',
   relieved: '1f60c',
+  rocket: '1f680',
   'grin-sweat': '1f605',
   'kissing-closed-eyes': '1f61a',
   'upside-down-face': '1f643',
@@ -61,6 +59,12 @@ export const EMOJI_MAP = {
   'kissing-heart': '1f618',
   'slightly-happy': '1f642',
   'head-shake': '1fae2',
+  wave: '1f44b',
+  'wave-light': '1f44b_1f3fb',
+  'wave-medium-light': '1f44b_1f3fc',
+  'wave-medium': '1f44b_1f3fd',
+  'wave-medium-dark': '1f44b_1f3fe',
+  'wave-dark': '1f44b_1f3ff',
 } as const;
 
 export type EmojiName = keyof typeof EMOJI_MAP;

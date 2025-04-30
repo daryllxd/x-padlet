@@ -6,6 +6,8 @@ import { EmojiDisplay } from '@/components/ui/emojis/emoji-display';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
+import { EMOJI_MAP } from '@/lib/utils/emoji';
+import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
 import { TodoList } from '@/types/todo-list';
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -99,14 +101,17 @@ export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHe
     );
   }
 
+  const iconKey =
+    todoList?.icon && isObjectKeysTraversing(EMOJI_MAP, todoList?.icon)
+      ? EMOJI_MAP[todoList.icon as keyof typeof EMOJI_MAP]
+      : null;
+
   return (
     <header className="mb-6 sm:mb-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1 sm:gap-2">
           <div className="flex items-center gap-2">
-            {todoList?.icon && <EmojiDisplay code={todoList.icon} size={24} />}
-            {true && <EmojiDisplay code={'1f603'} size={24} />}
-            {true && <EmojiDisplay code={'1f304'} size={24} />}
+            {iconKey && <EmojiDisplay code={iconKey} size={24} />}
             <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
           </div>
           <p className="text-sm text-slate-500">{description}</p>

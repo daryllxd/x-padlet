@@ -2,6 +2,7 @@
 
 import { TodoListAppearanceEditor } from '@/components/todo-lists/todo-list-appearance-editor';
 import { TodoListMobileActions } from '@/components/todo-lists/todo-list-mobile-actions';
+import { EmojiDisplay } from '@/components/ui/emojis/emoji-display';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
@@ -55,11 +56,13 @@ export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHe
     themeColor: TodoList['theme'];
     font: Font;
     displayMode: TodoList['display_mode'];
+    icon?: string | null;
   }) => {
     updateTodoList({
       id: todoListId,
       theme: settings.themeColor,
       displayMode: settings.displayMode,
+      icon: settings.icon,
     });
   };
 
@@ -101,6 +104,9 @@ export function TodoListHeroSection({ todoListId, themeColor, font }: TodoListHe
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1 sm:gap-2">
           <div className="flex items-center gap-2">
+            {todoList?.icon && <EmojiDisplay code={todoList.icon} size={24} />}
+            {true && <EmojiDisplay code={'1f603'} size={24} />}
+            {true && <EmojiDisplay code={'1f304'} size={24} />}
             <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
           </div>
           <p className="text-sm text-slate-500">{description}</p>

@@ -8,6 +8,7 @@ type UpdateTodoListInput = {
   description?: string;
   theme?: TodoList['theme'];
   displayMode?: TodoList['display_mode'];
+  icon?: string | null;
 };
 
 const updateTodoList = async (input: UpdateTodoListInput): Promise<TodoList> => {
@@ -24,6 +25,9 @@ const updateTodoList = async (input: UpdateTodoListInput): Promise<TodoList> => 
   }
   if (input.displayMode) {
     formData.append('display_mode', input.displayMode);
+  }
+  if (input.icon !== undefined) {
+    formData.append('icon', input.icon || '');
   }
   const response = await fetch(API_ENDPOINTS.todoList(input.id), {
     method: 'PATCH',
@@ -44,6 +48,7 @@ const updateTodoListData = (old: TodoList, updates: UpdateTodoListInput): TodoLi
     ...(updates.description && { description: updates.description }),
     ...(updates.theme && { theme: updates.theme }),
     ...(updates.displayMode && { display_mode: updates.displayMode }),
+    ...(updates.icon !== undefined && { icon: updates.icon }),
   };
 };
 

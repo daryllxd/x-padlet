@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
 // Initialize S3 client
@@ -59,5 +59,20 @@ export async function uploadToS3(
   } catch (error) {
     console.error('Error uploading to S3:', error);
     throw new Error('Failed to upload file to S3');
+  }
+}
+
+// Function to delete file from S3
+export async function deleteFromS3(key: string): Promise<void> {
+  try {
+    const command = new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+    });
+
+    await s3Client.send(command);
+  } catch (error) {
+    console.error('Error deleting from S3:', error);
+    throw new Error('Failed to delete file from S3');
   }
 }

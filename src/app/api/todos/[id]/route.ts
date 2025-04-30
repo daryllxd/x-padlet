@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/db';
-import { uploadToS3 } from '@/lib/s3';
+import { deleteFromS3, uploadToS3 } from '@/lib/s3';
 import { TodoFormData, TodoItem } from '@/types';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
@@ -15,8 +15,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const imageFile = formData.get('image') as File | null;
     const todoListId = formData.get('todo_list_id') as string;
     const theme = formData.get('theme') as TodoItem['theme'] | null;
-
-    console.log('❗update todo', todoListId);
+    const removeImage = formData.get('remove_image') === 'true';
 
     if (!title || !description) {
       return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
@@ -42,7 +41,25 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     const updates: Partial<TodoItem> = {};
 
-    if (todoFormData.imageFile) {
+    const { data: currentTodo } = await supabase
+      .from('todos')
+      .select('image_url')
+      .eq('id', id)
+      .single();
+
+    if (removeImage && currentTodo?.image_url) {
+      try {
+        // Extract the key from the image_url
+        const key = currentTodo.image_url.split('/').pop();
+        if (key) {
+          await deleteFromS3(`todos/${id}/${key}`);
+        }
+        updates.image_url = null;
+      } catch (error) {
+        console.error('Error deleting image from S3:', error);
+        return NextResponse.json({ error: 'Failed to delete image' }, { status: 500 });
+      }
+    } else if (todoFormData.imageFile) {
       try {
         const bytes = await todoFormData.imageFile.arrayBuffer();
         const buffer = Buffer.from(bytes);

@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'xwing-daryll.s3.us-east-1.amazonaws.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'fonts.gstatic.com',
+      },
     ],
   },
   async headers() {

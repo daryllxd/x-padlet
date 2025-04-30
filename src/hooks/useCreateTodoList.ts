@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList, TodoListWithCreating } from '@/types/todo-list';
+import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type CreateTodoListInput = {
@@ -38,35 +38,8 @@ export function useCreateTodoList() {
 
   return useMutation({
     mutationFn: createTodoList,
-    onMutate: async (newTodoList) => {
+    onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['todoLists'] });
-      const previousTodoLists = queryClient.getQueryData<TodoList[]>(['todoLists']) ?? [];
-
-      const optimisticTodoList: TodoListWithCreating = {
-        id: 'temp-id',
-        title: newTodoList.title,
-        description: newTodoList.description,
-        status: 'creating',
-        todoCount: 0,
-        theme: 'white',
-        display_mode: 'masonry',
-        background: 'white',
-        custom_url: null,
-      };
-
-      queryClient.setQueryData<TodoListWithCreating[]>(
-        ['todoLists', { status: 'active' }],
-        (old = []) => {
-          return [...old, optimisticTodoList];
-        }
-      );
-
-      return { previousTodoLists };
-    },
-    onError: (err, newTodoList, context) => {
-      if (context?.previousTodoLists) {
-        queryClient.setQueryData(['todoLists'], context.previousTodoLists);
-      }
     },
     onSettled: () => {
       // Get all query keys that start with 'todoLists'

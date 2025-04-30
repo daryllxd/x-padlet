@@ -22,6 +22,10 @@ const config: StorybookConfig = {
     autodocs: true,
     defaultName: 'Documentation',
   },
+  env: (config) => ({
+    ...config,
+    STORYBOOK: 'true',
+  }),
   viteFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {

@@ -3,6 +3,7 @@
 import { getEmojiVariants } from '@/lib/utils/emoji';
 import type { Player } from '@lottiefiles/react-lottie-player';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { Suspense } from 'react';
 
 /**
@@ -33,15 +34,20 @@ interface EmojiDisplayProps {
  * @returns The emoji display component
  */
 export function EmojiDisplay({ code, size = 32, className = '' }: EmojiDisplayProps) {
-  const { animated } = getEmojiVariants(code);
+  const { animated, static: staticEmoji } = getEmojiVariants(code);
 
   return (
     <div className={`selected-emoji ${className}`} style={{ width: size, height: size }}>
       <Suspense
         fallback={
-          <div
-            className="animate-pulse rounded-full bg-slate-200"
+          <Image
+            src={staticEmoji}
+            alt=""
+            width={size}
+            height={size}
+            className="h-full w-full object-contain"
             style={{ width: '100%', height: '100%' }}
+            priority
           />
         }
       >

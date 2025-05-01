@@ -69,6 +69,7 @@
     "react-pdf": "^9.2.1",
     "react-rough-notation": "^1.0.5",
     "react-use": "^17.6.0",
+    "react-webcam": "^7.2.0",
     "sharp": "^0.34.1",
     "slugify": "^1.6.6",
     "sonner": "^2.0.3",

@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { WebcamCapture } from '@/components/ui/webcam-capture';
 import { TodoItem } from '@/types';
 import { Label } from '@radix-ui/react-label';
 import { X } from 'lucide-react';
@@ -72,6 +73,9 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
       formData.append('description', editedDescription);
       if (coverImageFile) {
         formData.append('image', coverImageFile);
+      } else if (todo?.image_url && !imagePreview) {
+        // If there was an image and it's been removed
+        formData.append('remove_image', 'true');
       }
       if (selectedTheme) {
         formData.append('theme', selectedTheme);
@@ -105,6 +109,17 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
         };
         reader.readAsDataURL(file);
       }
+    };
+
+    const handleImageCapture = (imageData: string) => {
+      setImagePreview(imageData);
+      // Convert base64 to File object
+      fetch(imageData)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const file = new File([blob], 'webcam-capture.jpg', { type: 'image/jpeg' });
+          setCoverImageFile(file);
+        });
     };
 
     const removeImage = () => {
@@ -160,12 +175,19 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
                       type="button"
                       onClick={removeImage}
                       className="absolute top-2 right-2 rounded-full bg-white/80 p-1 hover:bg-white"
+                      title="Remove image"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
                 ) : (
-                  <FileUploader onFileInputChange={handleImageChange} />
+                  <div className="flex flex-col gap-2">
+                    <FileUploader onFileInputChange={handleImageChange} />
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm text-gray-500">or</span>
+                    </div>
+                    <WebcamCapture onCapture={handleImageCapture} />
+                  </div>
                 )}
               </div>
             </div>

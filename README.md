@@ -129,6 +129,9 @@ pnpm build
 
 # Build web app only
 pnpm build --filter @x-padlet/web
+
+# Starting
+pnpm --filter @x-padlet/web start
 ```
 
 ### Linting and Formatting

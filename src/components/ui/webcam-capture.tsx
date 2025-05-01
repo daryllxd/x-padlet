@@ -41,8 +41,6 @@ export function WebcamCapture({
 
   const webcamRef = useRef<Webcam>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
 
   const videoConstraints = {
     width: 1280,
@@ -79,13 +77,37 @@ export function WebcamCapture({
 
   useEffect(() => {
     checkCameraPermission();
-  }, [checkCameraPermission]);
+
+    // Return cleanup function to remove the listener
+    return () => {
+      if (permissionState) {
+        navigator.permissions.query({ name: 'camera' as PermissionName }).then((result) => {
+          result.onchange = null;
+        });
+      }
+    };
+  }, [checkCameraPermission, permissionState]);
 
   const startRecording = useCallback(() => {
     if (!webcamRef.current?.stream) return;
 
+    const mimeTypes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4'];
+
+    let mimeType = '';
+    for (const type of mimeTypes) {
+      if (MediaRecorder.isTypeSupported(type)) {
+        mimeType = type;
+        break;
+      }
+    }
+
+    if (!mimeType) {
+      console.error('No supported media recorder mime type found');
+      return;
+    }
+
     const mediaRecorder = new MediaRecorder(webcamRef.current.stream, {
-      mimeType: 'video/webm;codecs=vp9',
+      mimeType,
     });
     mediaRecorderRef.current = mediaRecorder;
     const chunks: Blob[] = [];
@@ -98,6 +120,9 @@ export function WebcamCapture({
 
     mediaRecorder.onstop = () => {
       const blob = new Blob(chunks, { type: 'video/webm;codecs=vp9' });
+      if (recordedVideo) {
+        URL.revokeObjectURL(recordedVideo);
+      }
       const videoUrl = URL.createObjectURL(blob);
       setRecordedVideo(videoUrl);
       setRecordedChunks(chunks);
@@ -140,11 +165,10 @@ export function WebcamCapture({
   }, [onCapture]);
 
   const stopCamera = useCallback(() => {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
+    if (webcamRef.current?.stream) {
+      webcamRef.current.stream.getTracks().forEach((track) => track.stop());
     }
-  }, [stream]);
+  }, []);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -168,7 +192,7 @@ export function WebcamCapture({
           <DialogTitle>Capture Media</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 py-4">
           {error ? (
             <div className="bg-destructive/10 text-destructive rounded-lg p-4">{error}</div>
           ) : permissionState === 'denied' ? (

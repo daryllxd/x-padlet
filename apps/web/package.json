@@ -131,6 +131,9 @@
     ]
   },
   "packageManager": "pnpm@10.7.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "nextBundleAnalysis": {
     "budget": 358400,
     "budgetPercentIncreaseRed": 20,

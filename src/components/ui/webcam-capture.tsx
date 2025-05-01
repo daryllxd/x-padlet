@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { zIndex } from '@/lib/z-index';
 import { Camera, Check, Video, X } from 'lucide-react';
-import { ComponentProps, useCallback, useRef, useState } from 'react';
+import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import { TooltipContent } from './tooltip';
 
@@ -34,6 +34,10 @@ export function WebcamCapture({
   const [isRecording, setIsRecording] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
+  const [permissionState, setPermissionState] = useState<'granted' | 'prompt' | 'denied' | null>(
+    null
+  );
+  const [error, setError] = useState<string | null>(null);
 
   const webcamRef = useRef<Webcam>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -45,6 +49,37 @@ export function WebcamCapture({
     height: 720,
     facingMode: 'user',
   };
+
+  const checkCameraPermission = useCallback(async () => {
+    try {
+      const result = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      setPermissionState(result.state);
+
+      if (result.state === 'denied') {
+        setError(
+          'Camera access was denied. Please enable camera access in your browser settings (you may need to refresh the page).'
+        );
+      }
+
+      result.onchange = () => {
+        setPermissionState(result.state);
+        if (result.state === 'denied') {
+          setError(
+            'Camera access was denied. Please enable camera access in your browser settings (you may need to refresh the page).'
+          );
+        }
+      };
+    } catch (error) {
+      console.error('Error checking camera permission:', error);
+      setError(
+        'Unable to check camera permissions. Please ensure your browser supports camera access.'
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    checkCameraPermission();
+  }, [checkCameraPermission]);
 
   const startRecording = useCallback(() => {
     if (!webcamRef.current?.stream) return;
@@ -115,7 +150,9 @@ export function WebcamCapture({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <ConditionalTooltip
         content={
-          <TooltipContent style={{ zIndex: zIndex.dialogTooltip }}>Take a photo</TooltipContent>
+          <TooltipContent style={{ zIndex: zIndex.dialogTooltip }}>
+            Take a photo using your webcam
+          </TooltipContent>
         }
       >
         <DialogTrigger asChild>
@@ -132,23 +169,32 @@ export function WebcamCapture({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
-            {recordedVideo ? (
-              <video
-                src={recordedVideo}
-                controls
-                className="h-full w-full object-contain"
-                autoPlay
-              />
-            ) : (
-              <Webcam
-                ref={webcamRef}
-                audio={false}
-                videoConstraints={videoConstraints}
-                className="h-full w-full object-cover"
-              />
-            )}
-          </div>
+          {error ? (
+            <div className="bg-destructive/10 text-destructive rounded-lg p-4">{error}</div>
+          ) : permissionState === 'denied' ? (
+            <div className="bg-destructive/10 text-destructive rounded-lg p-4">
+              Camera access was denied. Please enable camera access in your browser settings (you
+              may need to refresh the page).
+            </div>
+          ) : (
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
+              {recordedVideo ? (
+                <video
+                  src={recordedVideo}
+                  controls
+                  className="h-full w-full object-contain"
+                  autoPlay
+                />
+              ) : (
+                <Webcam
+                  ref={webcamRef}
+                  audio={false}
+                  videoConstraints={videoConstraints}
+                  className="h-full w-full object-cover"
+                />
+              )}
+            </div>
+          )}
 
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setIsOpen(false)}>

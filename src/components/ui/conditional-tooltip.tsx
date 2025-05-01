@@ -1,7 +1,6 @@
 'use client';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { zIndex } from '@/lib/z-index';
 import { ComponentProps, ReactNode } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 
@@ -28,9 +27,7 @@ export function ConditionalTooltip({
 
   return (
     <Tooltip>
-      <TooltipTrigger style={{ zIndex: zIndex.debug }} asChild>
-        {children}
-      </TooltipTrigger>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
       {isTooltipContent(content) ? content : <TooltipContent>{content}</TooltipContent>}
     </Tooltip>
   );

@@ -4,7 +4,23 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**"]
+    },
+    "web#build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "app/**",
+        "components/**",
+        "lib/**",
+        "styles/**",
+        "public/**",
+        "package.json",
+        "next.config.js",
+        "tsconfig.json",
+        "postcss.config.js",
+        "tailwind.config.js"
+      ],
+      "outputs": [".next/**", "!.next/cache/**", ".next/types/**", "dist/**"]
     },
     "lint": {
       "outputs": []

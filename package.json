@@ -130,6 +130,7 @@
       "prettier --write"
     ]
   },
+  "packageManager": "pnpm@10.7.0",
   "nextBundleAnalysis": {
     "budget": 358400,
     "budgetPercentIncreaseRed": 20,

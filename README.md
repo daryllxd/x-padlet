@@ -81,3 +81,98 @@ src/
 - **Type Checking**: TypeScript strict mode
 - **Linting**: ESLint with Next.js config
 - **Testing**: (Coming soon)
+
+## Monorepo Commands
+
+This project uses Turborepo for monorepo management. Here are the essential commands:
+
+### Package Management
+
+```bash
+# Add a package to web app
+pnpm add <package> --filter @x-padlet/web
+
+# Add a dev dependency to web app
+pnpm add -D <package> --filter @x-padlet/web
+
+# Install all dependencies (from root)
+pnpm install
+
+# Install dependencies for web app only
+pnpm install --filter @x-padlet/web
+
+# Update all dependencies
+pnpm update
+
+# Update specific package
+pnpm update <package> --filter @x-padlet/web
+```
+
+### Development
+
+```bash
+# Run dev server for web app
+pnpm dev
+
+# Run storybook
+pnpm storybook
+
+# Run both dev and storybook in parallel
+pnpm dev & pnpm storybook
+```
+
+### Building
+
+```bash
+# Build all packages
+pnpm build
+
+# Build web app only
+pnpm build --filter @x-padlet/web
+```
+
+### Linting and Formatting
+
+```bash
+# Lint all packages
+pnpm lint
+
+# Lint web app only
+pnpm lint --filter @x-padlet/web
+
+# Format all packages
+pnpm format
+
+# Format web app only
+pnpm format --filter @x-padlet/web
+```
+
+### Testing
+
+```bash
+# Run tests for all packages
+pnpm test
+
+# Run tests for web app only
+pnpm test --filter @x-padlet/web
+```
+
+### Cleaning
+
+```bash
+# Clean all packages
+pnpm clean
+
+# Clean web app only
+pnpm clean --filter @x-padlet/web
+```
+
+### Helpful Commands
+
+```bash
+# List all packages
+pnpm list -r
+
+# Check for unused dependencies
+pnpm knip
+```

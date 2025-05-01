@@ -52,3 +52,17 @@ certificates
 storybook-static/
 *storybook.log
 storybook-static/
+
+# monorepo
+.turbo
+**/.turbo
+**/dist
+**/node_modules
+**/.next
+**/build
+**/coverage
+**/.vercel
+**/.env.local
+**/.env.*.local
+**/storybook-static
+**/*.tsbuildinfo

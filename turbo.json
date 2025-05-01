@@ -17,18 +17,23 @@
         "ENABLE_EXPERIMENTAL_COREPACK"
       ],
       "inputs": [
-        "app/**",
-        "components/**",
-        "lib/**",
-        "styles/**",
-        "public/**",
-        "package.json",
-        "next.config.js",
-        "tsconfig.json",
-        "postcss.config.js",
-        "tailwind.config.js"
+        "apps/web/app/**",
+        "apps/web/components/**",
+        "apps/web/lib/**",
+        "apps/web/styles/**",
+        "apps/web/public/**",
+        "apps/web/package.json",
+        "apps/web/next.config.js",
+        "apps/web/tsconfig.json",
+        "apps/web/postcss.config.js",
+        "apps/web/tailwind.config.js"
       ],
-      "outputs": [".next/**", "!.next/cache/**", ".next/types/**", "dist/**"]
+      "outputs": [
+        "apps/web/.next/**",
+        "!apps/web/.next/cache/**",
+        "apps/web/.next/types/**",
+        "apps/web/dist/**"
+      ]
     },
     "lint": {
       "outputs": []

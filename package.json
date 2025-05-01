@@ -117,6 +117,7 @@
     "storybook": "^8.6.12",
     "supabase": "^2.20.12",
     "tailwindcss": "^4",
+    "turbo": "^2.5.2",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
   },

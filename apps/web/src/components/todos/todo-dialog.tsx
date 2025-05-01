@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { WebcamCapture } from '@/components/ui/webcam-capture';
 import { TodoItem } from '@/types';
 import { Label } from '@radix-ui/react-label';
 import { X } from 'lucide-react';
@@ -17,6 +16,7 @@ import { useMount } from 'react-use';
 import { toast } from 'sonner';
 import { FileUploader } from '../ui/file-uploader';
 import { Select } from '../ui/select';
+import { WebcamCapture } from '../ui/webcam-capture/webcam-capture';
 
 type Nullable<T> = T | null;
 
@@ -174,7 +174,7 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
                     <button
                       type="button"
                       onClick={removeImage}
-                      className="absolute top-2 right-2 rounded-full bg-white/80 p-1 hover:bg-white"
+                      className="absolute right-2 top-2 rounded-full bg-white/80 p-1 hover:bg-white"
                       title="Remove image"
                     >
                       <X className="h-4 w-4" />

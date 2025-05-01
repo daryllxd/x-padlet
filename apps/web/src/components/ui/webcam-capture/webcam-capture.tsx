@@ -9,11 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { TooltipContent } from '@/components/ui/tooltip';
 import { zIndex } from '@/lib/z-index';
 import { Camera, Check, Video, X } from 'lucide-react';
 import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
-import { TooltipContent } from './tooltip';
 
 interface WebcamCaptureProps extends ComponentProps<typeof Button> {
   onCapture: (imageData: string) => void;
@@ -23,12 +23,7 @@ interface WebcamCaptureProps extends ComponentProps<typeof Button> {
 
 type CaptureMode = 'photo' | 'video';
 
-export function WebcamCapture({
-  onCapture,
-  onVideoCapture,
-  trigger,
-  ...props
-}: WebcamCaptureProps) {
+export function WebcamCapture({ onCapture, onVideoCapture, trigger }: WebcamCaptureProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<CaptureMode>('photo');
   const [isRecording, setIsRecording] = useState(false);

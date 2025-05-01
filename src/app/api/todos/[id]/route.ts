@@ -49,7 +49,6 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     if (removeImage && currentTodo?.image_url) {
       try {
-        // Extract the key from the image_url
         const key = currentTodo.image_url.split('/').pop();
         if (key) {
           await deleteFromS3(`todos/${id}/${key}`);

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ConditionalTooltip } from '@/components/ui/conditional-tooltip';
 import {
   Dialog,
   DialogContent,
@@ -8,11 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { zIndex } from '@/lib/z-index';
 import { Camera, Check, Video, X } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
+import { ComponentProps, useCallback, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
+import { TooltipContent } from './tooltip';
 
-interface WebcamCaptureProps {
+interface WebcamCaptureProps extends ComponentProps<typeof Button> {
   onCapture: (imageData: string) => void;
   onVideoCapture?: (videoBlob: Blob) => void;
   trigger?: React.ReactNode;
@@ -20,7 +23,12 @@ interface WebcamCaptureProps {
 
 type CaptureMode = 'photo' | 'video';
 
-export function WebcamCapture({ onCapture, onVideoCapture, trigger }: WebcamCaptureProps) {
+export function WebcamCapture({
+  onCapture,
+  onVideoCapture,
+  trigger,
+  ...props
+}: WebcamCaptureProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<CaptureMode>('photo');
   const [isRecording, setIsRecording] = useState(false);
@@ -29,6 +37,8 @@ export function WebcamCapture({ onCapture, onVideoCapture, trigger }: WebcamCapt
 
   const webcamRef = useRef<Webcam>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [stream, setStream] = useState<MediaStream | null>(null);
 
   const videoConstraints = {
     width: 1280,
@@ -86,22 +96,36 @@ export function WebcamCapture({ onCapture, onVideoCapture, trigger }: WebcamCapt
 
   const capturePhoto = useCallback(() => {
     if (!webcamRef.current) return;
-    const imageSrc = webcamRef.current.getScreenshot();
-    if (imageSrc) {
-      onCapture(imageSrc);
-      setIsOpen(false);
-    }
+
+    const imageData = webcamRef.current.getScreenshot();
+    if (!imageData) return;
+
+    onCapture(imageData);
+    stopCamera();
   }, [onCapture]);
+
+  const stopCamera = useCallback(() => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+    }
+  }, [stream]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" size="icon">
-            <Camera className="h-4 w-4" />
-          </Button>
-        )}
-      </DialogTrigger>
+      <ConditionalTooltip
+        content={
+          <TooltipContent style={{ zIndex: zIndex.dialogTooltip }}>Take a photo</TooltipContent>
+        }
+      >
+        <DialogTrigger asChild>
+          {trigger || (
+            <Button variant="outline" size="icon">
+              <Camera className="h-4 w-4" />
+            </Button>
+          )}
+        </DialogTrigger>
+      </ConditionalTooltip>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Capture Media</DialogTitle>
@@ -153,20 +177,39 @@ export function WebcamCapture({ onCapture, onVideoCapture, trigger }: WebcamCapt
           </div>
 
           <div className="flex justify-center gap-2">
-            <Button
-              variant={mode === 'photo' ? 'default' : 'outline'}
-              onClick={() => setMode('photo')}
+            <ConditionalTooltip
+              content={
+                <TooltipContent style={{ zIndex: zIndex.dialogTooltip }}>
+                  Take a photo
+                </TooltipContent>
+              }
             >
-              <Camera className="mr-2 h-4 w-4" />
-              Photo
-            </Button>
-            <Button
-              variant={mode === 'video' ? 'default' : 'outline'}
-              onClick={() => setMode('video')}
+              <Button
+                variant={mode === 'photo' ? 'default' : 'outline'}
+                onClick={() => setMode('photo')}
+              >
+                <Camera className="mr-2 h-4 w-4" />
+                Photo
+              </Button>
+            </ConditionalTooltip>
+            <ConditionalTooltip
+              content={
+                <TooltipContent style={{ zIndex: zIndex.dialogTooltip }}>
+                  Coming soon!
+                </TooltipContent>
+              }
             >
-              <Video className="mr-2 h-4 w-4" />
-              Video
-            </Button>
+              <Button
+                variant={mode === 'video' ? 'default' : 'outline'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <Video className="mr-2 h-4 w-4" />
+                Video
+              </Button>
+            </ConditionalTooltip>
           </div>
         </div>
       </DialogContent>

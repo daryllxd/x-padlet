@@ -4,6 +4,7 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { zIndex } from '@/lib/z-index';
 
 function TooltipProvider({
   delayDuration = 200,
@@ -44,7 +45,7 @@ function TooltipContent({
         sideOffset={sideOffset}
         className={cn(
           // Base styles
-          'z-50 mb-2 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-balance',
+          'mb-2 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-balance',
           // Colors
           'bg-primary text-primary-foreground',
           // Open state animations
@@ -58,6 +59,7 @@ function TooltipContent({
           'data-[side=top]:slide-in-from-bottom-2',
           className
         )}
+        style={{ zIndex: zIndex.tooltip }}
         role={role}
         {...props}
       >

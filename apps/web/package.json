@@ -5,8 +5,6 @@
   "scripts": {
     "dev": "next dev -p ${PORT:-3001} --turbo",
     "dev:https": "NODE_TLS_REJECT_UNAUTHORIZED=0 next dev --experimental-https --experimental-https-key ./certificates/key.pem --experimental-https-cert ./certificates/cert.pem -p ${PORT:-3001} --turbo",
-    "server": "cd server && pnpm run dev -p ${PORT:-3002}",
-    "server:https": "cd server && pnpm run dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

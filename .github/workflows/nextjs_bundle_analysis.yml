@@ -13,7 +13,7 @@ on:
 defaults:
   run:
     # change this if your nextjs app does not live at the root of the repo
-    working-directory: ./
+    working-directory: apps/web
 
 permissions:
   contents: read # for checkout repository
@@ -49,15 +49,11 @@ jobs:
         env:
           cache-name: cache-next-build
         with:
-          # if you use a custom build directory, replace all instances of `.next` in this file with your build directory
-          # ex: if your app builds to `dist`, replace `.next` with `dist`
-          path: apps/web/.next/cache
-          # change this if you prefer a more strict cache
+          path: .next/cache
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: Build next.js app
-        # change this if your site requires a custom build command
-        run: pnpm turbo run build --filter=@x-padlet/web...
+        run: cd ../.. && pnpm turbo run build --filter=@x-padlet/web...
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -71,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bundle
-          path: apps/web/.next/analyze/__bundle_analysis.json
+          path: .next/analyze/__bundle_analysis.json
 
       - name: Download base branch bundle stats
         uses: dawidd6/action-download-artifact@v4
@@ -79,7 +75,7 @@ jobs:
         with:
           workflow: nextjs_bundle_analysis.yml
           branch: ${{ github.event.pull_request.base.ref }}
-          path: apps/web/.next/analyze/base
+          path: .next/analyze/base
           allow_forks: false
 
       # And here's the second place - this runs after we have both the current and
@@ -97,7 +93,7 @@ jobs:
       # entry in your package.json file.
       - name: Compare with base branch bundle
         if: success() && github.event.number
-        run: ls -laR apps/web/.next/analyze/base && npx -p nextjs-bundle-analysis compare
+        run: ls -laR .next/analyze/base && npx -p nextjs-bundle-analysis compare
 
       - name: Get Comment Body
         id: get-comment-body
@@ -105,7 +101,7 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
         run: |
           echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$(cat apps/web/.next/analyze/__bundle_analysis_comment.txt)" >> $GITHUB_OUTPUT
+          echo "$(cat .next/analyze/__bundle_analysis_comment.txt)" >> $GITHUB_OUTPUT
           echo EOF >> $GITHUB_OUTPUT
 
       - name: Find Comment

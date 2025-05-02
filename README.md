@@ -1,8 +1,10 @@
-# X-Padlet
+# 🐶 Puglet
 
-A modern todo list application built with Next.js and Supabase.
+One of the todo list applications of all time
 
-![Preview](/public/preview-view-list.png)
+![Poggers](/apps/web/public/wow-pug.png)
+
+![Preview](/apps/web/public/preview-view-list.png)
 
 [![Live Demo](https://img.shields.io/badge/🙏_%20%20%20Live_demo-puglet.daryll.codes-green)](https://puglet.daryll.codes)
 [![Demo on Vercel](https://img.shields.io/badge/Deployed_on_vercel-padlet.vercel.app-green?logo=vercel)](https://x-padlet.vercel.app)
@@ -179,3 +181,7 @@ pnpm list -r
 # Check for unused dependencies
 pnpm knip
 ```
+
+### Vercel deployment
+
+- "Root directory is at https://vercel.com/daryllxds-projects/x-padlet/settings/build-and-deployment - should be apps/web, we cannot really change this in vercel.json"

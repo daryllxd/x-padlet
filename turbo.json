@@ -25,7 +25,7 @@
         "apps/web/postcss.config.mjs",
         "apps/web/components.json"
       ],
-      "outputs": ["apps/web/.next/**", "!apps/web/.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
       "outputs": []

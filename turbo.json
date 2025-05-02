@@ -6,7 +6,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "web#build": {
+    "@x-padlet/web#build": {
       "dependsOn": ["^build"],
       "env": [
         "AWS_ACCESS_KEY_ID",

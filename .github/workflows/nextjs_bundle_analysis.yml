@@ -7,7 +7,7 @@ on:
   pull_request:
   push:
     branches:
-      - main # change this if your default branch is named differently
+      - main
   workflow_dispatch:
 
 defaults:
@@ -31,11 +31,6 @@ jobs:
         with:
           node-version: 22
 
-      # - name: Install dependencies
-      #   uses: bahmutov/npm-install@v1
-
-      # If pnpm is used, you need to switch the previous step with the following one. pnpm does not create a package-lock.json
-      # so the step above will fail to pull dependencies
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         id: pnpm-install
@@ -53,13 +48,11 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: Build next.js app
-        run: cd ../.. && pnpm turbo run build --filter=@x-padlet/web...
+        run: cd ../.. && pnpm turbo run @x-padlet/web#build --filter=@x-padlet/web
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      # Here's the first place where next-bundle-analysis' own script is used
-      # This step pulls the raw bundle stats for the current bundle
       - name: Analyze bundle
         run: npx -p nextjs-bundle-analysis report
 

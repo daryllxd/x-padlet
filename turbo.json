@@ -16,15 +16,6 @@
         "ALLOWED_DOMAINS",
         "ENABLE_EXPERIMENTAL_COREPACK"
       ],
-      "inputs": [
-        "apps/web/src/**",
-        "apps/web/public/**",
-        "apps/web/package.json",
-        "apps/web/next.config.ts",
-        "apps/web/tsconfig.json",
-        "apps/web/postcss.config.mjs",
-        "apps/web/components.json"
-      ],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {

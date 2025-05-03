@@ -1,7 +1,7 @@
 'use client';
 
 import { TODO_TEMPLATES } from '@/lib/templates/todo-templates';
-import { TEMPLATE_IDS } from '@/types/todo-list-template';
+import { TEMPLATE_IDS } from '@x-padlet/types';
 
 export function CreateTodoListForm() {
   const createTodoListFromTemplate = async (formData: FormData) => {
@@ -56,7 +56,7 @@ export function CreateTodoListForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Create Todo List
           </button>

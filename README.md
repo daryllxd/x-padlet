@@ -132,6 +132,9 @@ pnpm build --filter @x-padlet/web
 
 # Starting
 pnpm --filter @x-padlet/web start
+
+# Generate build dependency graph
+npx turbo run build --graph=graph.pdf
 ```
 
 ### Linting and Formatting

@@ -8,8 +8,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { TodoItem } from '@/types';
 import { Label } from '@radix-ui/react-label';
+import { TodoItem } from '@x-padlet/types';
 import { X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { useMount } from 'react-use';

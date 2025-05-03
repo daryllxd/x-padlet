@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { TodoItem } from '@/types';
+import { TodoItem } from '@x-padlet/types';
 
 export function getTodoThemeStyles(
   theme: TodoItem['theme'],

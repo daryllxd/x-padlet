@@ -1,8 +1,8 @@
 'use client';
 
 import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
-import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { TodoItem } from '@x-padlet/types';
 import { Masonry } from 'masonic';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';

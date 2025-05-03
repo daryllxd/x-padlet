@@ -1,5 +1,5 @@
-import { TodoGroup } from '@/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { TodoGroup } from '@x-padlet/types';
 
 export function useTodoGroups(todoListId: string) {
   const queryClient = useQueryClient();

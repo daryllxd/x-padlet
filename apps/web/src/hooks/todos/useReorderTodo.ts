@@ -1,5 +1,5 @@
-import { TodoItem } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TodoItem } from '@x-padlet/types';
 
 async function reorderTodos(todoIds: string[]) {
   const response = await fetch('/api/todos/reorder', {

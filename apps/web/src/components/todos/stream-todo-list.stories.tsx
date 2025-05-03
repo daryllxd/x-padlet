@@ -1,5 +1,5 @@
-import { TodoItem } from '@/types';
 import type { Meta, StoryObj } from '@storybook/react';
+import { TodoItem } from '@x-padlet/types';
 import { StreamTodoList } from './stream-todo-list';
 
 const meta = {

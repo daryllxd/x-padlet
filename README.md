@@ -2,8 +2,6 @@
 
 One of the todo list applications of all time
 
-![Poggers](/apps/web/public/wow-pug.png)
-
 ![Preview](/apps/web/public/preview-view-list.png)
 
 [![Live Demo](https://img.shields.io/badge/🙏_%20%20%20Live_demo-puglet.daryll.codes-green)](https://puglet.daryll.codes)
@@ -185,3 +183,8 @@ pnpm knip
 ### Vercel deployment
 
 - "Root directory is at https://vercel.com/daryllxds-projects/x-padlet/settings/build-and-deployment - should be apps/web, we cannot really change this in vercel.json"
+
+<div style="text-align: center;">
+  <img src="apps/web/public/wow-pug.png" alt="Poggers" height="200" width="200" style="border-radius: 50%;">
+  <p>This is Poggers the Pug</p>
+</div>

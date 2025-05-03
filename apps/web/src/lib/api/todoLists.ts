@@ -42,7 +42,7 @@ export async function fetchTodoList({
 }): Promise<TodoList> {
   try {
     const response = await fetch(`${baseUrl}`, {
-      next: { revalidate: 10, tags: ['todo-list', id] },
+      next: { revalidate: 10, tags: [`todo-list-${id}`] },
     });
 
     if (!response.ok) {

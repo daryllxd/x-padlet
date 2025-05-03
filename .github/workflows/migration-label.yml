@@ -1,0 +1,28 @@
+name: Add Migration Label
+
+on:
+  pull_request:
+    paths:
+      - 'apps/web/supabase/migrations/**'
+
+concurrency:
+  group: migration-label-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  add-label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Add Migration Label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['migration']
+            })

@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TodoList } from '@x-padlet/types';
 
 const archiveTodoList = async (id: string): Promise<TodoList> => {
   const response = await fetch(`${API_ENDPOINTS.todoList(id)}/archive`, {

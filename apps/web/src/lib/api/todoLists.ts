@@ -1,4 +1,4 @@
-import { TodoList } from '@/types/todo-list';
+import { TodoList } from '@x-padlet/types';
 
 export async function fetchTodoLists({
   status,

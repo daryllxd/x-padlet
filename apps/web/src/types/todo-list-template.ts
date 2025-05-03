@@ -1,6 +1,4 @@
-import { TodoGroup } from '@/types/todo-group';
-import { TodoList } from '@/types/todo-list';
-import { TodoItem } from '@x-padlet/types';
+import { TodoGroup, TodoItem, TodoList } from '@x-padlet/types';
 
 /**
  * Template metadata containing UI and behavior configuration

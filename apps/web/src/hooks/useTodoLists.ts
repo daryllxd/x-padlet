@@ -1,8 +1,8 @@
 'use client';
 
 import { fetchTodoLists as fetchTodoListsFromApi } from '@/lib/api/todoLists';
-import { TodoList } from '@/types/todo-list';
 import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import { TodoList } from '@x-padlet/types';
 
 const clientFetchTodoLists = async (
   params: {

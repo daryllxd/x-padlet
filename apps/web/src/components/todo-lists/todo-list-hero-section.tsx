@@ -8,7 +8,7 @@ import { useTodoList } from '@/hooks/useTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { EMOJI_MAP } from '@/lib/utils/emoji';
 import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
-import { TodoList } from '@/types/todo-list';
+import { TodoList } from '@x-padlet/types';
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

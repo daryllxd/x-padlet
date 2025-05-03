@@ -4,7 +4,7 @@ import { TodoListHeroSection } from '@/components/todo-lists/todo-list-hero-sect
 import { TodoListView } from '@/components/todo-lists/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
-import { TAILWIND_THEME_COLORS } from '@/types/todo-list';
+import { TAILWIND_THEME_COLORS } from '@x-padlet/types';
 import { useState } from 'react';
 
 const FONTS = {

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { isObjectKeysTraversing } from '@/lib/utils/is-object-keys-traversing';
-import { TAILWIND_THEME_COLORS, TodoList } from '@/types/todo-list';
+import { TAILWIND_THEME_COLORS, TodoList } from '@x-padlet/types';
 import { Settings2 } from 'lucide-react';
 import { Inter, Open_Sans, Playpen_Sans, Poppins, Roboto } from 'next/font/google';
 import { ComponentProps, useState } from 'react';
@@ -143,7 +143,7 @@ export function TodoListAppearanceEditor({
               onChange={(e) =>
                 setPreviewSettings((prev) => ({ ...prev, font: e.target.value as Font }))
               }
-              className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-slate-400 focus:outline-none"
+              className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
               style={{ fontFamily: getFontFamily(previewSettings.font) }}
             >
               {Object.keys(FONTS).map((font) => (

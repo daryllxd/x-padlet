@@ -1,8 +1,8 @@
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { TODO_TEMPLATES } from '@/lib/templates/todo-templates';
-import { THEME_COLORS } from '@/types/todo-list';
 import { isValidTemplateId } from '@/types/todo-list-template';
+import { THEME_COLORS } from '@x-padlet/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {

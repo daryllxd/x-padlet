@@ -20,6 +20,7 @@ export interface TodoList {
   title: string;
   description?: string;
   status: 'active' | 'completed' | 'archived';
+  privacy_status: 'public' | 'secret' | 'secret_with_password';
   todoCount: number;
   theme: ThemeColor | null;
   background: ThemeColor | null;

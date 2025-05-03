@@ -9,11 +9,20 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status');
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
     let query = supabase.from('todo_lists').select('*').order('position');
 
     if (status) {
       query = query.eq('status', status);
+    }
+
+    /*
+     * In development, we want to show all todo lists, including private ones.
+     * In production, we only want to show public todo lists.
+     */
+    if (!isDevelopment) {
+      query = query.eq('privacy_status', 'public');
     }
 
     const { data, error } = await query;

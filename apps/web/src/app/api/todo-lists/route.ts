@@ -1,8 +1,13 @@
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
 import { TODO_TEMPLATES } from '@/lib/templates/todo-templates';
-import { THEME_COLORS } from '@/types/todo-list';
-import { isValidTemplateId } from '@/types/todo-list-template';
+import {
+  isValidTemplateId,
+  THEME_COLORS,
+  TodoGroup,
+  TodoItem,
+  TodoListTemplate,
+} from '@x-padlet/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -90,7 +95,7 @@ const createFromTemplate = async (request: NextRequest) => {
           if (todoListError || !todoList) throw todoListError;
 
           const groups = await Promise.all(
-            template.todoGroups.map(async (group, index) => {
+            template.todoGroups.map(async (group: Pick<TodoGroup, 'name'>, index: number) => {
               const { data: todoGroup, error: groupError } = await supabase
                 .from('todo_groups')
                 .insert([
@@ -110,31 +115,47 @@ const createFromTemplate = async (request: NextRequest) => {
 
           // Create all items for each group
           await Promise.all(
-            groups.map(async ({ group, templateGroup }) => {
-              let templateItems =
-                template.todoItems.find((ti) => ti.groupName === templateGroup.name)?.items || [];
+            groups.map(
+              async ({
+                group,
+                templateGroup,
+              }: {
+                group: TodoGroup;
+                templateGroup: Pick<TodoGroup, 'name'>;
+              }) => {
+                let templateItems =
+                  template.todoItems.find(
+                    (ti: TodoListTemplate['todoItems'][number]) =>
+                      ti.groupName === templateGroup.name
+                  )?.items || [];
 
-              if (template.metadata.itemSelectionStrategy?.type === 'random') {
-                templateItems = [...templateItems]
-                  .sort(() => Math.random() - 0.5)
-                  .slice(0, template.metadata.itemSelectionStrategy.count);
+                if (template.metadata.itemSelectionStrategy?.type === 'random') {
+                  templateItems = [...templateItems]
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, template.metadata.itemSelectionStrategy.count);
+                }
+
+                const { error: itemsError } = await supabase.from('todos').insert(
+                  templateItems.map(
+                    (
+                      item: Pick<TodoItem, 'title' | 'description' | 'is_completed'>,
+                      index: number
+                    ) => ({
+                      title: item.title,
+                      description: item.description,
+                      is_completed: item.is_completed,
+                      todo_list_id: todoList.id,
+                      todo_group_id: group.id,
+                      theme: theme,
+                      position: index + 1,
+                      position_in_group: index + 1,
+                    })
+                  )
+                );
+
+                if (itemsError) throw itemsError;
               }
-
-              const { error: itemsError } = await supabase.from('todos').insert(
-                templateItems.map((item, index) => ({
-                  title: item.title,
-                  description: item.description,
-                  is_completed: item.is_completed,
-                  todo_list_id: todoList.id,
-                  todo_group_id: group.id,
-                  theme: theme,
-                  position: index + 1,
-                  position_in_group: index + 1,
-                }))
-              );
-
-              if (itemsError) throw itemsError;
-            })
+            )
           );
 
           return NextResponse.json(todoList);

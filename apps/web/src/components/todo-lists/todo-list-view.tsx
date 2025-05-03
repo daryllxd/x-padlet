@@ -1,7 +1,6 @@
 'use client';
 
-import { TodoItem } from '@/types';
-import { TodoList } from '@/types/todo-list';
+import { TodoItem, TodoList } from '@x-padlet/types';
 import { GroupedTodoList } from '../todos/grouped-todo-list';
 import { MasonryTodoList } from '../todos/masonry-todo-list';
 import { StreamTodoList } from '../todos/stream-todo-list';

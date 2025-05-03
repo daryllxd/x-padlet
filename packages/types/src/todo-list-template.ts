@@ -1,11 +1,9 @@
-import { TodoItem } from '@/types/todo';
-import { TodoGroup } from '@/types/todo-group';
-import { TodoList } from '@/types/todo-list';
+import { TodoGroup, TodoItem, TodoList } from './';
 
 /**
  * Template metadata containing UI and behavior configuration
  */
-export type TodoListTemplateMetadata = {
+export interface TodoListTemplateMetadata {
   id: string;
   name: string;
   description: string;
@@ -13,34 +11,34 @@ export type TodoListTemplateMetadata = {
     type: 'random';
     count: number;
   };
-};
+}
 
 /**
  * Template items grouped by their respective group names
  */
-export type TodoListTemplateItems = {
+export interface TodoListTemplateItems {
   groupName: string;
   items: Array<Pick<TodoItem, 'title' | 'description' | 'is_completed'>>;
-};
+}
 
 /**
  * Complete todo list template structure
  */
-export type TodoListTemplate = {
+export interface TodoListTemplate {
   todoList: Pick<TodoList, 'title' | 'description' | 'display_mode'>;
   todoGroups: Array<Pick<TodoGroup, 'name'>>;
   todoItems: TodoListTemplateItems[];
   metadata: TodoListTemplateMetadata;
-};
+}
 
 /**
  * Request type for creating a todo list from a template
  */
-export type CreateFromTemplateRequest = {
+export interface CreateFromTemplateRequest {
   templateId: string;
   title?: string;
   description?: string;
-};
+}
 
 /**
  * Available template IDs

@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@/lib/config';
-import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TodoList } from '@x-padlet/types';
 
 type CreateTodoListInput = {
   title: string;

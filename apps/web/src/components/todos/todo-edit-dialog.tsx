@@ -1,7 +1,7 @@
 'use client';
 
 import { useUpdateTodo } from '@/hooks/todos/useUpdateTodo';
-import { TodoItem } from '@/types';
+import { TodoItem } from '@x-padlet/types';
 import { toast } from 'sonner';
 import { TodoDialog } from './todo-dialog';
 

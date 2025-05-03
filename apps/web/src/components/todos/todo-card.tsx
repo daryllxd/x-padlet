@@ -8,7 +8,7 @@ import { useTodos } from '@/hooks/useTodos';
 import { cn } from '@/lib/utils';
 import { extractUrls } from '@/lib/utils/extract-urls';
 import { getTodoHoverClasses, getTodoThemeStyles } from '@/lib/utils/todo-theme';
-import { TodoItem } from '@/types';
+import { TodoItem } from '@x-padlet/types';
 import { EllipsisVertical } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
 import LinkPreview from '../ui/link-preview/link-preview';

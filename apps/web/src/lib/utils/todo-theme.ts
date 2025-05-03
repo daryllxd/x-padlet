@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { TodoItem } from '@/types';
+import { TodoItem } from '@x-padlet/types';
 
 export function getTodoThemeStyles(
   theme: TodoItem['theme'],
@@ -26,7 +26,11 @@ export function getTodoThemeStyles(
       'bg-red-200 transition-colors hover:bg-red-300',
       contextMenuOpen && 'bg-red-300',
     ],
-    !theme && 'bg-slate-200 transition-colors hover:bg-slate-300'
+    theme === 'orange' && [
+      'bg-orange-200 transition-colors hover:bg-orange-300',
+      contextMenuOpen && 'bg-orange-300',
+    ],
+    !theme && 'bg-slate-100 transition-colors hover:bg-slate-300'
   );
 }
 
@@ -37,6 +41,7 @@ export function getTodoHoverClasses(theme: TodoItem['theme']): ReturnType<typeof
     theme === 'yellow' && `hover:bg-yellow-100`,
     theme === 'purple' && `hover:bg-purple-100`,
     theme === 'red' && `hover:bg-red-100`,
+    theme === 'orange' && `hover:bg-orange-100`,
     !theme && `hover:bg-slate-100`
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { PugletDraggableState, usePugletDraggableState } from '@/lib/puglet-drag';
-import { TodoItem } from '@/types';
 import {
   attachClosestEdge,
   extractClosestEdge,
@@ -10,6 +9,7 @@ import {
   draggable,
   dropTargetForElements,
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { TodoItem } from '@x-padlet/types';
 import { useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
 import { PugletDragIndicator } from '../puglet-draggable/drag-indicator';

@@ -8,8 +8,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { TodoItem } from '@/types';
 import { Label } from '@radix-ui/react-label';
+import { TodoItem } from '@x-padlet/types';
 import { X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { useMount } from 'react-use';
@@ -32,12 +32,13 @@ export interface TodoDialogRef {
   resetForm: () => void;
 }
 
-const THEME_COLORS = [
+const THEME_COLORS: { value: NonNullable<TodoItem['theme']>; label: string; color: string }[] = [
   { value: 'red', label: 'Red', color: 'bg-red-500' },
   { value: 'blue', label: 'Blue', color: 'bg-blue-500' },
   { value: 'green', label: 'Green', color: 'bg-green-500' },
   { value: 'yellow', label: 'Yellow', color: 'bg-yellow-500' },
   { value: 'purple', label: 'Purple', color: 'bg-purple-500' },
+  { value: 'orange', label: 'Orange', color: 'bg-orange-500' },
 ] as const;
 
 export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(

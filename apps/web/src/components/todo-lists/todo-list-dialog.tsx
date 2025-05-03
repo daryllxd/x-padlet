@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { TodoList } from '@/types/todo-list';
+import { TodoList } from '@x-padlet/types';
 import { LoaderIcon, X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -150,7 +150,7 @@ export const TodoListDialog = forwardRef<TodoListDialogRef, TodoListDialogProps>
                   <button
                     type="button"
                     onClick={removeImage}
-                    className="absolute top-2 right-2 rounded-full bg-white/80 p-1 hover:bg-white"
+                    className="absolute right-2 top-2 rounded-full bg-white/80 p-1 hover:bg-white"
                   >
                     <X className="h-4 w-4" />
                   </button>

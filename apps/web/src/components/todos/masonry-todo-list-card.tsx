@@ -2,7 +2,7 @@
 
 import { PugletDraggableState } from '@/lib/puglet-drag';
 import { cn } from '@/lib/utils';
-import { TodoItem } from '@/types';
+import { TodoItem } from '@x-padlet/types';
 import { DraggableTodo } from './draggable-todo';
 import { TodoCard } from './todo-card';
 

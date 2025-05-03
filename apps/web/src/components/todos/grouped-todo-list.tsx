@@ -6,8 +6,8 @@ import { useTodoGroups } from '@/hooks/todo-groups/useTodoGroups';
 import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
 import { PugletDraggableState } from '@/lib/puglet-drag/puglet-draggable-state';
 import { cn } from '@/lib/utils';
-import { TodoGroup, TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { TodoGroup, TodoItem } from '@x-padlet/types';
 import { useEffect } from 'react';
 import { DraggableTodoGroup } from '../todo-groups/draggable-todo-group';
 import { GroupedTodoCreate } from './grouped-todo-create';
@@ -39,6 +39,11 @@ export function GroupedTodoList({ todos, listId }: GroupedTodoListProps) {
     },
     {} as Record<string, { name: string; todos: TodoItem[] }>
   );
+
+  const sortTodos = (a: TodoItem, b: TodoItem) => {
+    const todo = todos.find((t) => t.id === a.id);
+    // ... existing code ...
+  };
 
   useEffect(() => {
     return monitorForElements({

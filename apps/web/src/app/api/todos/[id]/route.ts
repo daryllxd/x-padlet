@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/db';
 import { deleteFromS3, uploadToS3 } from '@/lib/s3';
-import { TodoFormData, TodoItem } from '@/types';
+import { TodoFormData } from '@/types';
+import { TodoItem } from '@x-padlet/types';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 

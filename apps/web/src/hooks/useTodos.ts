@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/db';
-import { TodoItem } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { TodoItem } from '@x-padlet/types';
 
 export function useTodos(listId: string) {
   const queryClient = useQueryClient();

@@ -2,8 +2,8 @@
 
 import { useReorderTodo } from '@/hooks/todos/useReorderTodo';
 import { cn } from '@/lib/utils';
-import { TodoItem } from '@/types';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { TodoItem } from '@x-padlet/types';
 import { useEffect } from 'react';
 import { DraggableTodo } from './draggable-todo';
 import { TodoCard } from './todo-card';

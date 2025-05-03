@@ -1,4 +1,4 @@
-import { TemplateId, TodoListTemplate } from '@/types/todo-list-template';
+import { TemplateId, TodoListTemplate } from '@x-padlet/types';
 
 const positiveAdjectives = [
   'Amazing',

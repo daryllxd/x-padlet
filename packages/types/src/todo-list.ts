@@ -15,6 +15,7 @@ export const TAILWIND_THEME_COLORS = {
 
 export type ThemeColor = (typeof THEME_COLORS)[number];
 export type TailwindThemeColor = (typeof TAILWIND_THEME_COLORS)[keyof typeof TAILWIND_THEME_COLORS];
+
 export interface TodoList {
   id: string;
   title: string;

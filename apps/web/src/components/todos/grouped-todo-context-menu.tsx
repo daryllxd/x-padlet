@@ -6,7 +6,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { TodoGroup } from '@/types';
+import { TodoGroup } from '@x-padlet/types';
 import { Pencil, Trash2 } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 

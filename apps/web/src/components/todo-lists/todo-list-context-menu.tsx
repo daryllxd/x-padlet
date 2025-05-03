@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/context-menu';
 import { useArchiveTodoList } from '@/hooks/useArchiveTodoList';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
-import { TodoList } from '@/types/todo-list';
+import { TodoList } from '@x-padlet/types';
 import { Archive, Clipboard, Copy, Link, Pencil } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { toast } from 'sonner';

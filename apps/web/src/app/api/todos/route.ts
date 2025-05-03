@@ -2,7 +2,7 @@ import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
-import { TodoItem } from '@/types/todo';
+import { TodoItem } from '@x-padlet/types';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 

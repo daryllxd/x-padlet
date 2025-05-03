@@ -1,6 +1,5 @@
-import { TodoItem } from '@/types';
-import { TodoList } from '@/types/todo-list';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TodoItem, TodoList } from '@x-padlet/types';
 
 interface CreateTodoParams {
   listId: string;

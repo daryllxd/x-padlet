@@ -2,7 +2,7 @@
 
 import { useTodoGroupMutations } from '@/hooks/todo-groups/useTodoGroupMutations';
 import { cn } from '@/lib/utils';
-import { TodoGroup } from '@/types';
+import { TodoGroup } from '@x-padlet/types';
 import { EllipsisVertical, Plus } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';

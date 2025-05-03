@@ -1,7 +1,4 @@
-import { TodoItem } from '@/types/todo';
-import { TodoGroup } from '@/types/todo-group';
-
-export type { TodoGroup, TodoItem };
+import { TodoItem } from '@x-padlet/types';
 export interface TodoFormData {
   title: string;
   description: string;

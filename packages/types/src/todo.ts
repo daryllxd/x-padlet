@@ -8,7 +8,7 @@ export interface TodoItem {
   image_url?: string | null;
   created_at: string;
   updated_at: string;
-  theme: 'red' | 'blue' | 'green' | 'yellow' | 'purple' | null;
+  theme: 'red' | 'blue' | 'green' | 'yellow' | 'purple' | 'orange' | null;
   todo_group_id: string;
   todo_group_name: string;
   todo_group_position: number;

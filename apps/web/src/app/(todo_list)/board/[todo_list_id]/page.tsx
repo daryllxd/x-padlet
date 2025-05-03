@@ -2,8 +2,8 @@
 
 import { TodoListPage } from '@/components/todo-lists/todo-list-page';
 import { fetchTodoList } from '@/lib/api/todoLists';
-import { TodoList } from '@/types/todo-list';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { TodoList } from '@x-padlet/types';
 import { headers } from 'next/headers';
 
 export async function generateStaticParams() {

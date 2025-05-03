@@ -1,6 +1,7 @@
 import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { withRevalidation } from '@/lib/api/withRevalidation';
 import { supabase } from '@/lib/db';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 const updateTodoList = async (
@@ -35,6 +36,7 @@ const updateTodoList = async (
       return NextResponse.json({ error: 'Failed to update todo list' }, { status: 500 });
     }
 
+    revalidateTag(`todo-list-${id}`);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

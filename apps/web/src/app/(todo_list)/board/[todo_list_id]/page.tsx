@@ -18,6 +18,8 @@ export default async function Page({ params }: { params: Promise<{ todo_list_id:
   const protocol = headersList.get('x-forwarded-proto') || 'http';
   const baseUrl = `${protocol}://${host}/api/todo-lists/${todoListId}`;
 
+  console.log(`❗in the page`);
+
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: ['todoList', todoListId],

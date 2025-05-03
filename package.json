@@ -32,7 +32,11 @@
     "turbo": "^2.5.2"
   },
   "lint-staged": {
-    "*.{ts,tsx,mdx}": [
+    "apps/**/*.{ts,tsx,mdx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/**/*.{ts,tsx,mdx}": [
       "eslint --fix",
       "prettier --write"
     ],

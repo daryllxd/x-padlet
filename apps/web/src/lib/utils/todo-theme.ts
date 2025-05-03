@@ -26,6 +26,10 @@ export function getTodoThemeStyles(
       'bg-red-200 transition-colors hover:bg-red-300',
       contextMenuOpen && 'bg-red-300',
     ],
+    theme === 'orange' && [
+      'bg-orange-200 transition-colors hover:bg-orange-300',
+      contextMenuOpen && 'bg-orange-300',
+    ],
     !theme && 'bg-slate-200 transition-colors hover:bg-slate-300'
   );
 }

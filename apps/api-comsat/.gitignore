@@ -36,11 +36,6 @@
 # Ignore RSpec status
 .rspec_status
 
-# Ignore Ruby version manager files
-.ruby-version
-.rbenv
-.rvm
-
 # Ignore IDE files
 .idea/
 .vscode/

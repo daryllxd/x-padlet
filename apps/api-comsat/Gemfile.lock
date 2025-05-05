@@ -74,7 +74,7 @@ GEM
       uri (>= 0.13.1)
     ast (2.4.3)
     base64 (0.2.0)
-    bcrypt_pbkdf (1.1.1-arm64-darwin)
+    bcrypt_pbkdf (1.1.1)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
     bootsnap (1.18.4)
@@ -313,5 +313,8 @@ DEPENDENCIES
   thruster
   tzinfo-data
 
+RUBY VERSION
+   ruby 3.4.3p32
+
 BUNDLED WITH
-   2.4.22
+   2.6.8

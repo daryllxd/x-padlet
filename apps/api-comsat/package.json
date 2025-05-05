@@ -1,0 +1,6 @@
+{
+  "name": "@x-padlet/api-comsat",
+  "scripts": {
+    "dev": "rails s -p 3100"
+  }
+}

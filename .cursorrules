@@ -1,38 +1,79 @@
-// Next.js App Router .cursorrules
+# Applies to: all projects in the monorepo
 
-Use pnpm as package manager
+## General Coding Standards
 
-// Next.js App Router best practices
+- Use TypeScript for all code.
+- Prefer interfaces over types for object shapes.
+- Avoid enums; use literal types or maps.
+- Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
+- Use functional and declarative programming patterns; avoid classes.
+- Prefer iteration and modularization over code duplication.
+- Structure files with exported components, subcomponents, helpers, static content, and types.
+- Favor named exports for components and functions.
+- Use lowercase with dashes for directory names (e.g., `components/auth-wizard`).
 
-const nextjsAppRouterBestPractices = [
-"Use server components by default",
-"Implement client components only when necessary",
-"Utilize the new file-based routing system",
-"Use layout.js for shared layouts",
-"Implement loading.js for loading states",
-"Use error.js for error handling",
-"Utilize route handlers for API routes",
-];
+## Monorepo Management
 
-// Folder structure
+- Use Turbo for monorepo management.
+- Project structure:
+  - `apps/`: Contains all applications
+    - `web/`: Main Next.js web application
+  - `lib/`: Shared libraries and utilities
+    - `types/`: Typescript types that will be used by the app.
+- Ensure packages are isolated and dependencies managed via workspace settings.
+- Use shared configurations and scripts where appropriate.
+- Maintain clear boundaries between apps and shared libraries.
 
-const folderStructure = `app/
-  layout.js
-  page.js
-  components/
-  lib/
-  styles/
-public/`;
+## Testing & Quality
 
-// Additional instructions
+- Write unit and integration tests for critical components.
+- Ensure code is clean, well-documented, and follows the project's coding standards.
 
-const additionalInstructions = `
+---
 
-1. Use TypeScript for type safety
-2. Implement proper metadata for SEO
-3. Utilize Next.js Image component for optimized images
-4. Use CSS Modules or Tailwind CSS for styling
-5. Implement proper error boundaries
-6. Follow Next.js naming conventions for special files
-7. Use environment variables for configuration
-   `;
+Description: "Automated Documentation Update"
+Globs: src/api/\*_/_.ts
+
+When this file changes:
+
+1. Analyze exported functions and interfaces
+2. Update corresponding documentation in docs/api/
+3. Generate usage examples based on function signatures
+4. Verify and update OpenAPI specification if applicable
+
+---
+
+Description: "Rule Verification Helper"
+Globs: \*_/_.\*
+
+- When console logging, add ❗ to distinguish that it came from a debug statement.
+
+---
+
+Description: "React Component Optimization"
+Globs: src/components/\*_/_.tsx
+
+When developing React components:
+
+1. Implement proper memoization for expensive computations
+2. Apply React.memo() for components receiving props that change infrequently
+3. Utilize useCallback for event handlers passed to child components
+4. Implement proper dependency arrays in useEffect and useMemo hooks
+5. Extract reusable logic into custom hooks following the use- prefix convention
+6. Apply proper key assignment in list renderings based on stable identifiers
+7. Implement accessibility best practices including ARIA attributes
+
+---
+
+Description: "TypeScript Full-Stack Standards"
+Globs: \*_/_.ts
+
+When writing TypeScript:
+
+1. Implement explicit return types for all functions
+2. Utilize interface segregation principles for complex object structures
+3. Apply proper error handling with discriminated union types
+4. Leverage TypeScript utility types (Pick, Omit, Partial) for type manipulation
+5. Implement proper null handling through Optional chaining and nullish coalescing
+6. Maintain consistent type definitions between frontend and backend
+7. Apply strict null checks and no implicit any

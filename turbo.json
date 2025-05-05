@@ -18,12 +18,23 @@
       ],
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "@x-padlet/web#dev": {
+      "cache": false,
+      "persistent": false,
+      "env": ["NODE_ENV"]
+    },
+    "@x-padlet/api-comsat#dev": {
+      "cache": false,
+      "persistent": false,
+      "env": ["RAILS_ENV", "PORT"]
+    },
     "lint": {
       "outputs": []
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["@x-padlet/web#dev", "@x-padlet/api-comsat#dev"]
     },
     "clean": {
       "cache": false

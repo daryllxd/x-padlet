@@ -93,22 +93,22 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     // Start revalidation in the background
-    void (async () => {
-      try {
-        const { data: todoList } = await supabase
-          .from('todo_lists')
-          .select('custom_url')
-          .eq('id', todoListId)
-          .single();
+    try {
+      const { data: todoList } = await supabase
+        .from('todo_lists')
+        .select('custom_url')
+        .eq('id', todoListId)
+        .single();
 
+      // If the todo list has a custom URL, revalidate the todos for that URL
+      if (todoList?.custom_url) {
+        revalidateTag(`todos-${todoList.custom_url}`);
+      } else {
         revalidateTag(`todos-${todoListId}`);
-        if (todoList?.custom_url) {
-          revalidateTag(`todos-${todoList.custom_url}`);
-        }
-      } catch (error: unknown) {
-        console.error('Error during revalidation:', error);
       }
-    })();
+    } catch (error: unknown) {
+      console.error('Error during revalidation:', error);
+    }
 
     return NextResponse.json(data);
   } catch (error) {

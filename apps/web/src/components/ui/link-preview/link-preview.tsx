@@ -25,7 +25,12 @@ export default function LinkPreview({ url, className }: LinkPreviewProps) {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const response = await fetch(`/api/metadata?url=${encodeURIComponent(url)}`);
+        const response = await fetch(`/api/metadata?url=${encodeURIComponent(url)}`, {
+          next: {
+            revalidate: 60,
+            tags: [`metadata-${url}`],
+          },
+        });
         const data = await response.json();
 
         if (!response.ok) throw new Error(data.message);

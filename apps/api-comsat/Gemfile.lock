@@ -332,6 +332,7 @@ DEPENDENCIES
   pry-rails
   puma (>= 5.0)
   rails (~> 8.0.2)
+  rspec-core
   rspec-rails
   rubocop-rails-omakase
   shoulda-matchers

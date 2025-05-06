@@ -16,20 +16,20 @@ class CreateTodos < ActiveRecord::Migration[8.0]
 
     # Add position constraint
     execute <<-SQL
-      ALTER TABLE todos 
-      ADD CONSTRAINT todos_position_check 
+      ALTER TABLE todos#{' '}
+      ADD CONSTRAINT todos_position_check#{' '}
       CHECK (position >= 0);
     SQL
 
     # Add constraint for position_in_group
     execute <<-SQL
-      ALTER TABLE todos 
-      ADD CONSTRAINT todos_grouped_position_check 
+      ALTER TABLE todos#{' '}
+      ADD CONSTRAINT todos_grouped_position_check#{' '}
       CHECK (position_in_group > 0);
     SQL
 
     # The todo_list_id and todo_group_id indexes are automatically created by t.references above
     # Only add the composite index
-    add_index :todos, [:todo_group_id, :position_in_group], name: 'todos_group_position_idx'
+    add_index :todos, [ :todo_group_id, :position_in_group ], name: 'todos_group_position_idx'
   end
 end

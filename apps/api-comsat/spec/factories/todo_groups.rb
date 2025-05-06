@@ -4,4 +4,4 @@ FactoryBot.define do
     sequence(:position) { |n| n }
     association :todo_list
   end
-end 
+end

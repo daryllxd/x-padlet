@@ -1,7 +1,7 @@
 class CreateTodoLists < ActiveRecord::Migration[8.0]
   def change
     # Create custom enum type for privacy_status
-    create_enum :privacy_status, ['public', 'secret', 'secret_with_password']
+    create_enum :privacy_status, [ 'public', 'secret', 'secret_with_password' ]
 
     create_table :todo_lists, id: :uuid do |t|
       t.string :title, null: false
@@ -20,8 +20,8 @@ class CreateTodoLists < ActiveRecord::Migration[8.0]
 
     # Add check constraint for status values
     execute <<-SQL
-      ALTER TABLE todo_lists 
-      ADD CONSTRAINT todo_lists_status_check 
+      ALTER TABLE todo_lists#{' '}
+      ADD CONSTRAINT todo_lists_status_check#{' '}
       CHECK (status IN ('active', 'completed', 'archived'));
     SQL
 

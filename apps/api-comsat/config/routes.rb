@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :contact_form_submissions, only: [:index, :create]
+      resources :contact_form_submissions, only: [ :index, :create ]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -5,4 +5,4 @@ FactoryBot.define do
     is_completed { false }
     association :todo_list
   end
-end 
+end

@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:fe": "turbo run dev:web",
     "dev:https": "turbo run dev:https",
     "build": "turbo run build",
     "start": "turbo run start",

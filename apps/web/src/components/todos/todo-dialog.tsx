@@ -89,6 +89,31 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
       setEditedDescription(content);
     };
 
+    const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+              toast.error('Image size should be less than 5MB');
+              return;
+            }
+
+            setCoverImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+    };
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) {
@@ -133,7 +158,7 @@ export const TodoDialog = forwardRef<TodoDialogRef, TodoDialogProps>(
 
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
+        <DialogContent onPaste={handlePaste}>
           <DialogHeader>
             <DialogTitle className="pb-4 text-left">
               <label htmlFor="title" className="sr-only">

@@ -92,7 +92,24 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
     }
 
-    revalidateTag(`todos-${todoListId}`);
+    // Start revalidation in the background
+    void (async () => {
+      try {
+        const { data: todoList } = await supabase
+          .from('todo_lists')
+          .select('custom_url')
+          .eq('id', todoListId)
+          .single();
+
+        revalidateTag(`todos-${todoListId}`);
+        if (todoList?.custom_url) {
+          revalidateTag(`todos-${todoList.custom_url}`);
+        }
+      } catch (error: unknown) {
+        console.error('Error during revalidation:', error);
+      }
+    })();
+
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

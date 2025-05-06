@@ -4,6 +4,10 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "@x-padlet/types#build": {
+      "cache": false,
       "outputs": ["dist/**"]
     },
     "@x-padlet/web#build": {
@@ -19,6 +23,7 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "@x-padlet/web#dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": false,
       "env": ["NODE_ENV"]
@@ -28,13 +33,16 @@
       "persistent": false,
       "env": ["RAILS_ENV", "PORT"]
     },
+    "@x-padlet/types#dev": {
+      "persistent": false
+    },
     "lint": {
       "outputs": []
     },
     "dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["@x-padlet/web#dev", "@x-padlet/api-comsat#dev"]
+      "dependsOn": ["@x-padlet/web#dev", "@x-padlet/api-comsat#dev", "@x-padlet/types#dev"]
     },
     "clean": {
       "cache": false

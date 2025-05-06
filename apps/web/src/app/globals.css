@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Need to include the type library */
+@source '../../node_modules/@x-padlet/types';
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

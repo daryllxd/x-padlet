@@ -4,6 +4,10 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "@x-padlet/types#build": {
+      "cache": false,
       "outputs": ["dist/**"]
     },
     "@x-padlet/web#build": {
@@ -19,6 +23,7 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "@x-padlet/web#dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": false,
       "env": ["NODE_ENV"]

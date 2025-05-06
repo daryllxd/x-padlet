@@ -76,6 +76,10 @@ src/
 
 ## Development
 
+```sheell
+$ pnpm dev:fe # Starts types + web frontend
+```
+
 - [**Cmd-K**](https://react-cmdk.com/): Keyboard shortcuts to go around
 - **Code Formatting**: Uses Prettier
 - **Type Checking**: TypeScript strict mode

@@ -1,7 +1,7 @@
 class TodoList < ApplicationRecord
   # Enums
   enum :status, { active: "active", completed: "completed", archived: "archived" }, validate: true
-  enum :privacy_status, { public: "public", secret: "secret", secret_with_password: "secret_with_password" }, validate: true
+  enum :privacy_status, { visible: "public", hidden: "secret", password_protected: "secret_with_password" }, validate: true
 
   # Relationships
   has_many :todo_groups, dependent: :destroy

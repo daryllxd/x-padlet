@@ -42,4 +42,9 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
   gem "pry-rails"
   gem "pry-byebug"
+  
+  # Testing
+  gem "rspec-rails"
+  gem "shoulda-matchers"
+  gem "factory_bot_rails"
 end

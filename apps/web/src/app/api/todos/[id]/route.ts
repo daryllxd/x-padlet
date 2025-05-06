@@ -101,9 +101,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
           .eq('id', todoListId)
           .single();
 
-        revalidateTag(`todos-${todoListId}`);
         if (todoList?.custom_url) {
           revalidateTag(`todos-${todoList.custom_url}`);
+        } else {
+          revalidateTag(`todos-${todoListId}`);
         }
       } catch (error: unknown) {
         console.error('Error during revalidation:', error);

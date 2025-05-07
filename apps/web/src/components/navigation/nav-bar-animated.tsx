@@ -2,6 +2,7 @@
 
 import { motion, useMotionTemplate, useMotionValue, useScroll, useTransform } from 'framer-motion';
 import { useEffect } from 'react';
+import { NavContext } from './nav-bar-animated-context';
 
 interface NavBarAnimatedProps {
   children: React.ReactNode;
@@ -31,7 +32,6 @@ function useBoundedScroll(bounds: number) {
 }
 
 export function NavBarAnimated({ children }: NavBarAnimatedProps) {
-  // After throttling to the 0.75 area, we want to animate the height to the MIN_HEADER_HEIGHT
   let { scrollYBoundedProgress } = useBoundedScroll(400);
   let scrollYBoundedProgressThrottled = useTransform(
     scrollYBoundedProgress,
@@ -40,25 +40,27 @@ export function NavBarAnimated({ children }: NavBarAnimatedProps) {
   );
 
   return (
-    <motion.div
-      className="fixed inset-x-0 w-full border-b bg-white"
-      style={{
-        height: useTransform(
-          scrollYBoundedProgressThrottled,
-          [0, 1],
-          [MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT]
-        ),
-        backgroundColor: useMotionTemplate`rgb(255 255 255 / ${useTransform(
-          scrollYBoundedProgressThrottled,
-          [0, 1],
-          [1, 0.5]
-        )})`,
-      }}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-    >
-      {children}
-    </motion.div>
+    <NavContext.Provider value={{ scrollProgress: scrollYBoundedProgressThrottled }}>
+      <motion.div
+        className="fixed inset-x-0 w-full border-b bg-white"
+        style={{
+          height: useTransform(
+            scrollYBoundedProgressThrottled,
+            [0, 1],
+            [MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT]
+          ),
+          backgroundColor: useMotionTemplate`rgb(255 255 255 / ${useTransform(
+            scrollYBoundedProgressThrottled,
+            [0, 1],
+            [1, 0.5]
+          )})`,
+        }}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+      >
+        {children}
+      </motion.div>
+    </NavContext.Provider>
   );
 }

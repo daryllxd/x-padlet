@@ -50,6 +50,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "downshift": "^9.0.9",
+    "framer-motion": "^12.10.0",
     "isomorphic-dompurify": "^2.23.0",
     "jsdom": "^26.1.0",
     "lexical": "^0.29.0",

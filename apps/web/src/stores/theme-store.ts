@@ -12,6 +12,9 @@ export const useThemeStore = create<ThemeState>()((set) => ({
   theme: 'white',
   setTheme: (theme) => {
     set({ theme });
-    document.body.className = TAILWIND_THEME_COLORS[theme];
+    Object.values(TAILWIND_THEME_COLORS).forEach((cls) => {
+      document.body.classList.remove(cls);
+    });
+    document.body.classList.add(TAILWIND_THEME_COLORS[theme]);
   },
 }));

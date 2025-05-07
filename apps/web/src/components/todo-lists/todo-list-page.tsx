@@ -5,7 +5,6 @@ import { TodoListView } from '@/components/todo-lists/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
 import { useThemeStore } from '@/stores/theme-store';
-import { TAILWIND_THEME_COLORS } from '@x-padlet/types';
 import { useEffect, useState } from 'react';
 
 const FONTS = {
@@ -34,8 +33,8 @@ export function TodoListPage({ todoListId: todoListIdOrUrl }: TodoListPageProps)
   const setTheme = useThemeStore((state) => state.setTheme);
 
   useEffect(() => {
-    if (todoList?.theme && todoList.theme in TAILWIND_THEME_COLORS) {
-      setTheme(todoList.theme as keyof typeof TAILWIND_THEME_COLORS);
+    if (todoList?.theme) {
+      setTheme(todoList.theme);
     }
   }, [todoList?.theme, setTheme]);
 

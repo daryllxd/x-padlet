@@ -24,10 +24,14 @@ export const zIndex = {
   tooltip: 30,
 
   // Overlays
+  popover: 90,
   modal: 100,
   dialog: 100,
   dialogTooltip: 130,
-  popover: 90,
+
+  header: 105,
+  mobileNav: 110,
+  devBanner: 120,
 
   // Notifications
   toast: 1000,

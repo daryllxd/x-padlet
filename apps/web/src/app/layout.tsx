@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex min-h-screen flex-col">
             <NavBar />
 
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pt-[60px]">{children}</main>
           </div>
           <Toaster />
         </Providers>

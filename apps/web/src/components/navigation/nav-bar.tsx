@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { getZIndex } from '@/lib/z-index';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,8 +15,10 @@ export async function NavBar() {
     <nav
       className={cn(
         'border-b bg-white',
+        'fixed inset-x-0',
         isKawaiiPug && 'border-b-purple-300 bg-gradient-to-b from-blue-200 to-purple-200'
       )}
+      style={{ zIndex: getZIndex('header') }}
     >
       <div className="container mx-auto flex h-14 items-center px-4">
         <div className="flex items-center">

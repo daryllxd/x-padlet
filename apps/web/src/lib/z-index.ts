@@ -29,6 +29,8 @@ export const zIndex = {
   dialogTooltip: 130,
   popover: 90,
 
+  header: 100,
+
   // Notifications
   toast: 1000,
 } as const;

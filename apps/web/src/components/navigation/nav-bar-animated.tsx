@@ -1,31 +1,59 @@
 'use client';
 
-import { motion, useMotionValue, useMotionValueEvent, useScroll } from 'framer-motion';
+import { motion, useMotionTemplate, useMotionValue, useScroll, useTransform } from 'framer-motion';
+import { useEffect } from 'react';
 
 interface NavBarAnimatedProps {
   children: React.ReactNode;
 }
 
-const HEADER_HEIGHT = 60;
+const MAX_HEADER_HEIGHT = 60;
 const MIN_HEADER_HEIGHT = 40;
 
-export function NavBarAnimated({ children }: NavBarAnimatedProps) {
+let clamp = (number: number, min: number, max: number) => Math.min(Math.max(number, min), max);
+
+function useBoundedScroll(bounds: number) {
   let { scrollY } = useScroll();
-  let height = useMotionValue(HEADER_HEIGHT);
+  let scrollYBounded = useMotionValue(0);
+  let scrollYBoundedProgress = useTransform(scrollYBounded, [0, bounds], [0, 1]);
 
-  useMotionValueEvent(scrollY, 'change', (current) => {
-    // Bang here cause I'm pretty sure this is not undefined
-    let previous = scrollY.getPrevious()!;
+  useEffect(() => {
+    return scrollY.onChange((current) => {
+      let previous = scrollY.getPrevious()!;
+      let diff = current - previous;
+      let newScrollYBounded = scrollYBounded.get() + diff;
 
-    let diff = current - previous;
-    let newHeight = height.get() - diff * 0.1;
+      scrollYBounded.set(clamp(newScrollYBounded, 0, bounds));
+    });
+  }, [bounds, scrollY, scrollYBounded]);
 
-    height.set(Math.min(Math.max(newHeight, MIN_HEADER_HEIGHT), HEADER_HEIGHT));
-  });
+  return { scrollYBounded, scrollYBoundedProgress };
+}
+
+export function NavBarAnimated({ children }: NavBarAnimatedProps) {
+  // After throttling to the 0.75 area, we want to animate the height to the MIN_HEADER_HEIGHT
+  let { scrollYBoundedProgress } = useBoundedScroll(400);
+  let scrollYBoundedProgressThrottled = useTransform(
+    scrollYBoundedProgress,
+    [0, 0.75, 1],
+    [0, 0, 1]
+  );
+
   return (
     <motion.div
       className="fixed inset-x-0 w-full border-b bg-white"
-      style={{ height }}
+      style={{
+        height: useTransform(
+          scrollYBoundedProgressThrottled,
+          [0, 1],
+          [MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT]
+        ),
+        backgroundColor: useMotionTemplate`rgb(255 255 255 / ${useTransform(
+          scrollYBoundedProgressThrottled,
+          [0, 1],
+          [1, 0.5]
+        )})`,
+      }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}

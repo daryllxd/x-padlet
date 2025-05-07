@@ -3,6 +3,7 @@
 import { navigationItems } from '@/config/navigation';
 import { navigationIcons } from '@/config/navigation-icons';
 import { cn } from '@/lib/utils';
+import { getZIndex } from '@/lib/z-index';
 import { MenuIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
@@ -20,7 +21,11 @@ export function NavMobileClient() {
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[280px] p-6 sm:w-[300px]">
+      <SheetContent
+        side="left"
+        className="w-[280px] p-6 sm:w-[300px]"
+        style={{ zIndex: getZIndex('mobileNav') }}
+      >
         <SheetHeader>
           <SheetTitle className="text-left">Puglet</SheetTitle>
         </SheetHeader>

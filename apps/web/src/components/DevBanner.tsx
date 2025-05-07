@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { getZIndex } from '@/lib/z-index';
 
 const DEV_BANNER_LOCAL_ICON = '️☺️';
 const DEV_BANNER_PROD_ICON = '⚒️❗️';
@@ -20,6 +21,7 @@ export function DevBanner() {
         'shadow-sm',
         'font-mono'
       )}
+      style={{ zIndex: getZIndex('devBanner') }}
     >
       <span className="md:hidden">
         {isLocalhost ? DEV_BANNER_LOCAL_ICON : DEV_BANNER_PROD_ICON}

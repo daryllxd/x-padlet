@@ -30,6 +30,8 @@ export const zIndex = {
   popover: 90,
 
   header: 100,
+  mobileNav: 110,
+  devBanner: 120,
 
   // Notifications
   toast: 1000,

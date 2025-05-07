@@ -4,8 +4,9 @@ import { TodoListHeroSection } from '@/components/todo-lists/todo-list-hero-sect
 import { TodoListView } from '@/components/todo-lists/todo-list-view';
 import { useTodoList } from '@/hooks/useTodoLists';
 import { useTodos } from '@/hooks/useTodos';
+import { useThemeStore } from '@/stores/theme-store';
 import { TAILWIND_THEME_COLORS } from '@x-padlet/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const FONTS = {
   Inter: 'Inter, sans-serif',
@@ -30,12 +31,16 @@ export function TodoListPage({ todoListId: todoListIdOrUrl }: TodoListPageProps)
   const todoListId = todoList?.id;
   const { todos, isLoading: isTodosLoading } = useTodos(todoListId ?? todoListIdOrUrl);
   const [font, setFont] = useState<Font>('Montserrat');
+  const setTheme = useThemeStore((state) => state.setTheme);
+
+  useEffect(() => {
+    if (todoList?.theme && todoList.theme in TAILWIND_THEME_COLORS) {
+      setTheme(todoList.theme as keyof typeof TAILWIND_THEME_COLORS);
+    }
+  }, [todoList?.theme, setTheme]);
 
   return (
-    <div
-      className={`min-h-screen ${TAILWIND_THEME_COLORS[todoList?.theme || 'white']}`}
-      style={{ fontFamily: FONTS[font] }}
-    >
+    <div className="min-h-screen" style={{ fontFamily: FONTS[font] }}>
       <div className="container mx-auto px-4 py-6 sm:py-10">
         <TodoListHeroSection
           todoListId={todoListId ?? todoListIdOrUrl}

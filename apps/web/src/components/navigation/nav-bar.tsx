@@ -17,7 +17,6 @@ export async function NavBar() {
   return (
     <nav
       className={cn(
-        'border-b bg-white',
         isKawaiiPug && 'border-b-purple-300 bg-gradient-to-b from-blue-200 to-purple-200'
       )}
       style={{ zIndex: getZIndex('header') }}

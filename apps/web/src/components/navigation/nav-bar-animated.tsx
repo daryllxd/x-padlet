@@ -18,7 +18,7 @@ export function NavBarAnimated({ children }: NavBarAnimatedProps) {
 
   return (
     <motion.div
-      className="fixed inset-x-0 h-14 w-full border-b bg-white"
+      className="fixed inset-x-0 h-[60px] w-full border-b bg-white"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}

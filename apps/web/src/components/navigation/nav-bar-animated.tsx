@@ -10,9 +10,14 @@ interface NavBarAnimatedProps {
 
 const MAX_HEADER_HEIGHT = 60;
 const MIN_HEADER_HEIGHT = 40;
+const SCROLL_THRESHOLD = 0.75;
 
 let clamp = (number: number, min: number, max: number) => Math.min(Math.max(number, min), max);
 
+/**
+ * Custom hook that tracks scroll within a bounded range and converts it to a progress value (0-1)
+ * @param bounds - Maximum scroll value to track (in pixels)
+ */
 function useBoundedScroll(bounds: number) {
   let { scrollY } = useScroll();
   let scrollYBounded = useMotionValue(0);
@@ -20,7 +25,7 @@ function useBoundedScroll(bounds: number) {
 
   useEffect(() => {
     return scrollY.onChange((current) => {
-      let previous = scrollY.getPrevious()!;
+      let previous = scrollY.getPrevious() ?? current;
       let diff = current - previous;
       let newScrollYBounded = scrollYBounded.get() + diff;
 
@@ -33,9 +38,10 @@ function useBoundedScroll(bounds: number) {
 
 export function NavBarAnimated({ children }: NavBarAnimatedProps) {
   let { scrollYBoundedProgress } = useBoundedScroll(400);
+  // No visual changes until 75% of scroll reached, then animate to completion
   let scrollYBoundedProgressThrottled = useTransform(
     scrollYBoundedProgress,
-    [0, 0.75, 1],
+    [0, SCROLL_THRESHOLD, 1],
     [0, 0, 1]
   );
 

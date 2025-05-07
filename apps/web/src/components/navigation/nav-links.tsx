@@ -12,7 +12,7 @@ import { useNavContext } from './nav-bar-animated-context';
 export function NavLinks() {
   const pathname = usePathname();
   const { scrollProgress } = useNavContext();
-  const opacity = useTransform(scrollProgress, [0, 1], [1, 0]);
+  const opacity = useTransform(scrollProgress, [0, 1], [1, 0.2]);
 
   return (
     <motion.div className="ml-4 hidden space-x-4 lg:flex" style={{ opacity }}>

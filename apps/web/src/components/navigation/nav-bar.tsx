@@ -22,7 +22,7 @@ export async function NavBar() {
       style={{ zIndex: getZIndex('header') }}
     >
       <NavBarAnimated>
-        <div className="container mx-auto flex h-14 items-center px-4">
+        <div className="container mx-auto flex h-full items-center px-4">
           <div className="flex items-center">
             <Link href="/" className="flex items-center text-lg font-bold">
               <Image

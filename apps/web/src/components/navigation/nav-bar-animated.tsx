@@ -1,24 +1,31 @@
 'use client';
 
-import { motion, useScroll } from 'framer-motion';
-import { useEffect } from 'react';
+import { motion, useMotionValue, useMotionValueEvent, useScroll } from 'framer-motion';
 
 interface NavBarAnimatedProps {
   children: React.ReactNode;
 }
 
+const HEADER_HEIGHT = 60;
+const MIN_HEADER_HEIGHT = 40;
+
 export function NavBarAnimated({ children }: NavBarAnimatedProps) {
-  const { scrollY } = useScroll();
+  let { scrollY } = useScroll();
+  let height = useMotionValue(HEADER_HEIGHT);
 
-  useEffect(() => {
-    return scrollY.onChange((current) => {
-      console.log(current);
-    });
-  }, [scrollY]);
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    // Bang here cause I'm pretty sure this is not undefined
+    let previous = scrollY.getPrevious()!;
 
+    let diff = current - previous;
+    let newHeight = height.get() - diff * 0.1;
+
+    height.set(Math.min(Math.max(newHeight, MIN_HEADER_HEIGHT), HEADER_HEIGHT));
+  });
   return (
     <motion.div
-      className="fixed inset-x-0 h-[60px] w-full border-b bg-white"
+      className="fixed inset-x-0 w-full border-b bg-white"
+      style={{ height }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}

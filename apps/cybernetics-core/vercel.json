@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nuxtjs",
-  "buildCommand": "pnpm turbo run build",
+  "buildCommand": "pnpm turbo run @x-padlet/cybernetics-core#build",
   "installCommand": "pnpm install --frozen-lockfile"
 }

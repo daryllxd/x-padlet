@@ -1,5 +1,5 @@
 {
-  "name": "cybernetics-core",
+  "name": "@x-padlet/cybernetics-core",
   "private": true,
   "type": "module",
   "scripts": {

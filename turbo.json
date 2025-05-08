@@ -35,7 +35,6 @@
       "inputs": ["src/**/*.stories.tsx", "src/**/*.stories.ts", ".storybook/**"]
     },
     "@x-padlet/types#build": {
-      "cache": false,
       "outputs": ["dist/**"]
     },
     "@x-padlet/web#build": {
@@ -49,6 +48,10 @@
         "ENABLE_EXPERIMENTAL_COREPACK"
       ],
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "@x-padlet/cybernetics-core#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".vercel/**"]
     },
     "@x-padlet/web#dev": {
       "dependsOn": ["^build"],

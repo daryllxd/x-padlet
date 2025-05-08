@@ -1,13 +1,23 @@
+import { revalidateTodoList } from '@/lib/api/todo-lists/revalidate';
 import { supabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 type ReorderRequest =
-  | { todo_ids: string[] }
-  | { group_id: string; group_todo: { id: string; position_in_group: number } };
+  | { todo_ids: string[]; todo_list_id: string }
+  | {
+      group_id: string;
+      group_todo: { id: string; position_in_group: number };
+      todo_list_id: string;
+    };
 
 export async function PATCH(request: NextRequest) {
   try {
     const body = (await request.json()) as ReorderRequest;
+    const todoListId = body.todo_list_id;
+
+    if (!todoListId) {
+      return NextResponse.json({ error: 'todo_list_id is required' }, { status: 400 });
+    }
 
     // Handle global position reordering
     if ('todo_ids' in body) {
@@ -34,6 +44,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to reorder todos' }, { status: 500 });
       }
 
+      await revalidateTodoList(todoListId);
       return NextResponse.json(updates.map((result) => result.data));
     }
 
@@ -72,6 +83,7 @@ export async function PATCH(request: NextRequest) {
           return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
         }
 
+        await revalidateTodoList(todoListId);
         return NextResponse.json(updatedTodo);
       }
 
@@ -103,6 +115,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to reorder group todos' }, { status: 500 });
       }
 
+      await revalidateTodoList(todoListId);
       return NextResponse.json(updates.map((result) => result.data));
     }
 

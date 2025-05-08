@@ -1,8 +1,8 @@
+import { revalidateTodoList } from '@/lib/api/todo-lists/revalidate';
 import { supabase } from '@/lib/db';
 import { deleteFromS3, uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
 import { TodoItem } from '@x-padlet/types';
-import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -92,23 +92,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
     }
 
-    // Start revalidation in the background
-    try {
-      const { data: todoList } = await supabase
-        .from('todo_lists')
-        .select('custom_url')
-        .eq('id', todoListId)
-        .single();
-
-      revalidateTag(`todos-${todoListId}`);
-      // If the todo list has a custom URL, revalidate the todos for that URL
-      if (todoList?.custom_url) {
-        revalidateTag(`todos-${todoList.custom_url}`);
-      }
-    } catch (error: unknown) {
-      console.error('Error during revalidation:', error);
-    }
-
+    await revalidateTodoList(todoListId);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);
@@ -123,6 +107,16 @@ export async function DELETE(
   const { id } = await params;
 
   try {
+    const { data: todo } = await supabase
+      .from('todos')
+      .select('todo_list_id')
+      .eq('id', id)
+      .single();
+
+    if (!todo) {
+      return NextResponse.json({ error: 'Todo not found' }, { status: 404 });
+    }
+
     const { error } = await supabase.from('todos').delete().eq('id', id);
 
     if (error) {
@@ -130,6 +124,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Failed to delete todo' }, { status: 500 });
     }
 
+    await revalidateTodoList(todo.todo_list_id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error processing request:', error);

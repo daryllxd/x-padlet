@@ -62,6 +62,8 @@ The application will be available at [http://localhost:3001](http://localhost:30
 
 ## Project Structure
 
+<img src="graph.png" alt="Dependency graph">
+
 ```
 src/
 ├── app/              # Next.js app router pages
@@ -138,7 +140,7 @@ pnpm build --filter @x-padlet/web
 pnpm --filter @x-padlet/web start
 
 # Generate build dependency graph
-npx turbo run build --graph=graph.pdf
+npx turbo run build --graph=graph.png
 ```
 
 ### Linting and Formatting

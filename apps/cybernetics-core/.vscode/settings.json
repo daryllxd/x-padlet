@@ -1,0 +1,19 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.nuxt": true,
+    "**/node_modules": true,
+    "**/.output": true,
+    "**/dist": true,
+    "**/.DS_Store": true,
+    "**.vercel": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.nuxt": true,
+    "**/.output": true,
+    "**/dist": true,
+    "**/.git": true,
+    "**.vercel": true
+  }
+}

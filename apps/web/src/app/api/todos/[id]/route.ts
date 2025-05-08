@@ -92,7 +92,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
     }
 
-    await revalidateTodoList(todoListId);
+    revalidateTodoList(todoListId);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);
@@ -124,7 +124,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Failed to delete todo' }, { status: 500 });
     }
 
-    await revalidateTodoList(todo.todo_list_id);
+    revalidateTodoList(todo.todo_list_id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error processing request:', error);

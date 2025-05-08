@@ -115,7 +115,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to reorder group todos' }, { status: 500 });
       }
 
-      await revalidateTodoList(todoListId);
+      revalidateTodoList(todoListId);
       return NextResponse.json(updates.map((result) => result.data));
     }
 

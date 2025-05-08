@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create todo' }, { status: 500 });
     }
 
-    await revalidateTodoList(todoListId.toString());
+    revalidateTodoList(todoListId.toString());
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

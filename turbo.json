@@ -35,7 +35,6 @@
       "inputs": ["src/**/*.stories.tsx", "src/**/*.stories.ts", ".storybook/**"]
     },
     "@x-padlet/types#build": {
-      "cache": false,
       "outputs": ["dist/**"]
     },
     "@x-padlet/web#build": {

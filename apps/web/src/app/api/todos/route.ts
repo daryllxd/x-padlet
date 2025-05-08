@@ -1,9 +1,9 @@
+import { revalidateTodoList } from '@/lib/api/todo-lists/revalidate';
 import { lookupTodoList } from '@/lib/api/todoListLookup';
 import { supabase } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
 import { TodoFormData } from '@/types';
 import { TodoItem } from '@x-padlet/types';
-import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create todo' }, { status: 500 });
     }
 
-    revalidateTag(`todos-${todoListId}`);
+    revalidateTodoList(todoListId.toString());
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error processing request:', error);

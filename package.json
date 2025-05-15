@@ -23,7 +23,7 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "eslint": "^8.56.0",
+    "eslint": "^9.26.0",
     "husky": "^9.1.7",
     "knip": "^5.50.5",
     "lint-staged": "^15.5.0",

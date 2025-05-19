@@ -28,7 +28,7 @@
     "knip": "^5.50.5",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
-    "prettier-plugin-sql": "^0.19.0",
+    "prettier-plugin-sql": "^0.19.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "turbo": "^2.5.2"
   },
